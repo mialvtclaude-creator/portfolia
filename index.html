@@ -202,6 +202,9 @@ input[type=checkbox]{width:auto;min-height:0;accent-color:var(--gold)}
 .seg button{border:0;background:none;padding:7px 12px;border-radius:3px;font-weight:500;color:var(--mut);cursor:pointer;min-height:34px;transition:background-color 150ms,color 150ms}
 .seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .tk{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.sec+.sec{margin-top:22px}.sech{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:17px;font-weight:600;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--line)}.sech span{font-size:12.5px;color:var(--mut);font-weight:400}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chip{border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);padding:6px 11px;min-height:34px;cursor:pointer;font:500 13px var(--font);clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}.chip:hover{border-color:var(--violet-2)}.chip.on{background:var(--gold);color:var(--gold-ink);border-color:var(--gold)}.chip .mono{font-size:11.5px;opacity:.8}
+.nw .via{font:500 11px var(--mono);color:var(--violet-2);margin-left:6px}
 .tkb{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-lg);padding:11px 12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;transition:transform 180ms var(--ease),border-color 180ms}
 @media (hover:hover) and (pointer:fine){.tkb:hover{transform:translateY(-2px);border-color:var(--line-2)}}
 .tkb.on{border-color:var(--gold);background:var(--soft)}.tkb .num{font-size:14px}
@@ -328,7 +331,7 @@ progress{accent-color:var(--gold);height:8px}
     <h1 id="hero-h">Aprende a invertir en <em>Wall Street</em> jugando</h1>
     <p class="lead" data-up>Dos modos con $10,000 virtuales: siete niveles de práctica en un mercado simulado, y la bolsa real con precios y noticias de Nueva York en vivo mientras la NYSE está abierta. Sin arriesgar dinero real.</p>
     <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" onclick="openReal()">Abrir la bolsa real</button></div>
-    <div class="facts" data-up><div><b>$10k</b><span>virtuales para invertir</span></div><div><b>30</b><span>empresas de EE. UU.</span></div><div><b>7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
+    <div class="facts" data-up><div><b>$10k</b><span>virtuales para invertir</span></div><div><b>112</b><span>empresas de EE. UU.</span></div><div><b>7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
   </div>
   <div class="hero__art frame" aria-label="Vista del juego: gráfico de Coca-Cola y la misión del nivel 1">
     <div class="frame__bar"><span class="dots"><i></i><i></i><i></i></span><span class="mono mut" id="hstat">NYSE</span><span class="sp"></span><span class="cash hide-s" id="hcash">$10,000.00</span></div>
@@ -379,22 +382,25 @@ progress{accent-color:var(--gold);height:8px}
 <div class="grid m" id="mx"></div>
 <div class="card"><h3>Tu rendimiento frente al índice</h3><div class="lg"><span><i style="background:var(--gold)"></i>Tu portafolio</span><span><i style="background:var(--violet-2)"></i>Índice</span></div><div id="ec" class="ch"></div></div>
 <div class="card"><h3>Tus posiciones</h3><div class="sc"><table><thead><tr><th>Empresa</th><th>Acciones</th><th>Costo medio</th><th>Precio</th><th>Resultado</th><th>Valor</th><th></th></tr></thead><tbody id="pt"></tbody></table></div><div id="ordw"></div></div>
+
+<div class="card"><h3>Noticias de tu portafolio</h3><p class="mut" style="margin:-6px 0 10px">Solo noticias de las empresas que tienes o de su sector.</p><div class="chips" id="pfc"></div><div class="tradingview-widget-container tvbox" id="tvpf" hidden style="height:420px"></div><div class="news" id="pfn"></div></div>
 </div>
 <aside class="card side"><h3>Watchlist</h3><input id="wi" list="dl" placeholder="Añade un símbolo y pulsa Enter" aria-label="Añadir símbolo a la watchlist"><div id="wl"></div></aside></div></div>
 
 <div id="v-mk" hidden>
 <div class="card">
-<div class="bar"><input id="si" placeholder="Busca por símbolo o empresa" aria-label="Buscar empresa" autocomplete="off"><select id="sf" aria-label="Filtrar por sector" onchange="sfv=this.value"><option value="">Todos los sectores</option></select><label><input type="checkbox" id="onlyN"> Solo NYSE</label></div>
+<div class="bar"><input id="si" placeholder="Busca por símbolo o empresa" aria-label="Buscar empresa" autocomplete="off"><select id="sf" aria-label="Filtrar por sector" onchange="sfv=this.value;rMK()"><option value="">Todos los sectores</option></select><label><input type="checkbox" id="onlyN"> Solo NYSE</label></div>
 <div class="hd"><div><h2 id="mn"></h2><span class="mut" id="ms"></span></div><div class="pr"><small id="mpl" hidden>Precio para operar (Finnhub)</small><b id="mp"></b><span id="mc" class="mono"></span></div></div>
 <div class="tradingview-widget-container tvbox" id="tvinfo" hidden></div>
 <div class="bar"><div class="seg" id="per"><button data-p="30">30 días</button><button data-p="90" class="on">90 días</button><button data-p="420">Todo</button></div><label><input type="checkbox" id="sma"> Medias móviles (20 y 50 días)</label><span class="sp"></span><button class="btn buy" id="bt-buy" onclick="openM(null,'B')">Comprar</button><button class="btn sell" onclick="openM(null,'S')">Vender</button></div>
 <div id="pc" class="ch tall"></div><div id="tv" class="tvw" hidden></div>
 <div class="grid m" id="ks" style="margin:14px 0 0"></div>
 </div>
-<div class="card"><h3>Las 30 empresas</h3><div class="grid tk" id="tk"></div></div>
+<div class="card"><h3 id="mkh">Noticias de la empresa</h3><div class="tradingview-widget-container tvbox" id="tvmk" hidden style="height:420px"></div><div class="news" id="mkn"></div></div>
+<div class="card"><h3>Empresas por sector</h3><p class="mut" style="margin:-6px 0 12px">112 empresas de la NYSE y NASDAQ en 14 sectores. Filtra con el selector de sector o con "Solo NYSE".</p><div id="tk"></div></div>
 </div>
 
-<div id="v-nw" hidden><div class="card"><h3>Noticias del mercado</h3><p class="mut" id="nwi" style="margin-bottom:6px">Cada noticia mueve a un sector o a una empresa durante unos días. Lee el porqué: es la parte que se aprende.</p><div class="tradingview-widget-container tvbox" id="tvnews" hidden></div><div class="news" id="nwl"></div></div></div>
+<div id="v-nw" hidden><div class="card"><h3>Noticias del mercado</h3><p class="mut" id="nwi" style="margin-bottom:6px">Cada noticia mueve a un sector o a una empresa durante unos días. Lee el porqué: es la parte que se aprende.</p><div class="bar" style="margin-top:10px"><input id="nq" placeholder="Busca por acción o palabra: KO, Coca-Cola, petróleo…" aria-label="Buscar noticias" autocomplete="off"></div><div class="chips" id="nfc"></div><div class="tradingview-widget-container tvbox" id="tvnews" hidden></div><div class="news" id="nwl"></div></div></div>
 
 <div id="v-hs" hidden><div class="card"><h3>Historial de operaciones</h3><div class="sc"><table><thead><tr><th>Cuándo</th><th>Tipo</th><th>Empresa</th><th>Acciones</th><th>Precio</th><th>Comisión</th><th>Importe</th><th>Resultado</th></tr></thead><tbody id="ht"></tbody></table></div></div></div>
 
@@ -454,7 +460,8 @@ onmessage=e=>{
 </script>
 <script>
 /* Universo: símbolo, nombre, sector, precio inicial, retorno anual, volatilidad, beta, bolsa, rentabilidad por dividendo aproximada */
-const U="AAPL,Apple,Tecnología,190,.12,.28,1.1,NASDAQ,.005;MSFT,Microsoft,Tecnología,420,.11,.25,1,NASDAQ,.008;NVDA,NVIDIA,Tecnología,120,.2,.5,1.7,NASDAQ,0;GOOGL,Alphabet,Tecnología,170,.11,.3,1.1,NASDAQ,.005;AMZN,Amazon,Consumo,185,.12,.32,1.2,NASDAQ,0;TSLA,Tesla,Automotriz,250,.1,.55,1.9,NASDAQ,0;META,Meta,Tecnología,500,.13,.38,1.3,NASDAQ,.004;NFLX,Netflix,Medios,650,.12,.36,1.1,NASDAQ,0;AMD,AMD,Tecnología,150,.14,.5,1.8,NASDAQ,0;INTC,Intel,Tecnología,30,.03,.4,1.2,NASDAQ,0;JPM,JPMorgan,Finanzas,200,.09,.24,1.1,NYSE,.022;BAC,Bank of America,Finanzas,40,.08,.28,1.3,NYSE,.025;V,Visa,Finanzas,270,.1,.22,.95,NYSE,.007;KO,Coca-Cola,Consumo básico,62,.06,.16,.6,NYSE,.03;PEP,PepsiCo,Consumo básico,170,.06,.17,.6,NASDAQ,.035;MCD,McDonald’s,Consumo,290,.07,.18,.7,NYSE,.023;DIS,Disney,Medios,100,.07,.3,1.1,NYSE,.01;NKE,Nike,Consumo,95,.06,.28,1,NYSE,.02;WMT,Walmart,Consumo básico,70,.08,.17,.6,NASDAQ,.012;COST,Costco,Consumo básico,880,.1,.2,.8,NASDAQ,.006;XOM,ExxonMobil,Energía,115,.07,.26,.9,NYSE,.035;CVX,Chevron,Energía,155,.07,.25,.9,NYSE,.045;JNJ,Johnson & Johnson,Salud,155,.05,.15,.5,NYSE,.03;PFE,Pfizer,Salud,28,.03,.22,.6,NYSE,.06;UNH,UnitedHealth,Salud,520,.1,.22,.7,NYSE,.015;BA,Boeing,Industria,180,.05,.38,1.4,NYSE,0;CAT,Caterpillar,Industria,350,.09,.27,1.1,NYSE,.016;T,AT&T,Telecom,19,.04,.2,.5,NYSE,.05;VZ,Verizon,Telecom,41,.04,.17,.4,NYSE,.065;SPY,ETF S&P 500,ETF,540,.08,.16,1,NYSE Arca,.013";
+const U="AAPL,Apple,Tecnología,190,0.12,.28,1.1,NASDAQ,.005;MSFT,Microsoft,Tecnología,420,0.12,.25,1,NASDAQ,.008;NVDA,NVIDIA,Tecnología,120,0.2,.5,1.7,NASDAQ,0;GOOGL,Alphabet,Tecnología,170,0.12,.3,1.1,NASDAQ,.005;META,Meta,Tecnología,500,0.12,.38,1.3,NASDAQ,.004;AVGO,Broadcom,Tecnología,170,0.12,.4,1.3,NASDAQ,.012;AMD,AMD,Tecnología,150,0.14,.5,1.8,NASDAQ,0;INTC,Intel,Tecnología,30,0.03,.4,1.2,NASDAQ,0;ORCL,Oracle,Tecnología,150,0.12,.32,1.1,NYSE,.011;CRM,Salesforce,Tecnología,280,0.12,.32,1.2,NYSE,.006;ADBE,Adobe,Tecnología,500,0.12,.32,1.2,NASDAQ,0;CSCO,Cisco,Tecnología,55,0.12,.22,.9,NASDAQ,.028;IBM,IBM,Tecnología,220,0.12,.22,.8,NYSE,.03;QCOM,Qualcomm,Tecnología,165,0.12,.35,1.3,NASDAQ,.02;TXN,Texas Instruments,Tecnología,195,0.12,.27,1.1,NASDAQ,.028;MU,Micron,Tecnología,100,0.12,.45,1.5,NASDAQ,.004;INTU,Intuit,Tecnología,640,0.12,.3,1.2,NASDAQ,.006;NOW,ServiceNow,Tecnología,900,0.12,.33,1.2,NYSE,0;ACN,Accenture,Tecnología,330,0.12,.24,1,NYSE,.016;PLTR,Palantir,Tecnología,40,0.15,.6,2,NASDAQ,0;UBER,Uber,Tecnología,70,0.12,.4,1.3,NYSE,0;NFLX,Netflix,Medios,650,0.09,.36,1.1,NASDAQ,0;DIS,Disney,Medios,100,0.09,.3,1.1,NYSE,.01;CMCSA,Comcast,Medios,40,0.09,.25,.9,NASDAQ,.03;SPOT,Spotify,Medios,300,0.09,.45,1.3,NYSE,0;T,AT&T,Telecom,19,0.04,.2,.5,NYSE,.05;VZ,Verizon,Telecom,41,0.04,.17,.4,NYSE,.065;TMUS,T-Mobile,Telecom,200,0.04,.2,.6,NASDAQ,.015;AMZN,Amazon,Consumo,185,0.09,.32,1.2,NASDAQ,0;HD,Home Depot,Consumo,370,0.09,.24,1,NYSE,.024;LOW,Lowe’s,Consumo,240,0.09,.26,1.05,NYSE,.019;MCD,McDonald’s,Consumo,290,0.09,.18,.7,NYSE,.023;SBUX,Starbucks,Consumo,85,0.09,.3,1,NASDAQ,.027;NKE,Nike,Consumo,95,0.09,.28,1,NYSE,.02;TGT,Target,Consumo,140,0.09,.32,1,NYSE,.03;BKNG,Booking,Consumo,3800,0.09,.3,1.2,NASDAQ,.008;ABNB,Airbnb,Consumo,140,0.09,.42,1.3,NASDAQ,0;CMG,Chipotle,Consumo,55,0.09,.32,1.1,NYSE,0;LULU,Lululemon,Consumo,300,0.09,.42,1.2,NASDAQ,0;TSLA,Tesla,Automotriz,250,0.06,.55,1.9,NASDAQ,0;F,Ford,Automotriz,11,0.06,.38,1.3,NYSE,.055;GM,General Motors,Automotriz,45,0.06,.35,1.3,NYSE,.01;TM,Toyota,Automotriz,180,0.06,.24,.8,NYSE,.025;KO,Coca-Cola,Consumo básico,62,0.06,.16,.6,NYSE,.03;PEP,PepsiCo,Consumo básico,170,0.06,.17,.6,NASDAQ,.035;WMT,Walmart,Consumo básico,70,0.06,.17,.6,NASDAQ,.012;COST,Costco,Consumo básico,880,0.06,.2,.8,NASDAQ,.006;PG,Procter & Gamble,Consumo básico,165,0.06,.16,.5,NYSE,.024;CL,Colgate-Palmolive,Consumo básico,95,0.06,.17,.5,NYSE,.022;MDLZ,Mondelez,Consumo básico,68,0.06,.18,.6,NASDAQ,.025;PM,Philip Morris,Consumo básico,120,0.06,.2,.6,NYSE,.045;MO,Altria,Consumo básico,50,0.06,.2,.6,NYSE,.08;KHC,Kraft Heinz,Consumo básico,33,0.06,.22,.6,NASDAQ,.045;JPM,JPMorgan,Finanzas,200,0.09,.24,1.1,NYSE,.022;BAC,Bank of America,Finanzas,40,0.09,.28,1.3,NYSE,.025;WFC,Wells Fargo,Finanzas,60,0.09,.28,1.2,NYSE,.025;C,Citigroup,Finanzas,65,0.09,.3,1.4,NYSE,.033;GS,Goldman Sachs,Finanzas,450,0.09,.28,1.3,NYSE,.025;MS,Morgan Stanley,Finanzas,100,0.09,.27,1.3,NYSE,.035;V,Visa,Finanzas,270,0.09,.22,.95,NYSE,.007;MA,Mastercard,Finanzas,450,0.09,.23,1,NYSE,.006;AXP,American Express,Finanzas,230,0.09,.28,1.2,NYSE,.012;BRK.B,Berkshire Hathaway,Finanzas,420,0.09,.18,.85,NYSE,0;BLK,BlackRock,Finanzas,800,0.09,.26,1.2,NYSE,.025;SCHW,Charles Schwab,Finanzas,70,0.09,.32,1.1,NYSE,.015;PYPL,PayPal,Finanzas,70,0.09,.38,1.3,NASDAQ,0;JNJ,Johnson & Johnson,Salud,155,0.07,.15,.5,NYSE,.03;LLY,Eli Lilly,Salud,800,0.07,.3,.6,NYSE,.007;UNH,UnitedHealth,Salud,520,0.07,.22,.7,NYSE,.015;PFE,Pfizer,Salud,28,0.03,.22,.6,NYSE,.06;MRK,Merck,Salud,120,0.07,.2,.5,NYSE,.025;ABBV,AbbVie,Salud,170,0.07,.22,.6,NYSE,.036;ABT,Abbott,Salud,110,0.07,.2,.7,NYSE,.02;TMO,Thermo Fisher,Salud,560,0.07,.24,.9,NYSE,.003;AMGN,Amgen,Salud,300,0.07,.22,.6,NASDAQ,.03;GILD,Gilead,Salud,70,0.07,.22,.5,NASDAQ,.045;CVS,CVS Health,Salud,60,0.07,.3,.7,NYSE,.04;MRNA,Moderna,Salud,100,0.07,.55,1.1,NASDAQ,0;XOM,ExxonMobil,Energía,115,0.07,.26,.9,NYSE,.035;CVX,Chevron,Energía,155,0.07,.25,.9,NYSE,.045;COP,ConocoPhillips,Energía,115,0.07,.3,1,NYSE,.028;SLB,SLB,Energía,45,0.07,.34,1.1,NYSE,.024;OXY,Occidental,Energía,60,0.07,.36,1.1,NYSE,.015;BA,Boeing,Industria,180,0.05,.38,1.4,NYSE,0;CAT,Caterpillar,Industria,350,0.08,.27,1.1,NYSE,.016;GE,GE Aerospace,Industria,165,0.08,.3,1.2,NYSE,.007;HON,Honeywell,Industria,200,0.08,.2,.9,NASDAQ,.022;UPS,UPS,Industria,140,0.08,.26,.9,NYSE,.045;FDX,FedEx,Industria,260,0.08,.3,1.1,NYSE,.02;LMT,Lockheed Martin,Industria,450,0.08,.2,.5,NYSE,.028;RTX,RTX,Industria,105,0.08,.22,.8,NYSE,.024;DE,Deere,Industria,380,0.08,.26,1,NYSE,.016;UNP,Union Pacific,Industria,230,0.08,.22,.9,NYSE,.023;DAL,Delta Air Lines,Industria,45,0.08,.4,1.4,NYSE,.01;MMM,3M,Industria,100,0.08,.26,1,NYSE,.028;LIN,Linde,Materiales,440,0.07,.19,.9,NASDAQ,.013;FCX,Freeport-McMoRan,Materiales,45,0.07,.42,1.5,NYSE,.013;NEM,Newmont,Materiales,40,0.07,.35,.6,NYSE,.025;DOW,Dow,Materiales,55,0.07,.28,1.1,NYSE,.05;SHW,Sherwin-Williams,Materiales,300,0.07,.25,1,NYSE,.009;NEE,NextEra Energy,Servicios públicos,70,0.06,.22,.6,NYSE,.028;DUK,Duke Energy,Servicios públicos,100,0.06,.17,.4,NYSE,.04;SO,Southern Company,Servicios públicos,80,0.06,.17,.4,NYSE,.036;D,Dominion Energy,Servicios públicos,50,0.06,.2,.5,NYSE,.055;PLD,Prologis,Inmobiliario,115,0.06,.27,1,NYSE,.033;AMT,American Tower,Inmobiliario,200,0.06,.26,.8,NYSE,.033;O,Realty Income,Inmobiliario,55,0.06,.2,.7,NYSE,.055;SPG,Simon Property,Inmobiliario,150,0.06,.28,1.1,NYSE,.052;SPY,ETF S&P 500,ETF,540,0.08,.16,1,NYSE Arca,.013;QQQ,ETF Nasdaq-100,ETF,470,0.1,.21,1.15,NASDAQ,.006;DIA,ETF Dow Jones,ETF,400,0.08,.15,.95,NYSE Arca,.016;VTI,ETF mercado total,ETF,260,0.08,.16,1,NYSE Arca,.014";
+const SECS=["Tecnología", "Medios", "Telecom", "Consumo", "Automotriz", "Consumo básico", "Finanzas", "Salud", "Energía", "Industria", "Materiales", "Servicios públicos", "Inmobiliario", "ETF"];
 const $=id=>document.getElementById(id),K='portfolia-juego-v1',KR='portfolia-juego-real-v1',CAP=1e4,FEE=.001,DIVD=20;
 const M=U.split(';').map(r=>{const[s,n,x,p,m,v,b,e,dy]=r.split(',');return{s,n,x,p:+p,m:+m,v:+v,b:+b,e,dy:+dy}});
 const G=Object.fromEntries(M.map(o=>[o.s,o]));
@@ -521,14 +528,15 @@ function proc(){
   Object.entries(S.pos).forEach(([s,p])=>{const c=px(s);if(p.sl&&c&&c<=p.sl){const q=p.q,pl=exec('S',s,q,c,{auto:'SL'});toast(`Stop-loss activado: se vendieron ${q} ${s} a ${usd(c)} (${sg(pl)}).`)}});
 }
 function save(){try{localStorage.setItem(S.real?KR:K,JSON.stringify(S))}catch(e){}}
-function load(r){try{const o=JSON.parse(localStorage.getItem(r?KR:K));if(o&&o.h&&o.cash!=null&&o.g&&!!o.real===!!r&&M.every(x=>o.h[x.s]))return o}catch(e){}return null}
+function load(r){try{const o=JSON.parse(localStorage.getItem(r?KR:K));if(o&&o.h&&o.cash!=null&&o.g&&!!o.real===!!r){const L=(o.h.SPY||[]).length||1;
+  M.forEach(x=>{if(o.h[x.s])return;if(r){o.h[x.s]=[];return}let p=x.p;const a=[p];for(let i=1;i<L;i++){p*=Math.exp(-(x.m/252)+x.v/Math.sqrt(252)*g());a.unshift(p)}const k=x.p/a[a.length-1];o.h[x.s]=a.map(v=>v*k)});return o}}catch(e){}return null}
 
 function theme(){const r=document.documentElement,d=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=d?'light':'dark';try{localStorage.setItem('pf-theme',r.dataset.theme)}catch(e){}tvKey='';document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);if(!$('sim').hidden)render()}
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3800)}
 
 /* ---------- Noticias ---------- */
 const NEWS=[
- {t:'La Reserva Federal sube las tasas de interés',fx:[['sec','Finanzas',.006,4],['sec','Tecnología',-.007,4]],why:'Con tasas más altas, los bancos ganan más por prestar. Las empresas de tecnología valen menos porque sus ganancias futuras se descuentan a una tasa mayor.'},
+ {t:'La Reserva Federal sube las tasas de interés',fx:[['sec','Finanzas',.006,4],['sec','Tecnología',-.007,4],['sec','Inmobiliario',-.006,3],['sec','Servicios públicos',-.004,3]],why:'Con tasas más altas, los bancos ganan más por prestar. Las empresas de tecnología valen menos porque sus ganancias futuras se descuentan a una tasa mayor.'},
  {t:'La Reserva Federal baja las tasas de interés',fx:[['sec','Tecnología',.007,4],['sec','Finanzas',-.004,3],['all','',.002,3]],why:'El crédito se abarata: las empresas invierten más y la gente gasta más. La tecnología suele ser la que más sube.'},
  {t:'La OPEP recorta la producción y el petróleo se dispara',fx:[['sec','Energía',.009,4],['sec','Automotriz',-.006,3],['sec','Industria',-.003,3]],why:'Si el barril sube, las petroleras venden más caro. A quienes usan mucho combustible les suben los costos.'},
  {t:'El petróleo cae a su nivel más bajo del año',fx:[['sec','Energía',-.009,4],['sec','Consumo',.003,3]],why:'Petróleo barato reduce las ganancias de las petroleras, pero deja más dinero en el bolsillo de los consumidores.'},
@@ -542,8 +550,22 @@ const NEWS=[
  {t:'La inflación sube más de lo esperado',fx:[['all','',-.006,3],['sec','Consumo básico',.003,3]],why:'Inflación alta hace temer que suban las tasas. Las empresas de productos básicos aguantan mejor porque la gente sigue comprando.'},
  {t:'Problemas de producción en Boeing',fx:[['sym','BA',-.012,3]],why:'Retrasos en la fabricación significan entregas que no se cobran a tiempo y posibles multas.'},
  {t:'Las plataformas de streaming suben precios y no pierden usuarios',fx:[['sym','NFLX',.01,3],['sym','DIS',.004,3]],why:'Poder subir precios sin perder clientes es señal de un negocio fuerte.'},
- {t:'Los bancos aprueban las pruebas de estrés de la Reserva Federal',fx:[['sec','Finanzas',.006,3]],why:'Si los bancos aguantan una crisis simulada, pueden repartir más dividendos y recomprar acciones.'}];
-function addNews(n,big){S.nw.unshift({d:S.day,...n});if(S.nw.length>60)S.nw.pop();if(view!=='nw')S.g.unread=(S.g.unread||0)+1;S.g.hl=1;if(big)toast(n.t)}
+ {t:'Los bancos aprueban las pruebas de estrés de la Reserva Federal',fx:[['sec','Finanzas',.006,3]],why:'Si los bancos aguantan una crisis simulada, pueden repartir más dividendos y recomprar acciones.'},
+ {t:'{n} anuncia una recompra de acciones',sym:1,fx:[['sym','',.02,1],['sym','',.004,2]],why:'Al recomprar acciones quedan menos en circulación, así que cada una representa una parte mayor de la empresa.'},
+ {t:'Analistas mejoran su recomendación sobre {n}',sym:1,fx:[['sym','',.025,1],['sym','',.004,2]],why:'Muchos inversores siguen a los analistas de los grandes bancos, aunque sus opiniones no siempre aciertan.'},
+ {t:'Analistas rebajan su recomendación sobre {n}',sym:1,fx:[['sym','',-.025,1],['sym','',-.004,2]],why:'Una rebaja hace que algunos fondos vendan. El precio baja aunque el negocio no haya cambiado ese día.'},
+ {t:'{n} enfrenta una demanda millonaria',sym:1,fx:[['sym','',-.03,1],['sym','',-.005,2]],why:'Una demanda puede costar dinero y reputación. El mercado suele descontar primero el peor escenario.'},
+ {t:'{n} presenta un nuevo producto',sym:1,fx:[['sym','',.015,1],['sym','',.005,3]],why:'Un lanzamiento que convence puede aumentar las ventas futuras, y el precio lo anticipa.'},
+ {t:'{n} cambia de director ejecutivo',sym:1,fx:[['sym','',-.015,1],['sym','',.004,3]],why:'Un cambio de líder trae incertidumbre al principio; después el mercado juzga el nuevo plan.'},
+ {t:'{n} sube su dividendo',sym:2,fx:[['sym','',.012,1],['sym','',.003,2]],why:'Subir el dividendo es una señal de confianza: la empresa espera seguir ganando dinero.'},
+ {t:'Bajan las tasas hipotecarias y repunta el sector inmobiliario',fx:[['sec','Inmobiliario',.007,3]],why:'Con créditos más baratos se compran y alquilan más propiedades, y valen más los edificios de estas empresas.'},
+ {t:'Ola de calor dispara la demanda de electricidad',fx:[['sec','Servicios públicos',.005,3]],why:'Las eléctricas venden más energía. Son empresas estables que suelen moverse poco.'},
+ {t:'Suben el cobre y el oro en los mercados internacionales',fx:[['sec','Materiales',.008,3]],why:'Las mineras venden lo que extraen al precio del mercado: si el metal sube, sus ganancias también.'},
+ {t:'Aumenta el presupuesto de defensa de EE. UU.',fx:[['sym','LMT',.008,3],['sym','RTX',.007,3],['sym','GE',.004,3]],why:'Más gasto militar significa más contratos para los fabricantes de aviones y equipos de defensa.'},
+ {t:'Récord de pasajeros en los aeropuertos',fx:[['sym','DAL',.01,3],['sym','BKNG',.006,3],['sym','ABNB',.006,3]],why:'Más viajes significan más ventas para aerolíneas y plataformas de reservas.'}];
+function nTags(n){if(n.syms)return n;const sy=[],se=[];let all=false;(n.tags||[]).forEach(([l])=>{if(l==='Todo el mercado')all=true;else if(G[l]&&G[l].s===l&&!SECS.includes(l))sy.push(l);else se.push(l)});n.syms=sy;n.secs=se;n.all=all;return n}
+const nOf=(n,s)=>{nTags(n);return n.syms.includes(s)?'sym':(G[s]&&n.secs.includes(G[s].x))?'sec':''};
+function addNews(n,big){nTags(n);S.nw.unshift({d:S.day,...n});if(S.nw.length>120)S.nw.pop();if(view!=='nw')S.g.unread=(S.g.unread||0)+1;S.g.hl=1;if(big)toast(n.t)}
 function news(){
   if(S.real)return;
   const cr=S.g.cr;
@@ -551,9 +573,12 @@ function news(){
     if(k===0)addNews({t:'Pánico en Wall Street: los inversores venden todo',why:'Una mala noticia global provoca ventas masivas. En un pánico casi todas las acciones caen juntas, aunque las empresas sigan sanas. La diversificación entre sectores ayuda poco aquí.',tags:[['Todo el mercado','dn']]},true);
     if(k===5)addNews({t:'La Reserva Federal anuncia apoyo a los mercados: empieza el rebote',why:'Cuando el miedo baja, los compradores vuelven. Quien vendió en el fondo se pierde la recuperación.',tags:[['Todo el mercado','up']]},true);
     if(k>=-2&&k<=16)return}
-  if(S.day<S.nx)return;S.nx=S.day+6+Math.floor(Math.random()*8);
+  if(S.day<S.nx)return;S.nx=S.day+3+Math.floor(Math.random()*5);
+  for(let z=0;z<(Math.random()<.35?2:1);z++)news1();
+}
+function news1(){
   const n=NEWS[Math.floor(Math.random()*NEWS.length)];let sy=null,tags=[];
-  if(n.sym){const c=M.filter(o=>o.s!=='SPY'),o=c[Math.floor(Math.random()*c.length)];sy=o.s}
+  if(n.sym){const c=M.filter(o=>o.x!=='ETF'&&(n.sym!==2||o.dy>0)),o=c[Math.floor(Math.random()*c.length)];sy=o.s}
   n.fx.forEach(([k,v,r,len])=>{const vv=k==='sym'&&!v?sy:v;const prev=S.fx.find(e=>e.k===k&&e.v===vv&&e.d0===S.day+1);
     if(prev)prev.seq.push(...Array(len).fill(r));else S.fx.push({k,v:vv,d0:S.day+1,seq:Array(len).fill(r)});
     const lab=k==='all'?'Todo el mercado':vv;if(!tags.some(t=>t[0]===lab))tags.push([lab,r>=0?'up':'dn'])});
@@ -609,6 +634,7 @@ function rPF(){
     return`<tr><td><button class="sy" onclick="pick('${s}')">${s}</button> ${etag(s)}<small>${G[s].n}</small></td><td class="num">${p.q}</td><td class="num">${usd(p.avg)}</td><td class="num">${usd(c)}${p.sl?`<small>stop ${usd(p.sl)}</small>`:''}</td><td class="num ${cl(pl)}">${sg(pl)}<small>${pc(pl/(p.q*p.avg)*100)}</small></td><td class="num">${usd(v)}<small>${fm(v/eq*100,1)} % del total</small></td><td><button class="btn s" onclick="openM('${s}','S')">Vender</button></td></tr>`});
   $('pt').innerHTML=rows.join('')||'<tr><td colspan="7" class="emp">Aún no tienes acciones. Abre el Mercado para tu primera compra.<br><br><button class="btn pri s" onclick="tab(\'mk\')">Ir al mercado</button></td></tr>';
   $('ordw').innerHTML=S.ord.length?`<h3 style="margin:16px 0 8px;font-size:15px">Órdenes pendientes</h3>`+S.ord.map((o,i)=>`<div class="wi"><span style="flex:1">${o.moo?`${o.side==='S'?'Vender':'Comprar'} <b>${o.q} ${o.s}</b> en la apertura de la NYSE`:`Comprar <b>${o.q} ${o.s}</b> si baja a <b class="mono">${usd(o.lim)}</b>`}${o.sl?` · stop ${usd(o.sl)}`:''}<small>Último precio: ${usd(px(o.s))}</small></span><button class="btn s" onclick="S.ord.splice(${i},1);save();render()">Cancelar la orden</button></div>`).join(''):'';
+  rPFN();
   $('wl').innerHTML=S.wl.map(s=>{const c=dc(s);return`<div class="wi"><button onclick="pick('${s}')"><b>${s}</b> ${etag(s)}<small>${G[s].n}</small></button><svg class="sk" viewBox="0 0 60 24" aria-hidden="true">${spark((S.h[s]||[]).slice(-30))}</svg><div class="r"><b>${usd(px(s))}</b><span class="${cl(c)}">${pc(c)}</span></div><button class="x" aria-label="Quitar ${s}" onclick="unwatch('${s}')">✕</button></div>`}).join('')||'<p class="emp">Añade símbolos para seguirlos aquí.</p>';
 }
 function rMK(){
@@ -622,14 +648,54 @@ function rMK(){
   const lr=a.slice(-31).map((v,i,r)=>i?Math.log(v/r[i-1]):0).slice(1),own=S.pos[cur];
   $('ks').innerHTML=(a.length<2?[]:[['Variación del periodo',pc((sl[sl.length-1]/sl[0]-1)*100),cl(sl[sl.length-1]-sl[0])],['Máximo',usd(Math.max(...sl)),''],['Volatilidad (30 días)',fm(sdv(lr)*Math.sqrt(252)*100,1)+'%',''],['Tu posición',own?`${own.q} acciones`:'Ninguna','']])
     .map(([x,y,z])=>`<div class="mc"><span>${x}</span><b class="${z}" style="font-size:17px">${y}</b></div>`).join('');
-  $('tk').innerHTML=M.filter(q=>!onlyN||isN(q.s)).map(q=>{const e=dc(q.s);return`<button class="tkb${q.s===cur?' on':''}" onclick="pick('${q.s}')"><span class="row1"><b>${q.s}</b>${etag(q.s)}</span><small>${q.n}</small><span class="num">${usd(px(q.s))}</span><span class="num ${cl(e)}" style="font-size:12.5px">${pc(e)}</span></button>`}).join('');
+  $('tk').innerHTML=SECS.filter(x=>!sfv||x===sfv).map(x=>{const L=M.filter(q=>q.x===x&&(!onlyN||isN(q.s)));if(!L.length)return'';const av=L.reduce((t,q)=>t+dc(q.s),0)/L.length;
+    return`<section class="sec"><h4 class="sech">${x}<span class="mono">${L.length} empresas · <b class="${cl(av)}">${pc(av)}</b> hoy</span></h4><div class="grid tk">${L.map(q=>{const e=dc(q.s);return`<button class="tkb${q.s===cur?' on':''}" onclick="pick('${q.s}')"><span class="row1"><b>${q.s}</b>${etag(q.s)}</span><small>${esc(q.n)}</small><span class="num">${px(q.s)?usd(px(q.s)):'—'}</span><span class="num ${cl(e)}" style="font-size:12.5px">${pc(e)}</span></button>`}).join('')}</div></section>`}).join('')||'<p class="emp">No hay empresas con ese filtro.</p>';
+  rMKN();
 }
 function rHS(){
   const T={B:['Compra','up'],S:['Venta','dn'],D:['Dividendo','up']};
   $('ht').innerHTML=S.tr.slice(0,200).map(t=>`<tr><td class="num">${S.real?new Date(t.d).toLocaleString('es',{dateStyle:'short',timeStyle:'short'}):'Día '+t.d}</td><td class="${T[t.t][1]}">${T[t.t][0]}${t.auto==='SL'?' <small>stop-loss</small>':t.auto==='LIM'?' <small>orden límite</small>':t.auto==='MOO'?' <small>en la apertura</small>':''}</td><td><b>${t.s}</b></td><td class="num">${t.q}</td><td class="num">${usd(t.p)}</td><td class="num">${usd(t.f)}</td><td class="num">${usd(t.q*t.p)}</td><td class="num ${t.pl==null?'':cl(t.pl)}">${t.pl==null?'—':sg(t.pl)}</td></tr>`).join('')||'<tr><td colspan="8" class="emp">Todavía no has operado. Tus compras, ventas y dividendos aparecerán aquí.</td></tr>';
 }
+let NF='',NQ='',NM='all',PFS='';
+const nrm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const held=()=>Object.keys(S.pos).sort((a,b)=>S.pos[b].q*(px(b)||0)-S.pos[a].q*(px(a)||0));
+function simCard(n,s){const v=s?nOf(n,s):'';return`<article class="nw"><span class="d">Día ${n.d}</span><div><h4>${esc(n.t)}${v==='sec'?`<span class="via">· su sector: ${esc(G[s].x)}</span>`:''}</h4><p><b style="color:var(--ink)">Por qué importa:</b> ${esc(n.why)}</p><div class="tags">${(n.tags||[]).map(([t,c])=>`<span class="tag ${c}">${c==='up'?'▲':'▼'} ${esc(t)}</span>`).join('')}</div></div></article>`}
+function realCard(n){return`<article class="nw"><span class="d">${esc(ETD.format(new Date(n.t)))}<br>${etTime(n.t)} ET</span><div><h4>${n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.h)}</a>`:esc(n.h)}</h4><p>${esc(n.sm)}</p><div class="tags"><span class="tag">${esc(n.src)}</span>${n.rel?n.rel.split(',').slice(0,3).map(r=>`<span class="tag nyse">${esc(r)}</span>`).join(''):''}</div></div></article>`}
+const relOf=(n,s)=>(n.rel||'').split(',').map(x=>x.trim()).includes(s);
+function fetchCN(sym){if(!S.real||!KEY||!sym||CN[sym]>Date.now()-6e5)return;CN[sym]=Date.now();const to=new Date().toISOString().slice(0,10),from=new Date(Date.now()-5*864e5).toISOString().slice(0,10);
+  fh(`/company-news?symbol=${encodeURIComponent(sym)}&from=${from}&to=${to}`).then(a=>{addRN(a,sym);if(!$('sim').hidden)render()}).catch(()=>{CN[sym]=0})}
+function newsList(f){const L=S.real?S.rn:S.nw;return L.filter(f)}
+function textOk(n){if(!NQ)return true;const t=nrm(S.real?n.h+' '+n.sm+' '+n.rel:n.t+' '+n.why+' '+(n.syms||[]).join(' '));return t.includes(nrm(NQ))}
+function rNWf(){
+  const H=held();
+  const sug=NQ?M.filter(o=>o.s.toLowerCase().startsWith(nrm(NQ))||nrm(o.n).includes(nrm(NQ))).slice(0,6):[];
+  $('nfc').innerHTML=`<button class="chip${NM==='all'&&!NF?' on':''}" onclick="NM='all';NF='';rNW()">Todas</button><button class="chip${NM==='pf'?' on':''}" onclick="NM='pf';NF='';rNW()">Mi portafolio <span class="mono">${H.length}</span></button>${NF?`<button class="chip on" onclick="NF='';NM='all';rNW()">${esc(NF)} · ${esc(G[NF].n)} ✕</button>`:''}${sug.filter(o=>o.s!==NF).map(o=>`<button class="chip" onclick="NF='${o.s}';NM='sym';NQ='';$('nq').value='';rNW()">Filtrar por ${o.s} <span class="mono">${esc(o.n)}</span></button>`).join('')}`;
+  let f;if(NF)f=n=>S.real?relOf(n,NF):!!nOf(n,NF);else if(NM==='pf')f=n=>H.some(s=>S.real?relOf(n,s):!!nOf(n,s));else f=()=>true;
+  if(S.real){if(NF)fetchCN(NF);if(NM==='pf')H.slice(0,8).forEach(fetchCN)}
+  const L=newsList(n=>f(n)&&(!NF||!NQ?textOk(n):true)).slice(0,60);
+  const empty=NF?`Aún no hay noticias de ${NF}${S.real?(KEY?'. Las estoy buscando…':'. Conecta tu clave de Finnhub (⚙) para verlas; arriba tienes las de TradingView.'):'. Deja correr el mercado: aparecerán cuando la empresa o su sector sean noticia.'}`:NM==='pf'?(H.length?'Todavía no hay noticias de tus empresas.':'Compra acciones y aquí verás solo sus noticias.'):NQ?'Ninguna noticia coincide con tu búsqueda.':(S.real?(KEY?'Cargando noticias de Finnhub…':'Con tu clave de Finnhub (⚙) también verás aquí noticias de agencias.'):'Aún no hay noticias. Pulsa ▶ y aparecerán mientras corre el mercado.');
+  return{L,empty,sym:NF||(NM==='pf'?H[0]:'')}
+}
 function rNW(){
-  $('nwi').hidden=S.real;if(S.real)return rRN();
+  $('nwi').hidden=S.real;const r=rNWf();
+  if(S.real)tvWidget('tvnews','timeline',r.sym?{feedMode:'symbol',symbol:tvSym(r.sym),displayMode:'regular',width:'100%',height:'100%'}:{feedMode:'all_symbols',displayMode:'regular',width:'100%',height:'100%'});
+  $('nwl').innerHTML=(S.real?`<p class="mut" style="margin:4px 0">${r.sym?`Arriba, TradingView: noticias de ${esc(r.sym)}.`:'Arriba, todas las noticias en vivo de TradingView.'} Abajo, las de Finnhub en inglés, que se revisan cada minuto.</p>`:'')+(r.L.map(n=>S.real?realCard(n):simCard(n,NF)).join('')||`<p class="emp">${r.empty}</p>`);
+}
+function rMKN(){
+  $('mkh').textContent=`Noticias de ${cur} · ${G[cur].n}`;$('tvmk').hidden=!S.real;
+  if(S.real){tvWidget('tvmk','timeline',{feedMode:'symbol',symbol:tvSym(cur),displayMode:'regular',width:'100%',height:'100%'});fetchCN(cur)}
+  const L=newsList(n=>S.real?relOf(n,cur):!!nOf(n,cur)).slice(0,8);
+  $('mkn').innerHTML=L.map(n=>S.real?realCard(n):simCard(n,cur)).join('')||`<p class="emp">${S.real?(KEY?`Buscando noticias de ${cur} en Finnhub…`:`Arriba están las noticias de ${cur} en TradingView. Con tu clave de Finnhub también verás aquí las de agencias.`):`Aún no hay noticias de ${cur} ni de su sector (${esc(G[cur].x)}). Aparecerán mientras corre el mercado.`}</p>`;
+}
+function rPFN(){
+  const H=held();if(PFS&&!H.includes(PFS))PFS='';
+  $('pfc').innerHTML=H.length?`<button class="chip${!PFS?' on':''}" onclick="PFS='';rPFN()">Todas tus acciones</button>`+H.map(s=>`<button class="chip${PFS===s?' on':''}" onclick="PFS='${s}';rPFN()">${s}</button>`).join(''):'';
+  const T=PFS?[PFS]:H;$('tvpf').hidden=!(S.real&&H.length);
+  if(S.real&&H.length){tvWidget('tvpf','timeline',{feedMode:'symbol',symbol:tvSym(PFS||H[0]),displayMode:'regular',width:'100%',height:'100%'});T.slice(0,8).forEach(fetchCN)}
+  const L=newsList(n=>T.some(s=>S.real?relOf(n,s):!!nOf(n,s))).slice(0,10);
+  $('pfn').innerHTML=(S.real&&H.length?`<p class="mut" style="margin:4px 0">Arriba, TradingView: noticias de ${esc(PFS||H[0])}${PFS?'':' (tu posición más grande)'}.</p>`:'')+(L.map(n=>S.real?realCard(n):simCard(n,PFS||T.find(s=>nOf(n,s))||'')).join('')||`<p class="emp">${H.length?(S.real&&!KEY?'Con tu clave de Finnhub (⚙) verás aquí las noticias de agencias de tus empresas.':'Todavía no hay noticias de tus empresas ni de sus sectores.'):'Compra acciones y aquí verás solo sus noticias.'}</p>`);
+}
+function rNW_old(){
   $('nwl').innerHTML=S.nw.map(n=>`<article class="nw"><span class="d">Día ${n.d}</span><div><h4>${n.t}</h4><p><b style="color:var(--ink)">Por qué importa:</b> ${n.why}</p><div class="tags">${(n.tags||[]).map(([t,c])=>`<span class="tag ${c}">${c==='up'?'▲':'▼'} ${t}</span>`).join('')}</div></div></article>`).join('')||'<p class="emp">Aún no hay noticias. Pulsa ▶ y aparecerán mientras corre el mercado.</p>';
 }
 function rHL(){
@@ -754,7 +820,7 @@ const LV=[
     ['Suben las tasas de interés. ¿Qué sector suele salir ganando?',['Bancos','Tecnología','Ninguno'],0,'Los bancos cobran más por prestar. La tecnología suele caer porque sus ganancias futuras valen menos hoy.'],
     ['¿Diversificar te protege si cae todo el mercado?',['Sí, por completo','Solo en parte: el riesgo del mercado sigue ahí','Sí, si tienes 3 sectores'],1,'La diversificación reduce el riesgo de cada empresa, no el de todo el mercado.']]},
 {t:'El termómetro del mercado',k:'Índices, ETF y el S&P 500',sum:'Qué es un índice y cómo comprarlo entero con un ETF.',
- sl:[{kv:'500',h:'Un índice resume a muchas empresas',p:'El Dow Jones sigue a 30 grandes empresas desde 1896. El S&P 500 sigue a 500 de las mayores de EE. UU. Cuando las noticias dicen "Wall Street subió 1 %", hablan de un índice.',f:'En el juego, la línea gris de tu gráfico es un índice: el promedio de las 30 empresas.'},
+ sl:[{kv:'500',h:'Un índice resume a muchas empresas',p:'El Dow Jones sigue a 30 grandes empresas desde 1896. El S&P 500 sigue a 500 de las mayores de EE. UU. Cuando las noticias dicen "Wall Street subió 1 %", hablan de un índice.',f:'En el juego, la línea morada de tu gráfico es un índice: el promedio de todas las empresas del juego.'},
      {kv:'SPY',h:'Un ETF te compra el índice entero',p:'SPY es un ETF que replica el S&P 500. Con una sola compra eres dueño de un pedacito de 500 empresas: diversificación instantánea. SPY cotiza en NYSE Arca, parte de la Bolsa de Nueva York.',f:'Un ETF se compra y se vende como cualquier acción, durante el horario de la bolsa.'},
      {kv:'80 / 20',h:'Núcleo y satélites',p:'Una estrategia común: una base grande en un ETF del índice (el núcleo) y unas pocas acciones elegidas por ti (los satélites).',f:'Según los informes SPIVA de S&P, la mayoría de los fondos de gestión activa rinden menos que el S&P 500 a largo plazo.'}],
  ob:[{t:'Compra SPY',ok:x=>!!S.pos.SPY},{t:'Que SPY pese al menos 20 % de tu patrimonio',ok:x=>x.spy/x.eq>=.2,pr:x=>`${fm(x.spy/x.eq*100,0)}/20 %`}],
@@ -878,7 +944,7 @@ function unlockPro(){S.g.pro=true;save();rAP();toast('Herramientas profesionales
 const TOUR=[
  {sel:'#cp',t:'Este es tu efectivo: $10,000 virtuales para invertir. No es dinero real.',next:1},
  {sel:'#mis',t:'Aquí está tu misión. Cada objetivo se marca solo cuando lo cumples.',next:1},
- {sel:'#t-mk',t:'Abre el Mercado para ver las 30 empresas.',w:()=>view==='mk',wt:'Toca Mercado'},
+ {sel:'#t-mk',t:'Abre el Mercado para ver las empresas, agrupadas por sector.',w:()=>view==='mk',wt:'Toca Mercado'},
  {sel:'#tk',t:'La etiqueta dorada NYSE marca las empresas de la Bolsa de Nueva York. Toca Coca-Cola (KO) u otra con esa etiqueta.',w:m=>S.g.pk>m&&isN(cur),wt:'Elige una empresa NYSE',mk:()=>S.g.pk},
  {sel:'#bt-buy',t:'Pulsa Comprar para abrir la orden.',w:()=>!$('md').hidden,wt:'Toca Comprar'},
  {sel:'#md .box',t:'Escribe cuántas acciones quieres. Mira la comisión: 0,1 % con mínimo de $1. Luego confirma.',w:m=>S.tr.filter(t=>t.t==='B').length>m,wt:'Confirma la compra',mk:()=>S.tr.filter(t=>t.t==='B').length,side:1},
@@ -1039,7 +1105,7 @@ function uniParse(t){
 function setUni(a,fromStore){
   const seen=new Set();UNI=a.filter(o=>!seen.has(o.s)&&seen.add(o.s));UNI.forEach(o=>{if(SEC[o.s])o.x=SEC[o.s];if(!G[o.s])G[o.s]=o});ALLC=null;fillSf();
   if(!fromStore)try{localStorage.setItem('pf-uni',JSON.stringify(UNI.map(o=>[o.s,o.n,o.x,o.e])))}catch(e){toast('Universo cargado, pero no cabe en el almacenamiento del navegador.')}
-  $('us').textContent=`Universo: ${UNI.length+M.length} acciones (el mercado simulado usa solo las 30 fijas).`;
+  $('us').textContent=`Universo: ${UNI.length+M.length} acciones (el mercado simulado usa las del juego).`;
 }
 function uniLoad(){try{SEC=JSON.parse(localStorage.getItem('pf-sec'))||{};const a=JSON.parse(localStorage.getItem('pf-uni'));if(a)setUni(a.map(([s,n,x,e])=>({s,n,x,e})),true)}catch(e){}}
 async function uniFH(){
@@ -1199,12 +1265,12 @@ async function fh(path){if(!can())throw new Error('Cuota de la API alcanzada: si
   try{r=await fetch(`https://finnhub.io/api/v1${path}${path.includes('?')?'&':'?'}token=${encodeURIComponent(KEY)}`)}catch(e){throw new Error(NETERR)}
   if(r.status===401||r.status===403)throw new Error('Finnhub rechazó la clave: revisa que la copiaste completa en ⚙.');if(r.status===429)throw new Error('Límite de Finnhub alcanzado (60 llamadas por minuto). Espera un minuto.');if(!r.ok)throw new Error('Finnhub respondió con error '+r.status+'.');return r.json()}
 const rsyms=()=>[...new Set(['SPY',cur,...Object.keys(S.pos),...S.wl,...S.ord.map(o=>o.s),...M.map(o=>o.s)])].filter(Boolean);
-function setPx(s,p,t){if(!(p>0))return;const a=S.h[s]||(S.h[s]=[]),mk=Math.floor((t||Date.now())/6e4);S.hm=S.hm||{};
+function setPx(s,p,t){if(!(p>0))return;QC[s]=Date.now();const a=S.h[s]||(S.h[s]=[]),mk=Math.floor((t||Date.now())/6e4);S.hm=S.hm||{};
   if(S.hm[s]===mk&&a.length)a[a.length-1]=p;else{a.push(p);S.hm[s]=mk;if(a.length>420)a.shift()}
   if(S.pc&&S.pc[s])S.dp[s]=(p/S.pc[s]-1)*100}
 async function quotes(list){let ok=0,err='';for(const s of list){try{const q=await fh(`/quote?symbol=${encodeURIComponent(s)}`);if(q&&q.c>0){S.pc=S.pc||{};S.pc[s]=q.pc;setPx(s,q.c,(q.t||0)*1000||Date.now());S.dp[s]=q.dp||0;ok++}}catch(e){err=e.message;break}}return{ok,err}}
 async function rinit(force){if(!S.real||!KEY)return;if(!force&&Date.now()-RI<5*6e4)return;RI=Date.now();const st=S;$('rs').textContent='Cargando precios de la NYSE y NASDAQ…';
-  const r=await quotes(rsyms().slice(0,40));if(st!==S)return;if(!S.p0&&S.pc&&S.pc.SPY)S.p0=S.pc.SPY;
+  const r=await quotes(rsyms().slice(0,25));if(st!==S)return;if(!S.p0&&S.pc&&S.pc.SPY)S.p0=S.pc.SPY;
   $('rs').textContent=r.err||`Conectado a Finnhub · ${r.ok} precios cargados · ${mkt().open?'recibiendo operaciones en vivo':'la bolsa está cerrada: ves el precio del último cierre'}.`;
   if(r.err&&!r.ok)toast(r.err);save();render();rnews()}
 function wsOpen(){if(WS||!KEY)return;try{WS=new WebSocket(`wss://ws.finnhub.io?token=${encodeURIComponent(KEY)}`)}catch(e){WSst='err';return}WSst='con';
@@ -1214,7 +1280,12 @@ function wsOpen(){if(WS||!KEY)return;try{WS=new WebSocket(`wss://ws.finnhub.io?t
   WS.onerror=()=>{WSst='err'}}
 function wsSub(){if(!WS||WS.readyState!==1)return;const want=new Set(rsyms().slice(0,50));SUB.forEach(s=>{if(!want.has(s)){WS.send(JSON.stringify({type:'unsubscribe',symbol:s}));SUB.delete(s)}});want.forEach(s=>{if(!SUB.has(s)){WS.send(JSON.stringify({type:'subscribe',symbol:s}));SUB.add(s)}})}
 function wsClose(){if(WS){WS.onclose=null;try{WS.close()}catch(e){}WS=null}SUB.clear();WSst='off'}
-function rtick(){if(!S.real)return;const m=mkt();
+let lastQ=0;
+/* Cola de precios: carga poco a poco las ~110 empresas sin pasarse del límite de Finnhub */
+function qtick(m){if(!KEY||Date.now()-lastQ<1600)return;const now=Date.now();if(CALLS.filter(x=>now-x<6e4).length>=38)return;
+  const stale=m.open?12e4:1e13;let best=null,bt=Infinity;for(const o of M){const t=QC[o.s]||0;if((!t||now-t>stale)&&t<bt){bt=t;best=o.s}}
+  if(!best)return;lastQ=now;QC[best]=now;quotes([best]).then(()=>{if(view==='mk'&&!$('sim').hidden)rMK()})}
+function rtick(){if(!S.real)return;const m=mkt();qtick(m);
   if(m.open&&KEY){wsOpen();wsSub();let ch=false;for(const s in LIVE){const[p,t]=LIVE[s];setPx(s,p,t);ch=true}LIVE={};
     if(WSst!=='on'&&Date.now()-lastPoll>20000){lastPoll=Date.now();quotes([...new Set(['SPY',cur,...Object.keys(S.pos),...S.wl])].slice(0,15)).then(r=>{if(r.err)$('rs').textContent=r.err})}
     if(ch)proc();if(!S.p0&&px('SPY'))S.p0=px('SPY');
@@ -1229,7 +1300,7 @@ async function rnews(){lastNews=Date.now();if(!KEY||!S.real)return;
 function addRN(a,sym){if(!Array.isArray(a))return;if(!NWID.size)S.rn.forEach(n=>NWID.add(n.id));let n=0;
   a.slice(0,40).forEach(x=>{const id=String(x.id||x.url||'');if(!id||NWID.has(id)||!x.headline)return;NWID.add(id);S.rn.push({id,t:(x.datetime||0)*1000,h:String(x.headline).slice(0,200),sm:String(x.summary||'').slice(0,320),src:String(x.source||'').slice(0,40),url:/^https:\/\//.test(x.url||'')?x.url:'',rel:sym||String(x.related||'').slice(0,40)});n++});
   S.rn.sort((a,b)=>b.t-a.t);S.rn=S.rn.slice(0,80);if(n&&view!=='nw')S.g.unread=Math.min(99,(S.g.unread||0)+n)}
-function rRN(){
+function rRN_old(){
   $('nwl').innerHTML=`<p class="mut" style="margin:4px 0">Arriba, las noticias en vivo de TradingView. Abajo, las de Finnhub, en inglés, que se revisan cada minuto.</p>`+(S.rn.map(n=>`<article class="nw"><span class="d">${esc(ETD.format(new Date(n.t)))}<br>${etTime(n.t)} ET</span><div><h4>${n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.h)}</a>`:esc(n.h)}</h4><p>${esc(n.sm)}</p><div class="tags"><span class="tag">${esc(n.src)}</span>${n.rel?n.rel.split(',').slice(0,3).map(r=>`<span class="tag nyse">${esc(r)}</span>`).join(''):''}</div></div></article>`).join('')||`<p class="emp">${KEY?'Cargando noticias de Finnhub…':'Con tu clave de Finnhub (⚙) también verás aquí las noticias de las empresas de tu portafolio.'}</p>`);
 }
 function rHLreal(){const n=S.rn[0],h=$('hl');if(!n){h.hidden=true;return}const k=n.id;if(h.dataset.k!==k){h.dataset.k=k;h.classList.remove('new');void h.offsetWidth;h.classList.add('new')}
@@ -1246,8 +1317,7 @@ function tvWidget(id,kind,cfg){const el=$(id);if(!el)return;const key=kind+JSON.
 function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>$(i).hidden=!r);$('mpl').hidden=!r;if(!r)return;
   const L=[...new Set(['SPY',...Object.keys(S.pos),...S.wl,'KO','JPM','AAPL','MSFT','NVDA','XOM','DIS'])].slice(0,14);
   tvWidget('tvtape','ticker-tape',{symbols:L.map(s=>({proName:tvSym(s),title:s==='SPY'?'S&P 500 (SPY)':s})),showSymbolLogo:true,displayMode:'adaptive'});
-  if(view==='mk')tvWidget('tvinfo','symbol-info',{symbol:tvSym(cur),width:'100%'});
-  if(view==='nw')tvWidget('tvnews','timeline',{feedMode:'all_symbols',displayMode:'regular',width:'100%',height:'100%'})}
+  if(view==='mk')tvWidget('tvinfo','symbol-info',{symbol:tvSym(cur),width:'100%'});}
 let tvKey='';
 function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
   new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:'dark',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
@@ -1277,6 +1347,7 @@ function conn(){
   $('otg').onclick=e=>{const o=e.target.dataset.o;if(o){ot=o;if(o==='L'&&!$('lim').value&&px(cur))$('lim').value=(px(cur)*.98).toFixed(2);rM()}};
   $('sma').onchange=rMK;$('qt').oninput=rM;$('lim').oninput=rM;$('slp').oninput=rM;$('onlyN').onchange=e=>{onlyN=e.target.checked;rMK()};
   ['cr','ce','cs'].forEach(i=>$(i).oninput=rCalc);
+  $('nq').oninput=e=>{NQ=e.target.value.trim();rNW()};$('nq').onkeydown=e=>{if(e.key==='Enter'){const o=find(e.target.value);if(o){NF=o.s;NM='sym';NQ='';e.target.value='';rNW()}}};
   chips(DEF);
   $('bc').onclick=e=>{const b=e.target;if(b.tagName!=='BUTTON')return;b.dataset.a!=null?ans(+b.dataset.a):say(b.textContent)};
   $('bi').onkeydown=e=>{if(e.key==='Enter'){say(e.target.value);e.target.value=''}};
