@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="es" data-type="software" data-radius="sharp" data-motion>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolia Wall Street</title>
+<meta name="description" content="Juego educativo para aprender a invertir en la Bolsa de Nueva York: 7 niveles de práctica y un modo con precios y noticias reales en vivo.">
+<meta name="page-type" content="software">
+<meta name="site-kind" content="gaming">
+<meta name="theme-color" content="#0e0b14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
+<style>
+/* Estilo B "Bóveda": negro violáceo, dorado y morado, esquinas cortadas. Un solo look oscuro a propósito. Chakra Petch + IBM Plex Mono. */
+:root{
+  --bg:#0e0b14;--surface:#17121f;--surface-2:#211a2e;--ink:#efeaf7;--ink-2:#d7cfe6;--mut:#a99fbb;--line:#2e2540;--line-2:#45385e;
+  --acc:#e2bf4f;--gold:#d4af37;--gold-ink:#0e0b14;--soft:rgba(212,175,55,.13);
+  --violet:#7c3aed;--violet-2:#a78bfa;--vsoft:rgba(124,58,237,.18);
+  --up:#4ade80;--dn:#f87171;--up-soft:rgba(74,222,128,.12);--dn-soft:rgba(248,113,113,.12);
+  --shade:rgba(5,3,10,.74);--sh:none;
+  --font:"Chakra Petch",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);--ease-enter:cubic-bezier(.22,1,.36,1);
+  --r:2px;--r-lg:2px;--cut:10px;color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+html{-webkit-text-size-adjust:100%}
+body{font:400 15px/1.55 var(--font);background:radial-gradient(55% 40% at 85% -8%,rgba(124,58,237,.28),transparent 65%),radial-gradient(40% 30% at -5% 105%,rgba(212,175,55,.08),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.num,.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+small,.mut{color:var(--mut);font-size:12.5px}
+b,strong{font-weight:600}.up{color:var(--up)}.dn{color:var(--dn)}
+.skip{position:absolute;left:12px;top:-60px;background:var(--gold);color:var(--gold-ink);padding:10px 14px;border-radius:var(--r);z-index:100;font-weight:500}
+.skip:focus{top:12px}
+h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.08}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+
+/* Botones: un estilo, paso al pasar el puntero, presión al pulsar */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r);padding:8px 14px;font-weight:500;cursor:pointer;text-decoration:none;color:var(--ink);transition:background-color 150ms var(--ease),border-color 150ms var(--ease),transform 150ms var(--ease),color 150ms}
+.btn.pri{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.btn.buy{background:var(--up);border-color:var(--up);color:#fff}.btn.sell{background:var(--dn);border-color:var(--dn);color:#fff}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.s{min-height:32px;padding:5px 10px;font-size:13px}
+.btn.xl{min-height:52px;padding:12px 22px;font-size:16px}
+.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+@media (hover:hover) and (pointer:fine){
+  .btn:not(:disabled):hover{transform:translateY(-1px);background:color-mix(in srgb,var(--surface) 86%,var(--ink));border-color:color-mix(in srgb,var(--line-2) 70%,var(--ink))}
+  .btn.pri:not(:disabled):hover{background:color-mix(in srgb,var(--gold) 86%,var(--ink));border-color:color-mix(in srgb,var(--gold) 86%,var(--ink))}
+  .btn.buy:not(:disabled):hover{background:color-mix(in srgb,var(--up) 86%,#000)}
+  .btn.sell:not(:disabled):hover{background:color-mix(in srgb,var(--dn) 86%,#000)}
+  .btn.xl:not(:disabled):hover{transform:translateY(-2px)}
+  .btn.ghost:not(:disabled):hover{background:var(--surface-2)}
+}
+.btn:not(:disabled):active{transform:translateY(1px) scale(.985);transition-duration:90ms}
+.link{color:var(--ink);text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat,linear-gradient(var(--line-2),var(--line-2)) 0 100%/100% 1px no-repeat;transition:background-size 150ms var(--ease);cursor:pointer;border:0;padding:0;font:inherit}
+.link:hover{background-size:100% 1px,100% 1px}
+
+/* Portada */
+.home{position:relative;overflow:hidden}
+.home::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 45% at 78% 35%,var(--vsoft),transparent 70%),linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 48px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 100%;opacity:.5;pointer-events:none;-webkit-mask:linear-gradient(#000 40%,transparent);mask:linear-gradient(#000 40%,transparent)}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:10px;min-height:64px}
+.logo{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:17px;letter-spacing:-.02em;font-stretch:110%;text-decoration:none;color:var(--ink);background:none;border:0;cursor:pointer;min-height:44px}
+.logo i{width:26px;height:26px;border-radius:3px;background:var(--gold);display:grid;place-items:center;color:var(--gold-ink);font:600 12px/1 var(--mono);font-style:normal}
+.sp{flex:1}
+.hero{position:relative;min-height:calc(100svh - 64px);display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;padding-block:clamp(28px,6vh,64px)}
+.hero h1{font-size:clamp(40px,5.4vw,76px);letter-spacing:-.02em;font-weight:700;line-height:1;margin:18px 0 22px;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--acc)}
+.hero .lead{font-size:clamp(16px,1.4vw,19px);color:var(--ink-2);max-width:34em;margin-bottom:28px}
+.hero .acts{display:flex;gap:10px;flex-wrap:wrap}
+.facts{display:grid;grid-template-columns:repeat(4,auto);gap:clamp(14px,3vw,36px);margin-top:36px;padding-top:22px;border-top:1px solid var(--line);justify-content:start}
+.facts b{display:block;font:500 clamp(22px,2.4vw,30px)/1 var(--mono);letter-spacing:-.03em}
+.facts span{font-size:12.5px;color:var(--mut)}
+/* Ventana de la app en la portada */
+.frame{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);box-shadow:var(--sh);overflow:hidden;position:relative}
+.frame__bar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px}
+.frame__bar .dots{display:flex;gap:6px}.frame__bar .dots i{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
+.frame__body{padding:18px}
+.quote{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:6px}
+.quote .qt{font-size:20px;letter-spacing:-.02em}.quote .qt b{font-weight:500}.quote .big{font:500 28px/1 var(--mono);letter-spacing:-.03em}
+.tag{display:inline-flex;align-items:center;gap:5px;font:500 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:3px;border:1px solid var(--line-2);color:var(--mut);vertical-align:middle;white-space:nowrap}
+.tag.nyse{border-color:color-mix(in srgb,var(--gold) 60%,transparent);color:var(--acc);background:var(--soft)}
+.hc{height:230px;margin:8px -4px 10px}.hc svg{width:100%;height:100%;display:block}
+.minimis small{display:block}.minimis{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:12px;background:var(--bg)}
+.lvnum{font:500 13px/1 var(--mono);background:var(--gold);color:var(--gold-ink);border-radius:3px;padding:7px 8px}
+.pz{width:44px;height:44px;flex:none;border-radius:var(--r);border:1px solid var(--line-2);background:var(--surface);cursor:pointer;display:grid;place-items:center}
+.hero__art{transform-origin:50% 60%}
+/* Entrada del hero: líneas que suben desde su máscara, luego el resto */
+.hero h1 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.hero h1 .w>span{display:inline-block;transition:transform 700ms var(--ease-enter)}
+.m-enter:not(.m-in) .hero h1 .w>span{transform:translateY(108%)}
+.hero [data-up]{transition:opacity 520ms var(--ease-enter),transform 520ms var(--ease-enter)}
+.m-enter:not(.m-in) .hero [data-up]{opacity:0;transform:translateY(12px)}
+.hero__art{transition:transform 900ms var(--ease-enter)}
+.m-enter:not(.m-in) .hero__art{transform:scale(.98)}
+/* Mapa de niveles */
+.levels{min-height:100svh;padding-block:clamp(56px,10vh,110px);border-top:1px solid var(--line);position:relative;background:var(--bg)}
+.levels h2{font-size:clamp(30px,3.6vw,48px);max-width:16em;margin-bottom:12px}
+.levels .sub{color:var(--ink-2);max-width:40em;margin-bottom:36px;font-size:17px}
+.lgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.lcard{position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:8px;min-height:180px;cursor:pointer;transition:transform 180ms var(--ease),border-color 180ms var(--ease),box-shadow 180ms var(--ease)}
+@media (hover:hover) and (pointer:fine){.lcard:not(.lock):hover{transform:translateY(-2px);border-color:var(--line-2);box-shadow:0 14px 24px -18px rgba(0,0,0,.25)}}
+.lcard .lviz{width:100%;height:46px;display:block;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:4px;overflow:visible}
+.lcard .n{font:500 34px/1 var(--mono);letter-spacing:-.04em;color:var(--acc)}
+.lcard h3{font-size:19px}.lcard p{color:var(--mut);font-size:14px;flex:1}
+.lcard .st{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--mut)}
+.lcard.lock{cursor:not-allowed;border-style:dashed;background:transparent}
+.lcard.cur{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.lcard.fin{background:var(--ink);color:var(--bg);border-color:var(--ink)}.lcard.fin p,.lcard.fin .st{color:color-mix(in srgb,var(--bg) 70%,var(--ink))}.lcard.fin .n{color:var(--gold)}
+.stars{font-family:var(--mono);letter-spacing:2px;color:var(--acc)}.stars .off{color:var(--mut)}
+.foot{border-top:1px solid var(--line);padding-block:22px;color:var(--mut);font-size:13px}
+.foot .wrap{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap;align-items:center}
+
+/* Pantalla de juego */
+.gtop{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.gtop .wrap{display:flex;align-items:center;gap:8px;min-height:60px;flex-wrap:nowrap;padding-block:8px}
+.gtop .xp{flex:none}
+.mstat{display:inline-flex;align-items:center;gap:8px;font:500 12.5px/1 var(--mono);color:var(--mut);white-space:nowrap}
+.mstat i{width:8px;height:8px;border-radius:50%;background:var(--mut)}
+.mstat.on i{background:var(--up);animation:pulse 2.4s linear infinite}.mstat.off i{background:var(--dn)}.mstat.sim i{background:var(--violet-2)}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--up) 50%,transparent)}70%,100%{box-shadow:0 0 0 7px transparent}}
+select.btn{width:auto;min-height:40px;padding:8px 28px 8px 12px;background-color:var(--surface);appearance:none;-webkit-appearance:none;padding-right:26px;background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);background-position:calc(100% - 13px) 52%,calc(100% - 9px) 52%;background-size:4px 4px;background-repeat:no-repeat}
+.xp{display:flex;align-items:center;gap:10px;padding:4px 10px 4px 4px;border:1px solid var(--line);border-radius:var(--r);min-height:40px;position:relative;cursor:pointer;background:var(--surface)}
+.xp .lv{font:500 12px/1 var(--mono);background:var(--ink);color:var(--bg);border-radius:3px;padding:7px 7px}
+.xp .bar{width:90px;height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:4px}
+.xp .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--gold));transform-origin:0 50%;transition:transform 600ms var(--ease-enter)}
+.xp small{display:block;line-height:1.1;font-size:11.5px}
+.xp b{font-size:12.5px;display:block;line-height:1.1}
+.cash{font:500 13px/1 var(--mono);padding:12px 12px;border-radius:var(--r);background:var(--soft);color:var(--acc);white-space:nowrap}
+.fly{position:fixed;z-index:90;font:600 14px/1 var(--mono);color:var(--acc);pointer-events:none;animation:fly 1100ms var(--ease-enter) forwards}
+@keyframes fly{from{opacity:0;transform:translateY(8px)}20%{opacity:1}to{opacity:0;transform:translateY(-26px)}}
+
+.gwrap{max-width:1240px;margin:0 auto;padding:18px clamp(12px,3vw,32px) 40px}
+/* Misión */
+.mis{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden}
+.mis::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--gold),var(--violet))}
+.mis .big{font:500 40px/1 var(--mono);letter-spacing:-.05em;color:var(--acc)}
+.mis h2{font-size:21px;margin-bottom:2px}
+.mis .k{font-size:13px;color:var(--mut);margin-bottom:10px}
+.obs{display:grid;gap:6px;list-style:none}
+.obs li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.obs li .ck{flex:none;width:18px;height:18px;border-radius:3px;border:1.5px solid var(--line-2);display:grid;place-items:center;margin-top:2px;transition:background-color 160ms,border-color 160ms}
+.obs li .ck svg{width:12px;height:12px;opacity:0;transform:scale(.7);transition:opacity 160ms,transform 160ms var(--ease-enter)}
+.obs li.ok .ck{background:var(--up);border-color:var(--up)}.obs li.ok .ck svg{opacity:1;transform:none}
+.obs.stt li.ok>span{text-decoration:none;color:var(--ink-2)}
+.obs li.ok>span{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.obs li.fail .ck{border-color:var(--dn);background:var(--dn-soft)}
+.obs li.bonus .ck{border-color:var(--gold)}
+.obs li.bonus.ok .ck{background:var(--gold);border-color:var(--gold)}
+.obs li em{font-style:normal;font-family:var(--mono);font-size:12.5px;color:var(--mut);margin-left:6px}
+.mis .side{display:flex;flex-direction:column;gap:8px;align-items:stretch;min-width:170px}
+.mis.ready{border-color:var(--gold)}
+.mis .prog{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-top:12px}.mis .prog i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;transition:transform 500ms var(--ease-enter)}
+.mis .tog{display:none}
+/* Noticias */
+.headline{display:flex;gap:12px;align-items:center;border:1px solid var(--line);background:var(--surface);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;cursor:pointer;width:100%;text-align:left;font-size:14px;overflow:hidden}
+.headline .tag{flex:none}
+.headline span.t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.headline.new{animation:slidein 420ms var(--ease-enter)}
+@keyframes slidein{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+/* Pestañas */
+.tabs{display:flex;gap:4px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:none;padding:12px 14px;font-weight:500;color:var(--mut);cursor:pointer;white-space:nowrap;position:relative;min-height:44px}
+.tabs button::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;background:linear-gradient(90deg,var(--gold),var(--violet-2));transform:scaleX(0);transition:transform 240ms var(--ease)}
+.tabs button.on{color:var(--ink)}.tabs button.on::after{transform:scaleX(1)}
+.tabs button:hover{color:var(--ink)}
+.tabs .cnt{font:500 11px/1 var(--mono);background:var(--gold);color:var(--gold-ink);border-radius:3px;padding:3px 5px;margin-left:6px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;margin-bottom:14px}
+.card h3{font-size:18px;margin-bottom:12px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+.grid{display:grid;gap:10px}.m{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:14px}
+.mc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px}
+.mc span{display:block;color:var(--mut);font-size:12.5px}.mc b{font:500 20px/1.3 var(--mono);letter-spacing:-.02em;display:block;margin:2px 0}
+.ch{position:relative;height:260px;touch-action:pan-y}.ch.tall{height:330px}.ch svg{display:block;width:100%;height:100%}
+.tip{position:absolute;top:6px;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);padding:6px 10px;font-size:12.5px;pointer-events:none;min-width:130px;font-family:var(--mono)}
+.tip i,.lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.lg{display:flex;gap:16px;font-size:13px;color:var(--mut);margin-bottom:8px;flex-wrap:wrap}
+.sc{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:600px}
+th{text-align:left;color:var(--mut);font-size:12px;font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}td small{display:block}
+td.num,td .num{font-family:var(--mono)}
+.sy{color:var(--ink);cursor:pointer;font-weight:600;background:none;border:0;padding:0;font-size:15px}
+.emp{color:var(--mut);text-align:center;padding:24px 10px}
+.wi{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.wi>button:first-child{flex:1;cursor:pointer;background:none;border:0;text-align:left;min-height:44px}.wi small{display:block}.sk{width:60px;height:24px}
+.r{text-align:right;font-family:var(--mono)}.r span{display:block;font-size:12.5px}
+.x{border:0;background:none;color:var(--mut);cursor:pointer;padding:4px 6px;min-width:32px;min-height:32px;border-radius:var(--r)}.x:hover{color:var(--dn);background:var(--dn-soft)}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);min-height:42px;transition:border-color 140ms,box-shadow 140ms}
+input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--soft);outline:0}
+input[type=checkbox]{width:auto;min-height:0;accent-color:var(--gold)}
+.side input{margin-bottom:10px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.bar label{display:flex;gap:6px;align-items:center;color:var(--mut);cursor:pointer}
+.bar input#si,.bar input#ai{flex:1;min-width:200px}.bar select{width:auto}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.hd h2{font-size:26px}.pr{text-align:right}.pr b{font:500 30px/1.1 var(--mono);letter-spacing:-.03em;display:block}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:var(--r);padding:3px;gap:2px}
+.seg button{border:0;background:none;padding:7px 12px;border-radius:3px;font-weight:500;color:var(--mut);cursor:pointer;min-height:34px;transition:background-color 150ms,color 150ms}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.tk{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.tkb{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-lg);padding:11px 12px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;transition:transform 180ms var(--ease),border-color 180ms}
+@media (hover:hover) and (pointer:fine){.tkb:hover{transform:translateY(-2px);border-color:var(--line-2)}}
+.tkb.on{border-color:var(--gold);background:var(--soft)}.tkb .num{font-size:14px}
+.tkb .row1{display:flex;justify-content:space-between;align-items:center}
+.ov{position:fixed;inset:0;background:var(--shade);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;animation:fade 200ms var(--ease)}
+@keyframes fade{from{opacity:0}}
+.box{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:22px;width:440px;max-width:100%;max-height:calc(100svh - 32px);overflow:auto;display:grid;gap:12px;animation:drop 240ms var(--ease-enter)}
+@keyframes drop{from{opacity:0;transform:translateY(-6px)}}
+.box label{display:grid;gap:6px;color:var(--mut);font-size:13px}.box .seg{display:flex}.box .seg button{flex:1}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.sum{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;gap:5px;font-size:14px}.sum b{font-family:var(--mono);font-weight:500}
+.err{color:var(--dn);min-height:20px;font-size:13.5px}
+.adv{display:grid;gap:10px;border-top:1px dashed var(--line-2);padding-top:12px}
+.adv .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.note{font-size:13px;color:var(--mut);background:var(--bg);border-radius:var(--r);padding:10px 12px;border:1px dashed var(--line-2)}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:var(--r);font-weight:500;opacity:0;pointer-events:none;transition:opacity 200ms var(--ease),transform 240ms var(--ease-enter);z-index:95;max-width:min(560px,92%);text-align:center;font-size:14px}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.ft{text-align:center;color:var(--mut);font-size:13px;padding:6px 14px 30px}
+.cd{display:grid;grid-template-columns:minmax(220px,340px) 1fr;gap:18px;align-items:center}.cd p{margin-bottom:8px}
+.rk{display:flex;gap:10px;flex-wrap:wrap}.rk input{flex:1;min-width:200px}
+.tvw{height:460px;margin-bottom:6px}
+progress{accent-color:var(--gold);height:8px}
+/* Tutor */
+.bb{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));min-height:48px;padding:0 16px;border-radius:var(--r);border:1px solid var(--line-2);background:var(--ink);color:var(--bg);font-weight:500;cursor:pointer;z-index:40;display:flex;align-items:center;gap:8px}
+.bp{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:360px;max-width:calc(100% - 32px);background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:14px;z-index:40;display:grid;gap:8px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4);animation:drop 200ms var(--ease-enter)}
+.bl{max-height:280px;overflow:auto;display:grid;gap:8px}.bl p{background:var(--bg);border-radius:var(--r);padding:8px 12px;font-size:14px;white-space:pre-line}.bl p.u{background:var(--soft);justify-self:end}
+.bc{display:flex;gap:6px;flex-wrap:wrap}.bc button{border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r);padding:6px 10px;font-size:12.5px;cursor:pointer;min-height:32px}
+.bc button:hover{background:var(--surface-2)}
+.ac{position:absolute;left:0;right:0;top:100%;z-index:25;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);max-height:280px;overflow:auto}.ac button{display:flex;gap:8px;width:100%;text-align:left;border:0;background:none;padding:9px 12px;cursor:pointer;align-items:baseline}.ac button:hover{background:var(--soft)}.ac small{margin-left:auto}
+/* Modal del juego: lecciones, quiz, nivel completado */
+.gbox{width:620px;padding:0;gap:0;display:flex;flex-direction:column;overflow:hidden}
+.gbox .gb{overflow:auto;flex:1 1 auto;min-height:0}.gbox .gh,.gbox .gf{flex:none}
+.gbox .gh{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.gbox .gb{padding:26px 26px 20px;display:grid;gap:14px}
+.gbox .gf{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:14px 18px;border-top:1px solid var(--line)}
+.slide{animation:slidein 360ms var(--ease-enter)}
+.slide .kv{font:500 clamp(46px,9vw,84px)/.95 var(--mono);letter-spacing:-.06em;color:var(--acc);margin-bottom:6px}
+.slide h2{font-size:clamp(24px,3.2vw,32px);margin-bottom:10px}
+.slide p{font-size:16.5px;color:color-mix(in srgb,var(--ink) 82%,var(--bg))}
+.fact{border-left:3px solid var(--gold);background:var(--soft);padding:10px 14px;border-radius:0 var(--r) var(--r) 0;font-size:14.5px}
+.dots2{display:flex;gap:5px}.dots2 i{width:18px;height:3px;border-radius:2px;background:var(--line-2);transition:background-color 200ms}.dots2 i.on{background:var(--gold)}
+.qopts{display:grid;gap:8px}
+.qopt{text-align:left;border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r);padding:13px 14px;cursor:pointer;font-size:15px;display:flex;gap:12px;align-items:center;transition:border-color 150ms,background-color 150ms,transform 150ms var(--ease)}
+.qopt b{font:500 12px/1 var(--mono);border:1px solid var(--line-2);border-radius:3px;padding:5px 6px;color:var(--mut)}
+@media (hover:hover) and (pointer:fine){.qopt:not(:disabled):hover{border-color:var(--ink);transform:translateY(-1px)}}
+.qopt.right{border-color:var(--up);background:var(--up-soft)}.qopt.wrong{border-color:var(--dn);background:var(--dn-soft)}
+.qopt:disabled{cursor:default}
+.why{border-radius:var(--r);padding:12px 14px;font-size:14.5px;animation:slidein 300ms var(--ease-enter)}
+.why.y{background:var(--up-soft)}.why.n{background:var(--dn-soft)}
+.win{text-align:center}
+.win .kv{font:500 clamp(54px,10vw,96px)/1 var(--mono);letter-spacing:-.06em;color:var(--acc)}
+.bigstars{display:flex;justify-content:center;gap:14px;margin:6px 0}
+.bigstars svg{width:56px;height:56px;opacity:0;transform:scale(.6);transition:opacity 400ms var(--ease-enter),transform 500ms var(--ease-enter)}
+.bigstars svg.in{opacity:1;transform:none}
+.bdg{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;text-align:left}
+.bdg .ic{flex:none;width:40px;height:40px;border-radius:var(--r);display:grid;place-items:center;background:var(--soft);color:var(--acc);font:600 15px/1 var(--mono)}
+.bdgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.bdg.off{opacity:.45}.bdg.off .ic{background:var(--surface-2);color:var(--mut)}
+/* Tutorial guiado */
+.spot{position:fixed;z-index:70;border-radius:var(--r-lg);box-shadow:0 0 0 2px var(--gold),0 0 0 9999px var(--shade);pointer-events:none;transition:left 300ms var(--ease),top 300ms var(--ease),width 300ms var(--ease),height 300ms var(--ease)}
+.tcard{position:fixed;z-index:71;width:330px;max-width:calc(100vw - 24px);background:var(--surface);border:1px solid var(--gold);border-radius:var(--r-lg);padding:16px;display:grid;gap:10px;box-shadow:0 18px 40px -16px rgba(0,0,0,.5);transition:left 300ms var(--ease),top 300ms var(--ease)}
+.tcard .row small{font-family:var(--mono)}
+.tcard p{font-size:15px}
+.tcard .wait{font-size:12.5px;color:var(--acc);font-family:var(--mono)}
+.pulse{animation:ring 2.2s linear infinite}
+@keyframes ring{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 60%,transparent)}70%,100%{box-shadow:0 0 0 10px transparent}}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:96}
+.news{display:grid;gap:10px}
+.nw{display:grid;grid-template-columns:72px minmax(0,1fr);gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.nw .d{font:500 12.5px/1.4 var(--mono);color:var(--mut)}
+.nw h4{font-size:16px;font-weight:600;margin-bottom:4px;letter-spacing:-.01em}
+.nw p{font-size:14px;color:var(--mut)}
+.nw .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag.up{border-color:color-mix(in srgb,var(--up) 50%,transparent);color:var(--up);background:var(--up-soft)}
+.tag.dn{border-color:color-mix(in srgb,var(--dn) 50%,transparent);color:var(--dn);background:var(--dn-soft)}
+.lesson-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+@media (max-width:1000px){.lgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.m{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);min-height:auto}.cols{grid-template-columns:minmax(0,1fr)}.facts{grid-template-columns:repeat(2,auto)}}
+@media (max-width:700px){
+  .cd{grid-template-columns:1fr}
+  .mis{grid-template-columns:1fr;gap:10px}.mis .big{font-size:28px}.mis .side{min-width:0;flex-direction:row;flex-wrap:wrap}.mis .side .btn{flex:1}
+  .mis.min .obs,.mis.min .k,.mis.min .side .ex{display:none}
+  .mis .tog{display:inline-flex;position:absolute;right:10px;top:10px}
+  .gtop .xp .bar,.gtop .xp small{display:none}
+  .gtop .wrap{flex-wrap:wrap;row-gap:6px;gap:6px}
+  .gtop .mstat{order:10;width:100%;font-size:11.5px;white-space:normal}.gtop .cash,.gtop .xp b{display:none}.gtop .xp{padding-right:4px}.modes button{padding:7px 10px}
+  .gtop .btn.ghost{padding:8px 10px}
+  .hide-s{display:none!important}
+  .gbox .gb{padding:20px 18px}
+  .adv .two{grid-template-columns:1fr}
+  .hero .acts .btn{width:100%}
+}
+@media (max-width:560px){.lgrid{grid-template-columns:1fr}.m{grid-template-columns:repeat(2,minmax(0,1fr))}.mc b{font-size:17px}}
+/* Widgets de TradingView */
+.tvbox{position:relative;border:1px solid var(--line);background:var(--surface);margin-bottom:14px;overflow:hidden}
+.tvtape{min-height:46px}#tvinfo{min-height:120px}#tvnews{height:620px}#tvnews .tradingview-widget-container__widget{height:100%}
+.tvbox .emp{padding:14px}
+.tradingview-widget-copyright{font-size:11px;padding:4px 10px;text-align:right}.tradingview-widget-copyright a{color:var(--mut)}
+.pr small{display:block;font-size:11.5px}
+/* Esquinas cortadas del estilo Bóveda */
+.btn,.card,.mc,.mis,.frame,.lcard,.box,.tkb,.headline,.cash,.xp,.qopt,.bdg,.tcard,.sum,.note,.minimis,.fact,.why{clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
+.btn.s,.cash,.xp,.qopt,.bdg,.note,.why,.fact,.sum{--cut:6px}
+.btn:focus-visible,.lcard:focus-visible,.tkb:focus-visible,.qopt:focus-visible,.xp:focus-visible,.headline:focus-visible{outline-offset:-4px}
+.frame{border-color:var(--line-2);background:linear-gradient(160deg,rgba(124,58,237,.12),transparent 45%),var(--surface)}
+.mis,.card{background:linear-gradient(165deg,rgba(124,58,237,.07),transparent 40%),var(--surface)}
+.modes{flex:none}.modes button{min-height:34px;font-weight:600}.modes button.on{background:var(--gold);color:var(--gold-ink);box-shadow:none}
+.live{white-space:nowrap;flex:none;font:600 10.5px/1 var(--mono);letter-spacing:.08em;color:#fff;background:var(--dn);padding:4px 6px}
+.nw h4 a{color:var(--ink);text-decoration:none;background:linear-gradient(var(--violet-2),var(--violet-2)) 0 100%/0 1px no-repeat;transition:background-size 150ms var(--ease)}.nw h4 a:hover{background-size:100% 1px}
+.clock{font:500 clamp(28px,4vw,40px)/1 var(--mono);letter-spacing:-.03em}
+.steps{display:grid;gap:6px;margin:10px 0 4px 18px;color:var(--ink-2)}.steps a{color:var(--acc)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.m-enter .hero h1 .w>span,.m-enter .hero [data-up],.m-enter .hero__art{transform:none!important;opacity:1!important}}
+</style>
+</head>
+<body>
+<!-- Plan: juego educativo (site-kind gaming). Paleta warm-black-gold, tipografía mona, radio sharp. Hero split con la ventana del juego en vivo; mapa de 7 niveles; pantalla de juego con misión, tutorial guiado, quiz, XP e insignias. -->
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<section id="home" class="home">
+<header class="nav"><div class="wrap"><button class="logo" onclick="go('home')" aria-label="Portfolia, inicio"><i>PF</i>Portfolia</button><span class="sp"></span><button class="btn pri hide-s" onclick="play()" id="cta2">Empezar el nivel 1</button></div></header>
+<main id="main">
+<section class="hero wrap" data-enter aria-labelledby="hero-h">
+  <div>
+    <p class="eyebrow" data-up>Juego educativo · Bolsa de Nueva York</p>
+    <h1 id="hero-h">Aprende a invertir en <em>Wall Street</em> jugando</h1>
+    <p class="lead" data-up>Dos modos con $10,000 virtuales: siete niveles de práctica en un mercado simulado, y la bolsa real con precios y noticias de Nueva York en vivo mientras la NYSE está abierta. Sin arriesgar dinero real.</p>
+    <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" onclick="openReal()">Abrir la bolsa real</button></div>
+    <div class="facts" data-up><div><b>$10k</b><span>virtuales para invertir</span></div><div><b>30</b><span>empresas de EE. UU.</span></div><div><b>7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
+  </div>
+  <div class="hero__art frame" aria-label="Vista del juego: gráfico de Coca-Cola y la misión del nivel 1">
+    <div class="frame__bar"><span class="dots"><i></i><i></i><i></i></span><span class="mono mut" id="hstat">NYSE</span><span class="sp"></span><span class="cash hide-s" id="hcash">$10,000.00</span></div>
+    <div class="frame__body">
+      <div class="quote"><div><p class="qt"><b>KO · Coca-Cola</b> <span class="tag nyse">NYSE</span></p><small>Práctica · consumo básico · paga dividendos</small></div><div class="r"><span class="big" id="hp">$62.00</span><span id="hc" class="up">+0.00%</span></div></div>
+      <div class="hc" id="hchart"></div>
+      <div class="minimis"><span class="lvnum">01</span><div><b>Suena la campana</b><small>Compra acciones de una empresa de la NYSE</small></div><span class="stars" aria-label="0 de 3 estrellas"><span class="off">★★★</span></span></div>
+    </div>
+  </div>
+</section>
+<section class="levels" id="niveles" aria-labelledby="lv-h"><div class="wrap">
+  <p class="eyebrow">La campaña</p>
+  <h2 id="lv-h">Siete niveles, de la campana de apertura al índice</h2>
+  <p class="sub">Cada nivel trae una lección corta, una misión dentro del mercado y un quiz de 3 preguntas. Ganas hasta 3 estrellas: por cumplir la misión, por el reto extra y por el quiz perfecto.</p>
+  <div class="lgrid" id="lmap"></div>
+  <div class="acts" style="margin-top:28px"><button class="btn pri xl" id="cta3" onclick="play()">Empezar el nivel 1</button></div>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap"><span>Portfolia · prototipo educativo, sin dinero real. No es asesoría financiera.</span><button class="link" onclick="reset(this)">Empezar una partida nueva</button></div></footer>
+</section>
+
+<section id="sim" hidden>
+<header class="gtop"><div class="wrap">
+  <button class="logo" onclick="go('home')" aria-label="Volver a la portada"><i>PF</i><span class="hide-s">Portfolia</span></button>
+  <span class="mstat" id="mst"><i></i><span id="day"></span></span>
+  <span class="sp"></span>
+  <div class="seg modes" role="group" aria-label="Modo de bolsa"><button id="m-sim" onclick="setSrc('sim')">Práctica</button><button id="m-real" onclick="setSrc('real')">Bolsa real</button></div>
+  <button class="btn" id="pp" onclick="pause()" aria-label="Pausar o reanudar el mercado">▶</button>
+  <select class="btn hide-s" id="spd" onchange="setSpd(this.value)" aria-label="Velocidad del mercado"><option value="2600">Lento</option><option value="1500" selected>Normal</option><option value="500">Rápido</option></select>
+  <button class="xp" id="xpb" onclick="openBadges()" aria-label="Ver tu nivel, XP e insignias"><span class="lv" id="xpl">1</span><span><b id="xpr">Novato</b><small id="xpt">0 XP</small><span class="bar"><i id="xpi" style="transform:scaleX(0)"></i></span></span></button>
+  <span class="cash" id="cp"></span>
+  
+  <button class="btn ghost" onclick="$('rk').hidden=!$('rk').hidden" aria-label="Ajustes y clave de la API">⚙</button>
+</div></header>
+<main class="gwrap" id="gmain">
+<div class="card" id="rk" hidden><h3>Conectar la bolsa real</h3><p class="mut">El modo Bolsa real usa Finnhub, un servicio gratuito de datos de mercado. Necesitas tu propia clave (API key):</p>
+<ol class="steps"><li>Entra a <a href="https://finnhub.io/register" target="_blank" rel="noopener">finnhub.io/register</a> y crea una cuenta gratis.</li><li>En el Dashboard, copia tu API key.</li><li>Pégala aquí abajo y pulsa Guardar las claves.</li></ol>
+<p class="mut">La clave se guarda solo en este navegador. La página publicada en claude.ai bloquea las conexiones a la bolsa: para el modo real, abre el archivo HTML en tu navegador o súbelo a GitHub Pages.</p>
+<div class="rk" style="margin-top:10px"><input id="key" type="password" autocomplete="off" placeholder="API key de Finnhub" aria-label="API key de Finnhub"><input id="avk" type="password" autocomplete="off" placeholder="Clave de Alpha Vantage (opcional, para Excel)" aria-label="Clave de Alpha Vantage"><input id="pxu" type="url" placeholder="URL del proxy del tutor (opcional)" aria-label="URL del proxy del tutor"><button class="btn pri" onclick="conn()">Guardar las claves</button></div><div class="rk" style="margin-top:10px"><button class="btn" onclick="uniFH()">Cargar todas las acciones NYSE y NASDAQ</button><label class="btn">Importar CSV o JSON<input type="file" id="uf" accept=".csv,.json" hidden></label></div><p class="mut" id="us" style="margin-top:8px"></p><p class="mut" id="rs" style="margin-top:4px" role="status"></p></div>
+
+<section class="mis" id="mis" aria-live="polite"></section>
+<div class="tradingview-widget-container tvbox tvtape" id="tvtape" hidden></div>
+<button class="headline" id="hl" onclick="tab('nw')" hidden></button>
+
+<nav class="tabs" aria-label="Secciones del juego"><button id="t-pf" class="on" onclick="tab('pf')">Portafolio</button><button id="t-mk" onclick="tab('mk')">Mercado</button><button id="t-nw" onclick="tab('nw')">Noticias<span class="cnt" id="nwc" hidden></span></button><button id="t-hs" onclick="tab('hs')">Historial</button><button id="t-ap" onclick="tab('ap')">Academia</button></nav>
+
+<div id="v-pf"><div class="cols"><div>
+<div class="grid m" id="mx"></div>
+<div class="card"><h3>Tu rendimiento frente al índice</h3><div class="lg"><span><i style="background:var(--gold)"></i>Tu portafolio</span><span><i style="background:var(--violet-2)"></i>Índice</span></div><div id="ec" class="ch"></div></div>
+<div class="card"><h3>Tus posiciones</h3><div class="sc"><table><thead><tr><th>Empresa</th><th>Acciones</th><th>Costo medio</th><th>Precio</th><th>Resultado</th><th>Valor</th><th></th></tr></thead><tbody id="pt"></tbody></table></div><div id="ordw"></div></div>
+</div>
+<aside class="card side"><h3>Watchlist</h3><input id="wi" list="dl" placeholder="Añade un símbolo y pulsa Enter" aria-label="Añadir símbolo a la watchlist"><div id="wl"></div></aside></div></div>
+
+<div id="v-mk" hidden>
+<div class="card">
+<div class="bar"><input id="si" placeholder="Busca por símbolo o empresa" aria-label="Buscar empresa" autocomplete="off"><select id="sf" aria-label="Filtrar por sector" onchange="sfv=this.value"><option value="">Todos los sectores</option></select><label><input type="checkbox" id="onlyN"> Solo NYSE</label></div>
+<div class="hd"><div><h2 id="mn"></h2><span class="mut" id="ms"></span></div><div class="pr"><small id="mpl" hidden>Precio para operar (Finnhub)</small><b id="mp"></b><span id="mc" class="mono"></span></div></div>
+<div class="tradingview-widget-container tvbox" id="tvinfo" hidden></div>
+<div class="bar"><div class="seg" id="per"><button data-p="30">30 días</button><button data-p="90" class="on">90 días</button><button data-p="420">Todo</button></div><label><input type="checkbox" id="sma"> Medias móviles (20 y 50 días)</label><span class="sp"></span><button class="btn buy" id="bt-buy" onclick="openM(null,'B')">Comprar</button><button class="btn sell" onclick="openM(null,'S')">Vender</button></div>
+<div id="pc" class="ch tall"></div><div id="tv" class="tvw" hidden></div>
+<div class="grid m" id="ks" style="margin:14px 0 0"></div>
+</div>
+<div class="card"><h3>Las 30 empresas</h3><div class="grid tk" id="tk"></div></div>
+</div>
+
+<div id="v-nw" hidden><div class="card"><h3>Noticias del mercado</h3><p class="mut" id="nwi" style="margin-bottom:6px">Cada noticia mueve a un sector o a una empresa durante unos días. Lee el porqué: es la parte que se aprende.</p><div class="tradingview-widget-container tvbox" id="tvnews" hidden></div><div class="news" id="nwl"></div></div></div>
+
+<div id="v-hs" hidden><div class="card"><h3>Historial de operaciones</h3><div class="sc"><table><thead><tr><th>Cuándo</th><th>Tipo</th><th>Empresa</th><th>Acciones</th><th>Precio</th><th>Comisión</th><th>Importe</th><th>Resultado</th></tr></thead><tbody id="ht"></tbody></table></div></div></div>
+
+<div id="v-ap" hidden>
+<div class="card"><h3>Tus lecciones</h3><div class="lesson-list" id="lsl"></div></div>
+<div class="card"><h3>Tus insignias</h3><div class="bdgs" id="bdl"></div></div>
+<div class="card"><h3>Cómo leer una vela</h3><div class="cd"><svg viewBox="0 0 340 185" role="img" aria-label="Una vela verde y una roja con apertura, cierre, máximo y mínimo"><line x1="80" x2="80" y1="14" y2="156" stroke="var(--up)" stroke-width="3"/><rect x="62" y="48" width="36" height="66" rx="2" fill="var(--up)"/><line x1="250" x2="250" y1="14" y2="156" stroke="var(--dn)" stroke-width="3"/><rect x="232" y="48" width="36" height="66" rx="2" fill="var(--dn)"/><g fill="var(--ink)" font-size="12" font-family="Geist Mono, monospace"><text x="104" y="20">Máximo</text><text x="104" y="118">Apertura</text><text x="104" y="52">Cierre</text><text x="104" y="160">Mínimo</text><text x="274" y="52">Apertura</text><text x="274" y="118">Cierre</text></g><text x="80" y="179" text-anchor="middle" fill="var(--up)" font-size="12" font-weight="600">Vela verde (sube)</text><text x="250" y="179" text-anchor="middle" fill="var(--dn)" font-size="12" font-weight="600">Vela roja (baja)</text></svg>
+<div><p>Una vela resume un periodo (aquí, un día) con cuatro precios: apertura, cierre, máximo y mínimo.</p><p><b class="up">Verde:</b> cerró más alto de lo que abrió. <b class="dn">Roja:</b> cerró más bajo.</p><p>El cuerpo muestra el cambio entre apertura y cierre. Las mechas muestran hasta dónde llegó el precio. Una mecha larga indica que compradores y vendedores pelearon fuerte.</p></div></div></div>
+<div class="card"><h3>Calculadora de riesgo por operación</h3><p class="mut">Cuántas acciones comprar para no perder más de cierto porcentaje de tu patrimonio si el precio toca tu stop-loss (nivel 6).</p><div class="rk" style="margin-top:10px"><input id="cr" type="number" step=".5" value="1" placeholder="Riesgo (% del patrimonio)" aria-label="Riesgo en porcentaje del patrimonio"><input id="ce" type="number" step=".01" placeholder="Precio de entrada" aria-label="Precio de entrada"><input id="cs" type="number" step=".01" placeholder="Precio de stop-loss" aria-label="Precio de stop-loss"></div><p id="co" style="margin-top:10px"></p></div>
+<div id="pro-lock" class="card"><h3>Herramientas profesionales</h3><p class="mut">Análisis de acciones con datos históricos reales, informe de portafolio en Excel y datos de mercado en vivo. Se desbloquean al terminar la campaña. Necesitan abrir el archivo HTML directamente en tu navegador.</p><div class="bar" style="margin-top:12px;margin-bottom:0"><button class="btn" onclick="unlockPro()">Desbloquear ahora (docentes)</button></div></div>
+<div id="pro" hidden>
+<div class="card"><h3>Evalúa una acción y su riesgo</h3><div class="bar"><input id="ai" list="dl" placeholder="Empresa (por ejemplo KO)" aria-label="Empresa a analizar"><button class="btn pri" onclick="anl()">Analizar la acción</button></div><div class="bar"><select id="fq" aria-label="Frecuencia de los datos"><option value="D">Datos diarios</option><option value="M" selected>Datos mensuales</option><option value="Y">Datos anuales</option></select><select id="py" aria-label="Periodo"><option value="1">Último año</option><option value="3">Últimos 3 años</option><option value="5" selected>Últimos 5 años</option><option value="10">Últimos 10 años</option><option value="0">Todo el historial</option></select><button class="btn" onclick="dlx()">Descargar el Excel del análisis</button></div><div class="sc"><table id="at"><tbody><tr><td class="emp">Elige una empresa y pulsa Analizar.</td></tr></tbody></table></div><small id="an">Educativo: no es una recomendación de inversión. Necesita la clave de Alpha Vantage (⚙).</small></div>
+<div class="card"><h3>Informe de portafolio en Excel</h3><p class="mut">Descarga históricos mensuales de tus posiciones, tu watchlist y SPY, y genera 7 hojas con riesgo y rentabilidad, con fórmulas vivas de Excel.</p><div class="bar" style="margin-top:10px"><select id="xy" aria-label="Periodo del informe"><option value="3">Últimos 3 años</option><option value="5" selected>Últimos 5 años</option><option value="10">Últimos 10 años</option><option value="0">Todo el historial</option></select><button class="btn pri" id="xb" onclick="xport()">Generar el informe</button><button class="btn" id="xc" onclick="xcan=true" hidden>Cancelar</button></div><progress id="pg" hidden style="width:100%"></progress><p class="mut" id="xs" role="status"></p></div>
+</div>
+</div>
+</main>
+<footer class="ft">Prototipo educativo, sin dinero real · <button class="link" onclick="reset(this)">Empezar una partida nueva</button></footer>
+</section>
+
+<div class="ov" id="md" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="mt">
+<div class="row"><h3 id="mt"></h3><button class="x" onclick="closeM()" aria-label="Cerrar">✕</button></div>
+<div class="seg"><button id="tb" onclick="setSide('B')">Comprar</button><button id="ts" onclick="setSide('S')">Vender</button></div>
+<div class="row"><span class="mut">Precio actual (cambia con el mercado)</span><b id="mpx" class="mono"></b></div>
+<label>Cantidad de acciones<input id="qt" type="number" min="1" step="1" value="1" inputmode="numeric"></label>
+<div class="seg" id="qk"><button data-f=".25">25 %</button><button data-f=".5">50 %</button><button data-f=".75">75 %</button><button data-f="1">Máx.</button></div>
+<div class="adv" id="adv"><div class="seg" id="otg"><button data-o="M" class="on">A mercado</button><button data-o="L">Límite</button></div><div class="two"><label id="liml" hidden>Precio límite de compra<input id="lim" type="number" step=".01" inputmode="decimal"></label><label>Stop-loss (opcional)<input id="slp" type="number" step=".01" inputmode="decimal" placeholder="Precio de salida"></label></div></div>
+<p class="note" id="advl">Las órdenes límite y el stop-loss se desbloquean en el nivel 6.</p>
+<div class="sum" id="sm"></div><p class="err" id="er" role="alert"></p>
+<button class="btn xl full" id="ok" onclick="trade()">Confirmar</button>
+</div></div>
+
+<div class="ov" id="gm" hidden><div class="box gbox" role="dialog" aria-modal="true" aria-labelledby="gmt" id="gmb"></div></div>
+<div class="spot" id="spot" hidden></div><div class="tcard" id="tcard" hidden role="dialog" aria-live="polite"></div>
+<canvas id="fx" hidden></canvas>
+<button class="bb" id="bb" onclick="botT()" aria-label="Abrir el tutor" hidden>Tutor</button>
+<div class="bp" id="bp" hidden><div class="row"><b>Tutor de inversión</b><button class="x" onclick="botT()" aria-label="Cerrar el tutor">✕</button></div><div class="bl" id="bl" aria-live="polite"></div><div class="bc" id="bc"></div><input id="bi" placeholder="Pregúntame algo…" aria-label="Escribe tu pregunta"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<datalist id="dl"></datalist>
+
+<script type="text/js-worker" id="wk">
+const mean=a=>a.reduce((x,y)=>x+y,0)/a.length,sd=a=>{const m=mean(a);return Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/(a.length-1))},cov=(a,b)=>{const m=mean(a),n=mean(b);return a.reduce((t,x,i)=>t+(x-m)*(b[i]-n),0)/(a.length-1)};
+const pct=(a,p)=>{const s=[...a].sort((x,y)=>x-y),i=(s.length-1)*p,l=Math.floor(i);return s[l]+(s[Math.min(l+1,s.length-1)]-s[l])*(i-l)};
+onmessage=e=>{
+  const{syms,dates,adj,w,rf,ppy,bench,from}=e.data;
+  let D=dates[bench].filter(d=>d>=from);syms.forEach(s=>{const z=new Set(dates[s]);D=D.filter(d=>z.has(d))});D.sort();
+  if(D.length<8){postMessage({err:'Hay menos de 8 fechas comunes entre las acciones en ese periodo. Elige un periodo más largo o revisa los símbolos.'});return}
+  const P={},R={};syms.forEach(s=>{const m=new Map(dates[s].map((d,i)=>[d,adj[s][i]]));P[s]=D.map(d=>m.get(d));R[s]=P[s].slice(1).map((v,i)=>v/P[s][i]-1)});
+  const n=D.length-1,rb=R[bench],rfm=rf/ppy,rp=Array.from({length:n},(_,k)=>syms.reduce((t,s,i)=>t+w[i]*R[s][k],0));
+  const stat=r=>{const g=r.reduce((t,x)=>t*(1+x),1),m=mean(r),s=sd(r),dn=Math.sqrt(mean(r.map(x=>Math.min(0,x-rfm)**2))),v=pct(r,.05),ex=r.map((x,i)=>x-rb[i]),te=sd(ex)*Math.sqrt(ppy),beta=cov(r,rb)/cov(rb,rb);
+    let pk=1,c=1,dd=0;r.forEach(x=>{c*=1+x;pk=Math.max(pk,c);dd=Math.min(dd,c/pk-1)});
+    return{tot:g-1,cagr:g**(ppy/r.length)-1,vol:s*Math.sqrt(ppy),sharpe:(m*ppy-rf)/(s*Math.sqrt(ppy)),sortino:dn>0?(m*ppy-rf)/(dn*Math.sqrt(ppy)):null,mdd:dd,var95:v,cvar:mean(r.filter(x=>x<=v)),beta,alpha:(m-rfm-beta*(mean(rb)-rfm))*ppy,te,ir:te>1e-9?mean(ex)*ppy/te:null}};
+  const per={};syms.forEach(s=>per[s]=stat(R[s]));
+  const C=syms.map(a=>syms.map(b=>cov(R[a],R[b])/(sd(R[a])*sd(R[b])))),Sg=syms.map(a=>syms.map(b=>cov(R[a],R[b]))),Sw=Sg.map(r=>r.reduce((t,x,j)=>t+x*w[j],0)),vp=w.reduce((t,x,i)=>t+x*Sw[i],0);
+  const hhi=w.reduce((t,x)=>t+x*x,0);
+  postMessage({D,R,rp,per,pf:stat(rp),C,rc:w.map((x,i)=>x*Sw[i]/vp),hhi,neff:1/hhi,dr:syms.reduce((t,s,i)=>t+w[i]*sd(R[s]),0)/Math.sqrt(vp),w,n});
+};
+</script>
+<script>
+/* Universo: símbolo, nombre, sector, precio inicial, retorno anual, volatilidad, beta, bolsa, rentabilidad por dividendo aproximada */
+const U="AAPL,Apple,Tecnología,190,.12,.28,1.1,NASDAQ,.005;MSFT,Microsoft,Tecnología,420,.11,.25,1,NASDAQ,.008;NVDA,NVIDIA,Tecnología,120,.2,.5,1.7,NASDAQ,0;GOOGL,Alphabet,Tecnología,170,.11,.3,1.1,NASDAQ,.005;AMZN,Amazon,Consumo,185,.12,.32,1.2,NASDAQ,0;TSLA,Tesla,Automotriz,250,.1,.55,1.9,NASDAQ,0;META,Meta,Tecnología,500,.13,.38,1.3,NASDAQ,.004;NFLX,Netflix,Medios,650,.12,.36,1.1,NASDAQ,0;AMD,AMD,Tecnología,150,.14,.5,1.8,NASDAQ,0;INTC,Intel,Tecnología,30,.03,.4,1.2,NASDAQ,0;JPM,JPMorgan,Finanzas,200,.09,.24,1.1,NYSE,.022;BAC,Bank of America,Finanzas,40,.08,.28,1.3,NYSE,.025;V,Visa,Finanzas,270,.1,.22,.95,NYSE,.007;KO,Coca-Cola,Consumo básico,62,.06,.16,.6,NYSE,.03;PEP,PepsiCo,Consumo básico,170,.06,.17,.6,NASDAQ,.035;MCD,McDonald’s,Consumo,290,.07,.18,.7,NYSE,.023;DIS,Disney,Medios,100,.07,.3,1.1,NYSE,.01;NKE,Nike,Consumo,95,.06,.28,1,NYSE,.02;WMT,Walmart,Consumo básico,70,.08,.17,.6,NASDAQ,.012;COST,Costco,Consumo básico,880,.1,.2,.8,NASDAQ,.006;XOM,ExxonMobil,Energía,115,.07,.26,.9,NYSE,.035;CVX,Chevron,Energía,155,.07,.25,.9,NYSE,.045;JNJ,Johnson & Johnson,Salud,155,.05,.15,.5,NYSE,.03;PFE,Pfizer,Salud,28,.03,.22,.6,NYSE,.06;UNH,UnitedHealth,Salud,520,.1,.22,.7,NYSE,.015;BA,Boeing,Industria,180,.05,.38,1.4,NYSE,0;CAT,Caterpillar,Industria,350,.09,.27,1.1,NYSE,.016;T,AT&T,Telecom,19,.04,.2,.5,NYSE,.05;VZ,Verizon,Telecom,41,.04,.17,.4,NYSE,.065;SPY,ETF S&P 500,ETF,540,.08,.16,1,NYSE Arca,.013";
+const $=id=>document.getElementById(id),K='portfolia-juego-v1',KR='portfolia-juego-real-v1',CAP=1e4,FEE=.001,DIVD=20;
+const M=U.split(';').map(r=>{const[s,n,x,p,m,v,b,e,dy]=r.split(',');return{s,n,x,p:+p,m:+m,v:+v,b:+b,e,dy:+dy}});
+const G=Object.fromEntries(M.map(o=>[o.s,o]));
+const fm=(n,d=2)=>n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd=n=>n==null||isNaN(n)?'—':(n<0?'−$':'$')+fm(Math.abs(n)),sg=n=>(n<0?'−$':'+$')+fm(Math.abs(n)),pc=n=>(n<0?'−':'+')+fm(Math.abs(n))+'%',cl=n=>n>=0?'up':'dn';
+const g=()=>Math.sqrt(-2*Math.log(Math.random()||1e-9))*Math.cos(6.2832*Math.random());
+const sdv=r=>{const m=r.reduce((x,y)=>x+y,0)/r.length;return Math.sqrt(r.reduce((x,y)=>x+(y-m)**2,0)/r.length)};
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const isN=s=>G[s]&&/^NYSE/.test(G[s].e||''),etag=s=>{const e=(G[s]||{}).e;return e?`<span class="tag${/^NYSE/.test(e)?' nyse':''}">${e}</span>`:''};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let S,cur='KO',side='B',ot='M',pe=90,dly=1500,paused=true,timer,rc=0,view='pf',KEY='',polling=false,AVKEY='',UNI=[],ALLC=null,sfv='',SEC={},QC={},CALLS=[],xcan=false,LAST=null,QL=0,QZ=null,onlyN=false;
+const MS=new Set(M.map(o=>o.s)),cln=t=>String(t||'').replace(/&/g,' and ').replace(/[<>"'`]/g,'').trim().slice(0,80),ks=()=>{try{return JSON.parse(localStorage.getItem('pf-keys'))||{}}catch(e){return{}}},loadKeys=()=>{const k=ks();KEY=k.fh||'';AVKEY=k.av||''};
+
+const px=s=>{const a=S.h[s]||[];return a[a.length-1]},dc=s=>{if(S.real)return S.dp[s]||0;const a=S.h[s];return a&&a.length>1?(a[a.length-1]/a[a.length-2]-1)*100:0};
+const equity=()=>S.cash+Object.entries(S.pos).reduce((t,[s,p])=>t+p.q*(px(s)||0),0);
+const idx=()=>M.reduce((t,o)=>t+px(o.s)/o.p,0)/M.length*100;
+const WD=['lun','mar','mié','jue','vie'];
+
+/* ---------- Mercado simulado: factor común con volatilidad cambiante (GARCH) + ruido propio + saltos + noticias ---------- */
+function fxAt(D,o){let r=0;for(const e of S.fx){const k=D-e.d0,v=e.seq[k];if(v==null)continue;if(e.k==='all')continue;if((e.k==='sec'&&o.x===e.v)||(e.k==='sym'&&o.s===e.v))r+=v}return r}
+function mv(){
+  const D=S.day+1;let all=0;for(const e of S.fx)if(e.k==='all'){const v=e.seq[D-e.d0];if(v!=null)all+=v}
+  if(all<-.02)S.v=Math.max(S.v,3e-4);
+  const rm=Math.sqrt(S.v)*g()+.0003;S.v=2e-6+.08*(rm-.0003)**2+.9*S.v;
+  M.forEach(o=>{const a=S.h[o.s],iv=Math.max(o.v*o.v/252-o.b*o.b*1e-4,5e-5);
+    let r=o.m/252-.5*o.v*o.v/252+o.b*(rm-.0003+all)+Math.sqrt(iv)*g()*(all<-.02?.4:1)+fxAt(D,o);
+    if(Math.random()<.003)r+=(Math.random()<.5?-1:1)*(.04+Math.random()*.05);
+    a.push(a[a.length-1]*Math.exp(r));if(a.length>420)a.shift()});
+  S.fx=S.fx.filter(e=>D-e.d0<e.seq.length);
+}
+function fresh(r){
+  S={cash:CAP,pos:{},tr:[],eq:[CAP],bm:[100],wl:['KO','JPM','SPY'],h:{},day:0,v:1e-4,re:0,w:0,n:0,fees:0,real:!!r,dp:{},p0:null,
+     fx:[],nw:[],nx:8,ord:[],dv:0,dvN:0,rn:[],pc:{},hm:{},
+     g:{L:0,ph:'brief',ob:{},bo:null,t0:0,stars:[],xp:0,bd:[],tour:-1,cr:null,fin:false,pro:false,seen:{},pk:0,unread:0}};
+  if(r){M.forEach(o=>S.h[o.s]=[]);return}
+  M.forEach(o=>S.h[o.s]=[o.p]);for(let i=0;i<120;i++)mv();
+  M.forEach(o=>{const a=S.h[o.s],k=o.p/a[a.length-1];for(let i=0;i<a.length;i++)a[i]*=k});
+  S.fx=[];
+}
+function step(){
+  const i0=idx();mv();S.day++;const i1=idx(),chg=i1/i0-1;
+  if(chg<=-.07)addNews({t:'Se activa el circuit breaker: la NYSE detiene la negociación 15 minutos',why:`El índice cayó ${fm(-chg*100,1)} % en el día. Cuando el S&P 500 baja 7 %, las bolsas de EE. UU. frenan la negociación para que nadie decida en pánico.`,tags:[['Todo el mercado','dn']]},true);
+  divs();proc();news();S.bm.push(i1);S.eq.push(equity());if(S.day%5===0)save();render();
+}
+/* Dividendos: cada DIVD días se paga un trimestre de dividendo (yield / 4) */
+function divs(){
+  if(S.day%DIVD)return;let tot=0,who=[];
+  Object.entries(S.pos).forEach(([s,p])=>{const y=(G[s]||{}).dy;if(!y)return;const ps=px(s)*y/4,a=p.q*ps;if(a<.01)return;tot+=a;who.push(s);S.tr.unshift({d:S.day,t:'D',s,q:p.q,p:ps,f:0,pl:a,lv:S.g.L})});
+  if(tot>0){S.cash+=tot;S.dv+=tot;S.dvN++;toast(`Cobraste ${usd(tot)} en dividendos de ${who.join(', ')}.`)}
+}
+/* Órdenes límite pendientes y stop-loss de las posiciones */
+function proc(){
+  const keep=[],m=S.real?mkt():null,shut=S.real&&!m.open;
+  for(const o of S.ord){const c=px(o.s);if(!c){keep.push(o);continue}
+    if(o.moo){if(shut||!(S.hm&&S.hm[o.s]*6e4>=o.t0-6e4)){keep.push(o);continue}
+      if(o.side==='S'){const p=S.pos[o.s];if(!p){toast(`Orden de venta de ${o.s} cancelada: ya no tienes esas acciones.`);continue}const q=Math.min(o.q,p.q),pl=exec('S',o.s,q,c,{auto:'MOO'});toast(`Apertura: vendiste ${q} ${o.s} a ${usd(c)} (${sg(pl)}).`)}
+      else{const fee=Math.max(1,o.q*c*FEE);if(o.q*c+fee>S.cash){toast(`Orden de ${o.s} cancelada en la apertura: no te alcanzaba el efectivo.`);continue}exec('B',o.s,o.q,c,{sl:o.sl,auto:'MOO',rk:o.sl?o.q*(c-o.sl)/equity():null});toast(`Apertura: compraste ${o.q} ${o.s} a ${usd(c)}.`)}
+      continue}
+    if(shut){keep.push(o);continue}
+    if(c<=o.lim){const fee=Math.max(1,o.q*c*FEE);if(o.q*c+fee>S.cash){toast(`Orden límite de ${o.s} cancelada: no te alcanzaba el efectivo.`);continue}
+      exec('B',o.s,o.q,c,{sl:o.sl,auto:'LIM'});toast(`Se ejecutó tu orden límite: compraste ${o.q} ${o.s} a ${usd(c)}.`)}
+    else keep.push(o)}
+  S.ord=keep;if(shut)return;
+  Object.entries(S.pos).forEach(([s,p])=>{const c=px(s);if(p.sl&&c&&c<=p.sl){const q=p.q,pl=exec('S',s,q,c,{auto:'SL'});toast(`Stop-loss activado: se vendieron ${q} ${s} a ${usd(c)} (${sg(pl)}).`)}});
+}
+function save(){try{localStorage.setItem(S.real?KR:K,JSON.stringify(S))}catch(e){}}
+function load(r){try{const o=JSON.parse(localStorage.getItem(r?KR:K));if(o&&o.h&&o.cash!=null&&o.g&&!!o.real===!!r&&M.every(x=>o.h[x.s]))return o}catch(e){}return null}
+
+function theme(){const r=document.documentElement,d=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=d?'light':'dark';try{localStorage.setItem('pf-theme',r.dataset.theme)}catch(e){}tvKey='';document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);if(!$('sim').hidden)render()}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3800)}
+
+/* ---------- Noticias ---------- */
+const NEWS=[
+ {t:'La Reserva Federal sube las tasas de interés',fx:[['sec','Finanzas',.006,4],['sec','Tecnología',-.007,4]],why:'Con tasas más altas, los bancos ganan más por prestar. Las empresas de tecnología valen menos porque sus ganancias futuras se descuentan a una tasa mayor.'},
+ {t:'La Reserva Federal baja las tasas de interés',fx:[['sec','Tecnología',.007,4],['sec','Finanzas',-.004,3],['all','',.002,3]],why:'El crédito se abarata: las empresas invierten más y la gente gasta más. La tecnología suele ser la que más sube.'},
+ {t:'La OPEP recorta la producción y el petróleo se dispara',fx:[['sec','Energía',.009,4],['sec','Automotriz',-.006,3],['sec','Industria',-.003,3]],why:'Si el barril sube, las petroleras venden más caro. A quienes usan mucho combustible les suben los costos.'},
+ {t:'El petróleo cae a su nivel más bajo del año',fx:[['sec','Energía',-.009,4],['sec','Consumo',.003,3]],why:'Petróleo barato reduce las ganancias de las petroleras, pero deja más dinero en el bolsillo de los consumidores.'},
+ {t:'{n} supera lo esperado en su reporte trimestral',sym:1,fx:[['sym','',.04,1],['sym','',.006,3]],why:'Las acciones no reaccionan a si la empresa gana, sino a la diferencia entre lo que se esperaba y lo que pasó.',up:1},
+ {t:'{n} decepciona en su reporte trimestral',sym:1,fx:[['sym','',-.045,1],['sym','',-.006,3]],why:'Ganancias por debajo de lo esperado hacen que los inversores recalculen cuánto vale la empresa.'},
+ {t:'Aprueban un medicamento clave para el sector salud',fx:[['sec','Salud',.008,3]],why:'Un medicamento aprobado puede traer años de ventas. El mercado lo anticipa de inmediato.'},
+ {t:'Temporada de compras navideñas récord',fx:[['sec','Consumo',.006,4],['sec','Consumo básico',.002,3]],why:'Más ventas en tiendas y en línea se traducen en mejores ganancias para las empresas de consumo.'},
+ {t:'Escasez de chips frena a las fábricas',fx:[['sec','Tecnología',-.006,3],['sec','Automotriz',-.01,3]],why:'Sin chips no se pueden fabricar autos ni computadoras: menos producción, menos ventas.'},
+ {t:'Fiebre por la inteligencia artificial: récord de pedidos de chips',fx:[['sym','NVDA',.012,4],['sym','AMD',.009,4],['sym','MSFT',.004,3]],why:'Cuando una tecnología despega, el mercado premia primero a quienes venden las "palas" de la fiebre del oro.'},
+ {t:'El empleo en EE. UU. crece más de lo esperado',fx:[['all','',.004,2]],why:'Más empleo significa más consumo, y eso sostiene las ganancias de casi todas las empresas.'},
+ {t:'La inflación sube más de lo esperado',fx:[['all','',-.006,3],['sec','Consumo básico',.003,3]],why:'Inflación alta hace temer que suban las tasas. Las empresas de productos básicos aguantan mejor porque la gente sigue comprando.'},
+ {t:'Problemas de producción en Boeing',fx:[['sym','BA',-.012,3]],why:'Retrasos en la fabricación significan entregas que no se cobran a tiempo y posibles multas.'},
+ {t:'Las plataformas de streaming suben precios y no pierden usuarios',fx:[['sym','NFLX',.01,3],['sym','DIS',.004,3]],why:'Poder subir precios sin perder clientes es señal de un negocio fuerte.'},
+ {t:'Los bancos aprueban las pruebas de estrés de la Reserva Federal',fx:[['sec','Finanzas',.006,3]],why:'Si los bancos aguantan una crisis simulada, pueden repartir más dividendos y recomprar acciones.'}];
+function addNews(n,big){S.nw.unshift({d:S.day,...n});if(S.nw.length>60)S.nw.pop();if(view!=='nw')S.g.unread=(S.g.unread||0)+1;S.g.hl=1;if(big)toast(n.t)}
+function news(){
+  if(S.real)return;
+  const cr=S.g.cr;
+  if(cr){const k=S.day-cr.d0;
+    if(k===0)addNews({t:'Pánico en Wall Street: los inversores venden todo',why:'Una mala noticia global provoca ventas masivas. En un pánico casi todas las acciones caen juntas, aunque las empresas sigan sanas. La diversificación entre sectores ayuda poco aquí.',tags:[['Todo el mercado','dn']]},true);
+    if(k===5)addNews({t:'La Reserva Federal anuncia apoyo a los mercados: empieza el rebote',why:'Cuando el miedo baja, los compradores vuelven. Quien vendió en el fondo se pierde la recuperación.',tags:[['Todo el mercado','up']]},true);
+    if(k>=-2&&k<=16)return}
+  if(S.day<S.nx)return;S.nx=S.day+6+Math.floor(Math.random()*8);
+  const n=NEWS[Math.floor(Math.random()*NEWS.length)];let sy=null,tags=[];
+  if(n.sym){const c=M.filter(o=>o.s!=='SPY'),o=c[Math.floor(Math.random()*c.length)];sy=o.s}
+  n.fx.forEach(([k,v,r,len])=>{const vv=k==='sym'&&!v?sy:v;const prev=S.fx.find(e=>e.k===k&&e.v===vv&&e.d0===S.day+1);
+    if(prev)prev.seq.push(...Array(len).fill(r));else S.fx.push({k,v:vv,d0:S.day+1,seq:Array(len).fill(r)});
+    const lab=k==='all'?'Todo el mercado':vv;if(!tags.some(t=>t[0]===lab))tags.push([lab,r>=0?'up':'dn'])});
+  addNews({t:n.t.replace('{n}',sy?`${G[sy].n} (${sy})`:''),why:n.why,tags},false);
+}
+function startCrash(){S.g.cr={d0:S.day+2+Math.floor(Math.random()*3)};S.fx.push({k:'all',v:'',d0:S.g.cr.d0,seq:[-.03,-.085,-.04,-.025,.012,.016,.014,.02,.012,.015,.012,.012,.012,.01,.01]})}
+
+/* ---------- Gráfico SVG propio ---------- */
+function chart(id,ser,o={}){
+  const el=$(id),W=el.clientWidth||600,H=el.clientHeight||260,n=ser[0].d.length;
+  if(el.dataset.r&&el.matches(':hover'))return;el.dataset.r=1;
+  if(n<2){el.innerHTML=`<p class="emp">${S.real?(mkt().open?'Esperando las primeras operaciones de hoy…':'La bolsa está cerrada. Cuando abra verás aquí el precio minuto a minuto.'):'Pulsa ▶ y deja correr unos días para ver el gráfico.'}</p>`;return}
+  const all=ser.flatMap(s=>s.d).filter(v=>v!=null),lo=Math.min(...all),hi=Math.max(...all),pd=(hi-lo||1)*.08,y0=lo-pd,y1=hi+pd,L=4,R=64,T=8,B=8,f=o.fmt||fm;
+  const X=i=>L+(W-L-R)*i/(n-1),Y=v=>T+(H-T-B)*(1-(v-y0)/(y1-y0));
+  let s='<defs><linearGradient id="gd'+id+'" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>';
+  for(let k=0;k<=3;k++){const v=y0+(y1-y0)*k/3,y=Y(v).toFixed(1);s+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${W-R+8}" y="${+y+4}" fill="var(--mut)" font-size="11" font-family="Geist Mono,monospace">${f(v)}</text>`}
+  if(o.mark!=null&&o.mark>=0&&o.mark<n)s+=`<line x1="${X(o.mark)}" x2="${X(o.mark)}" y1="${T}" y2="${H-B}" stroke="var(--gold)" stroke-dasharray="2 4"/><text x="${X(o.mark)+4}" y="${T+12}" fill="var(--acc)" font-size="10.5" font-family="Geist Mono,monospace">inicio del nivel</text>`;
+  ser.forEach(q=>{let k=0;const d=q.d.map((v,i)=>v==null?'':`${k++?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join('');
+    if(q.f)s+=`<path d="${d}L${X(n-1)} ${H-B}L${X(0)} ${H-B}Z" fill="url(#gd${id})" style="color:${q.c}"/>`;
+    s+=`<path d="${d}" fill="none" stroke="${q.c}" stroke-width="${q.f?2:1.5}" stroke-linejoin="round" ${q.f?'':'stroke-dasharray="4 3"'}/>`});
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.al||'Gráfico'}">${s}<line class="cx" y1="${T}" y2="${H-B}" stroke="var(--mut)" stroke-dasharray="3" visibility="hidden"/></svg><div class="tip" hidden></div>`;
+  const cx=el.querySelector('.cx'),tp=el.querySelector('.tip');
+  el.onmousemove=el.ontouchmove=e=>{const r=el.getBoundingClientRect(),x=(e.touches?e.touches[0].clientX:e.clientX)-r.left,i=Math.min(n-1,Math.max(0,Math.round((x-L)/(W-L-R)*(n-1))));
+    cx.setAttribute('x1',X(i));cx.setAttribute('x2',X(i));cx.setAttribute('visibility','visible');tp.hidden=false;
+    tp.innerHTML=`<div class="mut">${o.lab?o.lab(i,n):''}</div>`+ser.map(q=>q.d[i]==null?'':`<div><i style="background:${q.c}"></i>${q.n} <b>${f(q.d[i])}</b></div>`).join('');
+    tp.style.left=Math.max(4,Math.min(X(i)+12,W-160))+'px'};
+  el.onmouseleave=()=>{cx.setAttribute('visibility','hidden');tp.hidden=true};
+}
+const spark=a=>{if(a.length<2)return'';const lo=Math.min(...a),hi=Math.max(...a);return`<polyline fill="none" stroke="${a[a.length-1]>=a[0]?'var(--up)':'var(--dn)'}" stroke-width="1.6" points="${a.map((v,i)=>`${(i*60/(a.length-1)).toFixed(1)},${(22-20*(v-lo)/(hi-lo||1)).toFixed(1)}`).join(' ')}"/>`};
+
+/* ---------- Vistas ---------- */
+function stats(){
+  const e=S.eq,r=[];for(let i=1;i<e.length;i++)r.push(e[i]/e[i-1]-1);
+  const mu=r.reduce((a,b)=>a+b,0)/(r.length||1),sd=r.length?sdv(r):0;let pk=e[0],dd=0;
+  e.forEach(v=>{pk=Math.max(pk,v);dd=Math.min(dd,v/pk-1)});
+  if(S.real)return{vol:null,sh:null,dd:dd*100};return{vol:r.length>4?sd*Math.sqrt(252)*100:null,sh:r.length>9&&sd>0?(mu-.03/252)/sd*Math.sqrt(252):null,dd:dd*100};
+}
+const lab=(i,n)=>{const k=n-1-i;return k?`Hace ${k} ${S.real?'min':'días'}`:(S.real?'Ahora':'Hoy')};
+function rPF(){
+  const eq=equity(),net=eq-CAP,prev=S.eq.length>1?S.eq[S.eq.length-2]:CAP,day=eq-prev,bm=S.bm[S.bm.length-1]-100,pp=(eq/CAP-1)*100-bm,st=stats();
+  const mx=[['Patrimonio total',usd(eq),'',`Efectivo ${usd(S.cash)}`,'Efectivo más el valor de tus acciones'],
+    ['Ganancia neta',sg(net),cl(net),`${pc(net/CAP*100)} · comisiones ${usd(S.fees||0)}`,'Lo que ganaste o perdiste desde el inicio, ya descontadas las comisiones'],
+    ['Frente al índice',(pp<0?'−':'+')+fm(Math.abs(pp))+' pp',cl(pp),`Índice ${pc(bm)}`,'Tu rendimiento menos el del índice (puntos porcentuales)'],
+    ['Dividendos cobrados',usd(S.dv||0),'',`${S.dvN||0} pagos`,'Dinero que te pagaron las empresas por ser accionista'],
+    [S.real?'Última lectura':'Último día',sg(day),cl(day),pc(day/prev*100),'Cambio de tu patrimonio en el último día'],
+    ['Ventas con ganancia',S.n?Math.round(S.w/S.n*100)+'%':'—','',`Realizado ${sg(S.re)}`,'Porcentaje de ventas con ganancia'],
+    ['Caída máxima',fm(st.dd)+'%','dn','Peor baja desde un máximo','Mayor caída de tu patrimonio desde su punto más alto'],
+    ['Ratio de Sharpe',st.sh==null?'—':fm(st.sh),'',(S.real?'Solo en simulado':'Necesita 10+ días'),'Rendimiento por unidad de riesgo (tasa libre de riesgo 3 %)']];
+  $('mx').innerHTML=mx.map(([a,b,c,d,t])=>`<div class="mc" title="${t}"><span>${a}</span><b class="${c}">${b}</b><small>${d}</small></div>`).join('');
+  const off=Math.max(0,S.eq.length-250);
+  chart('ec',[{n:'Tu portafolio',d:S.eq.slice(-250).map(v=>(v/CAP-1)*100),c:'var(--gold)',f:1},{n:'Índice',d:S.bm.slice(-250).map(v=>v-100),c:'var(--violet-2)'}],{fmt:pc,lab,mark:S.real||S.g.fin?null:S.g.t0-off,al:'Rendimiento de tu portafolio frente al índice'});
+  const rows=Object.entries(S.pos).map(([s,p])=>{const c=px(s)||0,v=p.q*c,pl=v-p.q*p.avg;
+    return`<tr><td><button class="sy" onclick="pick('${s}')">${s}</button> ${etag(s)}<small>${G[s].n}</small></td><td class="num">${p.q}</td><td class="num">${usd(p.avg)}</td><td class="num">${usd(c)}${p.sl?`<small>stop ${usd(p.sl)}</small>`:''}</td><td class="num ${cl(pl)}">${sg(pl)}<small>${pc(pl/(p.q*p.avg)*100)}</small></td><td class="num">${usd(v)}<small>${fm(v/eq*100,1)} % del total</small></td><td><button class="btn s" onclick="openM('${s}','S')">Vender</button></td></tr>`});
+  $('pt').innerHTML=rows.join('')||'<tr><td colspan="7" class="emp">Aún no tienes acciones. Abre el Mercado para tu primera compra.<br><br><button class="btn pri s" onclick="tab(\'mk\')">Ir al mercado</button></td></tr>';
+  $('ordw').innerHTML=S.ord.length?`<h3 style="margin:16px 0 8px;font-size:15px">Órdenes pendientes</h3>`+S.ord.map((o,i)=>`<div class="wi"><span style="flex:1">${o.moo?`${o.side==='S'?'Vender':'Comprar'} <b>${o.q} ${o.s}</b> en la apertura de la NYSE`:`Comprar <b>${o.q} ${o.s}</b> si baja a <b class="mono">${usd(o.lim)}</b>`}${o.sl?` · stop ${usd(o.sl)}`:''}<small>Último precio: ${usd(px(o.s))}</small></span><button class="btn s" onclick="S.ord.splice(${i},1);save();render()">Cancelar la orden</button></div>`).join(''):'';
+  $('wl').innerHTML=S.wl.map(s=>{const c=dc(s);return`<div class="wi"><button onclick="pick('${s}')"><b>${s}</b> ${etag(s)}<small>${G[s].n}</small></button><svg class="sk" viewBox="0 0 60 24" aria-hidden="true">${spark((S.h[s]||[]).slice(-30))}</svg><div class="r"><b>${usd(px(s))}</b><span class="${cl(c)}">${pc(c)}</span></div><button class="x" aria-label="Quitar ${s}" onclick="unwatch('${s}')">✕</button></div>`}).join('')||'<p class="emp">Añade símbolos para seguirlos aquí.</p>';
+}
+function rMK(){
+  const tvOn=!!(S.real&&window.TradingView);$('tv').hidden=!tvOn;$('pc').hidden=tvOn;$('per').hidden=tvOn;if(tvOn)tv();else if(S.real)need('tv').then(()=>{if(view==='mk')rMK()}).catch(()=>{});
+  const o=G[cur],a=S.h[cur]||[],c=px(cur),d=dc(cur),sl=a.slice(-pe),up=sl[sl.length-1]>=sl[0];
+  $('mn').innerHTML=`${cur} · ${o.n} ${etag(cur)}`;$('ms').textContent=o.x+(o.dy?` · dividendo aprox. ${fm(o.dy*100,1)} % anual`:' · no paga dividendo');$('mp').textContent=usd(c);$('mc').textContent=pc(d)+' hoy';$('mc').className='mono '+cl(d);
+  const sma=k=>a.map((_,i)=>i<k-1?null:a.slice(i-k+1,i+1).reduce((x,y)=>x+y,0)/k).slice(-pe);
+  const ser=[{n:'Precio',d:sl,c:up?'var(--up)':'var(--dn)',f:1}];
+  if($('sma').checked)ser.push({n:'Media 20',d:sma(20),c:'#d08a1e'},{n:'Media 50',d:sma(50),c:'#2a9bb8'});
+  chart('pc',ser,{lab,al:`Precio de ${cur}`});
+  const lr=a.slice(-31).map((v,i,r)=>i?Math.log(v/r[i-1]):0).slice(1),own=S.pos[cur];
+  $('ks').innerHTML=(a.length<2?[]:[['Variación del periodo',pc((sl[sl.length-1]/sl[0]-1)*100),cl(sl[sl.length-1]-sl[0])],['Máximo',usd(Math.max(...sl)),''],['Volatilidad (30 días)',fm(sdv(lr)*Math.sqrt(252)*100,1)+'%',''],['Tu posición',own?`${own.q} acciones`:'Ninguna','']])
+    .map(([x,y,z])=>`<div class="mc"><span>${x}</span><b class="${z}" style="font-size:17px">${y}</b></div>`).join('');
+  $('tk').innerHTML=M.filter(q=>!onlyN||isN(q.s)).map(q=>{const e=dc(q.s);return`<button class="tkb${q.s===cur?' on':''}" onclick="pick('${q.s}')"><span class="row1"><b>${q.s}</b>${etag(q.s)}</span><small>${q.n}</small><span class="num">${usd(px(q.s))}</span><span class="num ${cl(e)}" style="font-size:12.5px">${pc(e)}</span></button>`}).join('');
+}
+function rHS(){
+  const T={B:['Compra','up'],S:['Venta','dn'],D:['Dividendo','up']};
+  $('ht').innerHTML=S.tr.slice(0,200).map(t=>`<tr><td class="num">${S.real?new Date(t.d).toLocaleString('es',{dateStyle:'short',timeStyle:'short'}):'Día '+t.d}</td><td class="${T[t.t][1]}">${T[t.t][0]}${t.auto==='SL'?' <small>stop-loss</small>':t.auto==='LIM'?' <small>orden límite</small>':t.auto==='MOO'?' <small>en la apertura</small>':''}</td><td><b>${t.s}</b></td><td class="num">${t.q}</td><td class="num">${usd(t.p)}</td><td class="num">${usd(t.f)}</td><td class="num">${usd(t.q*t.p)}</td><td class="num ${t.pl==null?'':cl(t.pl)}">${t.pl==null?'—':sg(t.pl)}</td></tr>`).join('')||'<tr><td colspan="8" class="emp">Todavía no has operado. Tus compras, ventas y dividendos aparecerán aquí.</td></tr>';
+}
+function rNW(){
+  $('nwi').hidden=S.real;if(S.real)return rRN();
+  $('nwl').innerHTML=S.nw.map(n=>`<article class="nw"><span class="d">Día ${n.d}</span><div><h4>${n.t}</h4><p><b style="color:var(--ink)">Por qué importa:</b> ${n.why}</p><div class="tags">${(n.tags||[]).map(([t,c])=>`<span class="tag ${c}">${c==='up'?'▲':'▼'} ${t}</span>`).join('')}</div></div></article>`).join('')||'<p class="emp">Aún no hay noticias. Pulsa ▶ y aparecerán mientras corre el mercado.</p>';
+}
+function rHL(){
+  if(S.real)return rHLreal();
+  const n=S.nw[0],h=$('hl');if(!n){h.hidden=true;return}
+  const k=n.d+'|'+n.t;if(h.dataset.k!==k){h.dataset.k=k;h.classList.remove('new');void h.offsetWidth;h.classList.add('new')}
+  h.hidden=false;h.innerHTML=`<span class="tag nyse">Día ${n.d}</span><span class="t"><b>${n.t}</b></span><span class="mut hide-s">Leer por qué →</span>`;
+  const c=$('nwc');c.hidden=!S.g.unread;c.textContent=S.g.unread||'';
+}
+function render(){
+  const wd=WD[(S.day+0)%5];
+  if(S.real)rClock();else{$('day').textContent=`Simulación · Día ${S.day} · ${wd}`;$('mst').className='mstat sim'+(paused?'':' on')}$('cp').textContent=usd(S.cash);
+  if(view==='pf')rPF();else if(view==='mk')rMK();else if(view==='ap')rAP();else if(view==='nw')rNW();else rHS();
+  rM();rHL();tvSync();chk();rMis();rXP();tourTick();
+}
+function tab(v){view=v;['pf','mk','hs','ap','nw'].forEach(k=>{$('v-'+k).hidden=k!==v;$('t-'+k).classList.toggle('on',k===v)});if(v==='nw')S.g.unread=0;if(v==='mk')S.g.seen.mk=1;if(v==='hs')S.g.seen.hs=1;render()}
+function pick(s){cur=s;S.h[s]=S.h[s]||[];$('si').value='';S.g.pk=(S.g.pk||0)+1;sec(s);tab('mk')}
+function find(q){q=q.trim().toUpperCase();return G[q]||M.find(x=>x.n.toUpperCase()===q)}
+function unwatch(s){S.wl=S.wl.filter(x=>x!==s);save();render()}
+
+/* ---------- Operaciones ---------- */
+const advOn=()=>S.g.L>=5||S.g.fin||S.g.pro;
+function openM(s,sd){if(s)cur=s;side=sd||'B';ot='M';$('qt').value=sd==='S'&&S.pos[cur]?S.pos[cur].q:1;$('slp').value='';$('lim').value='';$('md').hidden=false;rM();tourTick();setTimeout(()=>$('qt').focus(),30)}
+function closeM(){$('md').hidden=true;tourTick()}
+function setSide(x){side=x;rM()}
+function rM(){
+  if($('md').hidden)return;
+  const c=px(cur),own=(S.pos[cur]||{q:0}).q,q=Math.floor(+$('qt').value)||0,buy=side==='B',lim=+$('lim').value,useL=buy&&ot==='L',pr=useL&&lim>0?lim:c,gr=q*pr,fee=q>0?Math.max(1,gr*FEE):0,tot=buy?gr+fee:gr-fee,sl=+$('slp').value,eq=equity();
+  const adv=advOn();$('adv').hidden=!adv||!buy;$('advl').hidden=adv||!buy;$('liml').hidden=!useL;
+  [...$('otg').children].forEach(b=>b.classList.toggle('on',b.dataset.o===ot));
+  let er='';
+  if(S.real&&!KEY)er='Para operar con precios reales conecta tu clave de Finnhub (⚙). TradingView muestra los precios, pero no deja usarlos para operar.';
+  else if(!c)er='Aún no hay precio de esta empresa. Espera la próxima lectura.';
+  else if(q<1)er='Escribe al menos 1 acción.';
+  else if(buy&&tot>S.cash)er=`Te faltan ${usd(tot-S.cash)}. Baja la cantidad.`;
+  else if(!buy&&q>own)er=own?`Solo tienes ${own} acciones de ${cur}.`:`No tienes acciones de ${cur} para vender.`;
+  else if(useL&&!(lim>0))er='Escribe el precio límite.';
+  else if(useL&&lim>=c)er=`El límite debe estar por debajo del precio actual (${usd(c)}). Si no, compra a mercado.`;
+  else if(buy&&adv&&sl>0&&sl>=pr)er='El stop-loss debe estar por debajo del precio de compra.';
+  $('mt').innerHTML=`${cur} · ${G[cur].n} ${etag(cur)}`;$('mpx').textContent=usd(c);
+  $('tb').classList.toggle('on',buy);$('ts').classList.toggle('on',!buy);
+  const risk=buy&&adv&&sl>0&&sl<pr?q*(pr-sl):0;
+  $('sm').innerHTML=`<div class="row"><span>Importe${useL?' (al precio límite)':''}</span><b>${usd(gr)}</b></div><div class="row"><span>Comisión (0,1 %, mín. $1)</span><b>${usd(fee)}${gr>0?` · ${fm(fee/gr*100,2)} %`:''}</b></div><div class="row"><span>${buy?'Total a pagar':'Recibirás'}</span><b>${usd(tot)}</b></div>${risk?`<div class="row"><span>Si toca tu stop perderías</span><b class="${risk/eq>.02?'dn':'up'}">${usd(risk)} · ${fm(risk/eq*100,2)} %</b></div>`:''}<div class="row"><span>Tienes ahora</span><b>${own} acciones</b></div>`;
+  const moo=S.real&&!useL&&!mkt().open;if(moo&&!er)$('sm').insertAdjacentHTML('beforeend',`<div class="row"><span>La NYSE está cerrada</span><b>se ejecuta al abrir</b></div>`);
+  $('er').textContent=er;const ok=$('ok');ok.disabled=!!er;ok.className='btn xl full '+(buy?'buy':'sell');ok.textContent=moo?(buy?'Programar la compra para la apertura':'Programar la venta para la apertura'):buy?(useL?'Crear la orden límite':'Confirmar la compra'):'Confirmar la venta';
+}
+function exec(sd,s,q,c,x={}){
+  const fee=Math.max(1,q*c*FEE),p=S.pos[s];let pl=null;
+  if(sd==='B'){S.cash-=q*c+fee;if(p){p.avg=(p.q*p.avg+q*c)/(p.q+q);p.q+=q;if(x.sl)p.sl=x.sl}else S.pos[s]={q,avg:c,sl:x.sl||null}}
+  else{pl=(c-p.avg)*q-fee;S.cash+=q*c-fee;S.re+=pl;S.n++;if(pl>0)S.w++;x.pp=(c/p.avg-1);p.q-=q;if(!p.q)delete S.pos[s]}
+  S.fees=(S.fees||0)+fee;S.tr.unshift({d:S.real?Date.now():S.day,t:sd,s,q,p:c,f:fee,pl,lv:S.g.L,sl:x.sl||null,rk:x.rk??null,auto:x.auto||null,pp:x.pp??null,dd:S.day});
+  S.eq[S.eq.length-1]=equity();return pl;
+}
+function trade(){
+  const c=px(cur),q=Math.floor(+$('qt').value);if(!c||!(q>=1)||$('ok').disabled)return;
+  const adv=advOn(),sl=adv&&side==='B'?+$('slp').value||null:null,lim=+$('lim').value;
+  if(side==='B'&&adv&&ot==='L'){S.ord.push({s:cur,q,lim,sl});save();closeM();render();toast(`Orden límite creada: comprarás ${q} ${cur} si baja a ${usd(lim)}.`);return}
+  if(S.real&&!mkt().open){const m=mkt();S.ord.push({s:cur,q,side,moo:1,sl,t0:m.next});save();closeM();render();toast(`Orden programada: se ejecutará cuando abra la NYSE (${nextLbl(m.next)}).`);return}
+  const fee=Math.max(1,q*c*FEE);
+  if(side==='B'&&q*c+fee>S.cash)return;if(side==='S'&&(!S.pos[cur]||q>S.pos[cur].q))return;
+  const rk=sl?q*(c-sl)/equity():null,pl=exec(side,cur,q,c,{sl,rk});save();closeM();render();
+  toast(side==='B'?`Compraste ${q} acciones de ${cur} a ${usd(c)}. Comisión: ${usd(fee)}.`:`Vendiste ${q} acciones de ${cur} a ${usd(c)}. Resultado: ${sg(pl)}.`);
+}
+
+/* ---------- Tiempo y pantallas ---------- */
+function run(){clearInterval(timer);const gm=!$('gm').hidden,vis=!document.hidden&&!$('sim').hidden;
+  if(S.real){if(vis){rinit();timer=setInterval(rtick,1000);rtick()}else wsClose()}
+  else if(!paused&&!gm&&vis)timer=setInterval(step,dly);
+  $('pp').textContent=paused?'▶':'❚❚';$('pp').setAttribute('aria-label',paused?'Reanudar la simulación':'Pausar la simulación');if(!S.real)$('mst').className='mstat sim'+(!paused&&!gm?' on':'')}
+function pause(){paused=!paused;run();render()}
+function setSpd(v){dly=+v;run()}
+function go(s){$('home').hidden=s!=='home';$('sim').hidden=s!=='sim';$('bb').hidden=s!=='sim';if(s!=='sim')$('bp').hidden=true;if(s==='home'){rHome();heroLoop()}else{render();if(!S.real&&!S.g.fin&&S.g.ph==='brief')openBrief()}run();scrollTo(0,0)}
+function play(){if(S.real)setSrc('sim');go('sim')}
+function openReal(){if(!S.real)setSrc('real');go('sim');if(!KEY){$('rk').hidden=false;$('rk').scrollIntoView({block:'start'})}}
+function reset(b){
+  if(!rc){rc=1;b.textContent='¿Seguro? Pulsa otra vez para borrar todo';setTimeout(()=>{rc=0;b.textContent='Empezar una partida nueva'},4000);return}
+  rc=0;b.textContent='Empezar una partida nueva';fresh(S.real);paused=true;save();closeG();tourEnd(true);if(!$('sim').hidden){render();if(!S.real)openBrief()}else rHome();run();toast('Partida nueva con $10,000.');
+}
+
+/* ======================= CAPA DE JUEGO ======================= */
+const ck='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2 5 8.6l4.6-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function gx(){
+  const t0=S.g.t0,since=S.day-t0,tr=S.tr.filter(t=>t.lv===S.g.L),eq=equity(),
+    P=Object.entries(S.pos).map(([s,p])=>({s,v:p.q*(px(s)||0),x:G[s].x,e:G[s].e})),inv=P.reduce((a,b)=>a+b.v,0),
+    secs=new Set(P.filter(p=>p.x!=='ETF').map(p=>p.x)),mw=P.length?Math.max(...P.map(p=>p.v))/eq:0,
+    e0=S.eq[t0]||CAP,b0=S.bm[t0]||100,myR=eq/e0-1,ixR=S.bm[S.bm.length-1]/b0-1,spy=S.pos.SPY?S.pos.SPY.q*px('SPY'):0;
+  return{since,tr,eq,P,inv,secs,mw,myR,ixR,spy,ind:P.filter(p=>p.s!=='SPY').length}
+}
+const LVIZ=['M0 44 L20 44 L20 34 L44 34 L44 24 L70 24 L70 12 L100 12','M0 40 L18 34 L30 38 L50 20 L66 24 L84 10 L100 14','PIE','M0 36 C15 30 25 34 40 26 S70 20 100 10','M0 14 L22 16 L30 40 L38 46 L48 36 L64 26 L80 18 L100 14','STOP','DUO'];
+function lviz(i){const st='fill="none" stroke="var(--acc)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"',v=LVIZ[i];let s='<line x1="0" x2="100" y1="50" y2="50" stroke="var(--line-2)"/>';
+ if(v==='PIE')s='<g transform="translate(50 27)"><circle r="22" fill="var(--surface-2)"/><path d="M0 0 L0 -22 A22 22 0 0 1 21 7Z" fill="var(--gold)"/><path d="M0 0 L21 7 A22 22 0 0 1 -12 18Z" fill="var(--acc)"/><path d="M0 0 L-12 18 A22 22 0 0 1 -21 -6Z" fill="var(--line-2)"/></g>';
+ else if(v==='STOP')s+=`<line x1="0" x2="100" y1="38" y2="38" stroke="var(--dn)" stroke-dasharray="3 3"/><path d="M0 26 L20 20 L36 28 L52 18 L70 30 L86 22 L100 16" ${st}/>`;
+ else if(v==='DUO')s+=`<path d="M0 40 L25 34 L50 30 L75 24 L100 20" fill="none" stroke="var(--mut)" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M0 42 L20 36 L40 30 L60 22 L80 16 L100 8" ${st}/>`;
+ else s+=`<path d="${v}" ${st}/>`;
+ return`<svg class="lviz" viewBox="0 0 100 54" preserveAspectRatio="${v==='PIE'?'xMidYMid meet':'none'}" aria-hidden="true">${s}</svg>`}
+const LV=[
+{t:'Suena la campana',k:'La Bolsa de Nueva York y tu primera compra',sum:'Qué es una acción, qué es la NYSE y cómo se compra.',
+ sl:[{kv:'1 acción',h:'Una acción es un pedazo de empresa',p:'Si compras una acción de Coca-Cola, eres dueño de una parte diminuta de Coca-Cola. Si a la empresa le va bien y más gente quiere sus acciones, el precio sube; si le va mal, baja.',f:'Coca-Cola tiene miles de millones de acciones. Con una sola ya eres accionista.'},
+     {kv:'1792',h:'La NYSE, en el 11 de Wall Street',p:'La New York Stock Exchange nació en 1792, cuando 24 corredores firmaron el Acuerdo de Buttonwood en Manhattan. Hoy es la bolsa más grande del mundo por el valor de sus empresas.',f:'Abre de lunes a viernes de 9:30 a 16:00, hora de Nueva York. Una campana marca la apertura y el cierre.'},
+     {kv:'KO',h:'El ticker es el apodo de la empresa',p:'Cada empresa tiene un símbolo corto: KO es Coca-Cola, JPM es JPMorgan, DIS es Disney. En el juego verás una etiqueta NYSE o NASDAQ al lado de cada una.',f:'NASDAQ es la otra gran bolsa de EE. UU., 100 % electrónica. Ahí cotizan Apple, Microsoft y NVIDIA.'}],
+ ob:[{t:'Abre el Mercado',ok:x=>!!S.g.seen.mk},{t:'Compra acciones de una empresa de la NYSE',ok:x=>x.tr.some(t=>t.t==='B'&&isN(t.s))},{t:'Deja pasar 5 días de mercado',ok:x=>x.since>=5,pr:x=>`${Math.min(5,x.since)}/5`}],
+ bo:{t:'Compra 2 empresas distintas de la NYSE',ok:x=>new Set(x.tr.filter(t=>t.t==='B'&&isN(t.s)).map(t=>t.s)).size>=2||null},
+ q:[['¿Qué compras cuando compras una acción?',['Un préstamo a la empresa','Una pequeña parte de la empresa','Un producto de la empresa'],1,'Una acción es una parte de la propiedad de la empresa. Prestarle dinero sería comprar un bono.'],
+    ['¿En qué horario abre la NYSE?',['24 horas, todos los días','De 9:30 a 16:00, hora de Nueva York, de lunes a viernes','De 8:00 a 20:00, de lunes a sábado'],1,'La sesión regular va de 9:30 a 16:00, hora del Este de EE. UU., con la campana de apertura y la de cierre.'],
+    ['¿Qué es KO?',['El ticker de Coca-Cola','Un índice de la bolsa','Un tipo de orden'],0,'El ticker es el símbolo corto con el que se identifica a una empresa en la bolsa.']]},
+{t:'Compra barato, vende caro',k:'Ganancias, comisiones y dividendos',sum:'Ganancia realizada, el costo de operar y los dividendos.',
+ sl:[{kv:'$50 → $55',h:'Ganas cuando vendes más caro de lo que compraste',p:'Si compras a $50 y vendes a $55, ganas $5 por acción. Mientras no vendas, esa ganancia es "no realizada": está en la pantalla, pero puede desaparecer si el precio baja.',f:'Tu costo medio es el precio promedio que pagaste. Si compras en varias veces, se recalcula solo.'},
+     {kv:'0,1 %',h:'Cada operación tiene un costo',p:'El bróker cobra una comisión al comprar y otra al vender. Aquí es 0,1 % con un mínimo de $1. Si compras $200, pagas $1, que es 0,5 %: operar montos chicos sale caro.',f:'Por eso tu patrimonio baja un poco justo después de comprar, aunque el precio no se mueva.'},
+     {kv:'3 %',h:'Dividendos: la empresa te paga por ser dueño',p:'Muchas empresas maduras reparten parte de sus ganancias. Coca-Cola, Johnson & Johnson o Verizon pagan dividendos cada trimestre. Te llegan en efectivo solo por tener las acciones.',f:'En el juego los dividendos llegan cada 20 días para no hacerte esperar; en la vida real suelen pagarse cada tres meses.'}],
+ ob:[{t:'Haz una venta con ganancia después de comisiones',ok:x=>x.tr.some(t=>t.t==='S'&&t.pl>0)},{t:'Revisa tu historial de operaciones',ok:x=>!!S.g.seen.hs}],
+ bo:{t:'Cobra un dividendo',ok:x=>x.tr.some(t=>t.t==='D')||null},
+ q:[['Compraste a $40, la acción vale $46 y no has vendido. Esa ganancia es…',['Realizada','No realizada','Un dividendo'],1,'Solo se vuelve realizada cuando vendes. Hasta entonces puede crecer o desaparecer.'],
+    ['Con 0,1 % de comisión y mínimo de $1, ¿qué sale más caro en porcentaje?',['Comprar $200','Comprar $5,000','Cuesta lo mismo'],0,'En $200 pagas el mínimo de $1, que es 0,5 %. En $5,000 pagas $5, que es 0,1 %.'],
+    ['¿Qué es un dividendo?',['Una comisión que pagas al bróker','Un pago que la empresa hace a sus accionistas','La subida del precio de la acción'],1,'Es una parte de las ganancias que la empresa reparte en efectivo entre sus dueños.']]},
+{t:'No todo en una canasta',k:'Diversificación y sectores',sum:'Repartir el dinero entre empresas y sectores.',
+ sl:[{kv:'1 ≠ 5',h:'Una mala noticia no debe hundirte',p:'Si todo tu dinero está en una empresa y esa empresa tropieza, pierdes mucho. Si lo repartes entre varias, una caída pesa menos en el total.',f:'A esto se le llama diversificar. Es lo más parecido a una regla de oro que tiene la inversión.'},
+     {kv:'4 sectores',h:'Los sectores se mueven distinto',p:'Bancos, energía, salud y tecnología reaccionan diferente a la misma noticia. Si suben las tasas de interés, a los bancos les suele ir mejor y a la tecnología peor. Mezclar sectores suaviza los golpes.',f:'Mira la pestaña Noticias: cada noticia te dice a qué sector golpea y por qué.'},
+     {kv:'40 %',h:'La regla de este nivel',p:'Muchos inversores evitan que una sola acción pese más del 20 o 25 % de su dinero. Aquí la regla es más suave: ninguna posición por encima del 40 % de tu patrimonio.',f:'Diversificar no te protege si cae todo el mercado a la vez. Eso lo vivirás en el nivel 5.'}],
+ ob:[{t:'Ten acciones de 3 sectores distintos a la vez (sin contar ETF)',ok:x=>x.secs.size>=3,pr:x=>`${Math.min(3,x.secs.size)}/3`},{t:'Que ninguna posición pese más del 40 % de tu patrimonio',ok:x=>x.secs.size>=3&&x.mw<=.4,pr:x=>x.P.length?`mayor: ${fm(x.mw*100,0)} %`:''}],
+ bo:{t:'Ten 5 sectores distintos a la vez',ok:x=>x.secs.size>=5||null},
+ q:[['Tienes todo en una sola acción y la empresa anuncia un fraude. ¿Qué pasa con tu portafolio?',['Casi nada','Cae casi tanto como la acción','Sube'],1,'Sin diversificación, el problema de una empresa es el problema de todo tu dinero.'],
+    ['Suben las tasas de interés. ¿Qué sector suele salir ganando?',['Bancos','Tecnología','Ninguno'],0,'Los bancos cobran más por prestar. La tecnología suele caer porque sus ganancias futuras valen menos hoy.'],
+    ['¿Diversificar te protege si cae todo el mercado?',['Sí, por completo','Solo en parte: el riesgo del mercado sigue ahí','Sí, si tienes 3 sectores'],1,'La diversificación reduce el riesgo de cada empresa, no el de todo el mercado.']]},
+{t:'El termómetro del mercado',k:'Índices, ETF y el S&P 500',sum:'Qué es un índice y cómo comprarlo entero con un ETF.',
+ sl:[{kv:'500',h:'Un índice resume a muchas empresas',p:'El Dow Jones sigue a 30 grandes empresas desde 1896. El S&P 500 sigue a 500 de las mayores de EE. UU. Cuando las noticias dicen "Wall Street subió 1 %", hablan de un índice.',f:'En el juego, la línea gris de tu gráfico es un índice: el promedio de las 30 empresas.'},
+     {kv:'SPY',h:'Un ETF te compra el índice entero',p:'SPY es un ETF que replica el S&P 500. Con una sola compra eres dueño de un pedacito de 500 empresas: diversificación instantánea. SPY cotiza en NYSE Arca, parte de la Bolsa de Nueva York.',f:'Un ETF se compra y se vende como cualquier acción, durante el horario de la bolsa.'},
+     {kv:'80 / 20',h:'Núcleo y satélites',p:'Una estrategia común: una base grande en un ETF del índice (el núcleo) y unas pocas acciones elegidas por ti (los satélites).',f:'Según los informes SPIVA de S&P, la mayoría de los fondos de gestión activa rinden menos que el S&P 500 a largo plazo.'}],
+ ob:[{t:'Compra SPY',ok:x=>!!S.pos.SPY},{t:'Que SPY pese al menos 20 % de tu patrimonio',ok:x=>x.spy/x.eq>=.2,pr:x=>`${fm(x.spy/x.eq*100,0)}/20 %`}],
+ bo:{t:'Núcleo y satélites: SPY más 2 acciones individuales',ok:x=>(!!S.pos.SPY&&x.ind>=2)||null},
+ q:[['¿Qué es el S&P 500?',['Una empresa','Un índice de 500 grandes empresas de EE. UU.','Un bróker'],1,'Es un índice: una canasta que mide cómo les va a 500 de las mayores empresas de EE. UU.'],
+    ['¿Qué ventaja tiene comprar SPY?',['Garantiza ganancias','Te diversifica en 500 empresas con una sola compra','No tiene riesgo'],1,'Te diversifica al instante. Pero si cae todo el mercado, SPY cae con él.'],
+    ['¿A cuántas empresas sigue el Dow Jones?',['30','100','500'],0,'El Dow Jones Industrial Average sigue a 30 grandes empresas desde 1896.']]},
+{t:'Lunes negro',k:'Volatilidad, pánico y circuit breakers',sum:'Qué hacer, y qué no, cuando el mercado se desploma.',
+ sl:[{kv:'−22,6 %',h:'Los mercados también caen fuerte',p:'El 19 de octubre de 1987, el Dow Jones cayó 22,6 % en un solo día. En 2020, por la pandemia, el S&P 500 perdió un tercio de su valor en poco más de un mes. Las dos veces, el mercado se recuperó con los años.',f:'A ese día de 1987 se le conoce como el Lunes Negro.'},
+     {kv:'7 · 13 · 20',h:'Los frenos de emergencia de la bolsa',p:'Si el S&P 500 cae 7 % en un día, la negociación se detiene 15 minutos (circuit breaker de nivel 1). Con 13 % se detiene otra vez y con 20 % la bolsa cierra el resto del día.',f:'Sirven para que la gente piense antes de vender en pánico.'},
+     {kv:'Aguanta',h:'Vender en pánico fija la pérdida',p:'Si vendes en el fondo, conviertes una caída temporal en una pérdida real. Quien aguanta con empresas sanas suele recuperarse, aunque nunca está garantizado.',f:'En este nivel viene un crash. No sabes el día exacto, pero viene.'}],
+ ob:[{t:'Invierte al menos 50 % de tu patrimonio',ok:x=>x.inv/x.eq>=.5,pr:x=>`${fm(x.inv/x.eq*100,0)}/50 %`},{t:'Aguanta hasta que el mercado rebote',ok:x=>!!S.g.cr&&S.day>=S.g.cr.d0+14,pr:x=>S.g.cr?(S.day<S.g.cr.d0?'el crash se acerca…':`${Math.min(14,S.day-S.g.cr.d0)}/14 días`):'empieza al invertir'}],
+ bo:{t:'Manos de diamante: no vendas nada durante los 5 días de pánico',ok:x=>{const c=S.g.cr;if(!c)return null;if(x.tr.some(t=>t.t==='S'&&!t.auto&&t.dd>=c.d0&&t.dd<=c.d0+4))return false;return S.day>c.d0+4?true:null}},
+ q:[['¿Qué hace un circuit breaker?',['Detiene la negociación cuando el mercado cae mucho en un día','Prohíbe vender para siempre','Sube los precios'],0,'Es una pausa obligatoria para cortar el pánico, no una prohibición de vender.'],
+    ['Tu acción cayó 25 % por un pánico general, pero la empresa sigue sana. Si vendes ahora…',['Conviertes la pérdida en real','Recuperas tu dinero','No pasa nada'],0,'Mientras no vendas, la pérdida es temporal. Al vender en el fondo, la fijas.'],
+    ['¿Cuánto cayó el Dow Jones el 19 de octubre de 1987?',['2,2 %','22,6 %','50 %'],1,'Fue la mayor caída en un solo día de su historia: 22,6 %.']]},
+{t:'Controla el riesgo',k:'Órdenes límite, stop-loss y tamaño de posición',sum:'Decidir cuánto puedes perder antes de comprar.',
+ sl:[{kv:'3 órdenes',h:'A mercado, límite y stop-loss',p:'A mercado: compras ya, al precio de ahora. Límite: eliges el precio máximo; si la acción no baja hasta ahí, no se compra. Stop-loss: eliges un precio de salida; si la acción cae hasta ahí, se vende sola.',f:'Desde este nivel, la ventana de compra tiene orden límite y stop-loss.'},
+     {kv:'2 %',h:'Decide cuánto puedes perder antes de comprar',p:'Regla del 1 al 2 %: no arriesgues más del 1 o 2 % de tu patrimonio en una sola operación. Acciones = pérdida máxima ÷ (precio de entrada − stop).',f:'Patrimonio $10,000, riesgo 2 % = $200. Compras a $50 con stop en $46: 200 ÷ 4 = 50 acciones.'},
+     {kv:'¡Salto!',h:'El stop-loss no es perfecto',p:'Si el precio salta de golpe por debajo de tu stop, se vende al siguiente precio disponible, que puede ser peor. Aun así te protege de lo peor.',f:'La calculadora de riesgo de la Academia hace la cuenta por ti.'}],
+ ob:[{t:'Compra con un stop-loss',ok:x=>x.tr.some(t=>t.t==='B'&&t.sl)},{t:'Que el riesgo de esa compra no pase del 2 % de tu patrimonio',ok:x=>x.tr.some(t=>t.t==='B'&&t.sl&&t.rk!=null&&t.rk<=.02)}],
+ bo:{t:'Que se ejecute una orden límite',ok:x=>x.tr.some(t=>t.auto==='LIM')||null},
+ q:[['Pones una orden límite de compra a $48 y la acción está en $50. ¿Qué pasa?',['Se compra ya a $50','Se compra solo si baja a $48 o menos','Se cancela'],1,'La orden límite espera a que el precio llegue a tu límite o mejore.'],
+    ['Patrimonio $10,000, riesgo 1 %, entrada $20 y stop $18. ¿Cuántas acciones?',['50','100','500'],0,'Pérdida máxima $100. Entre $2 de distancia al stop: 50 acciones.'],
+    ['¿Para qué sirve un stop-loss?',['Para asegurar ganancias sin límite','Para limitar cuánto puedes perder','Para pagar menos comisión'],1,'Fija de antemano el precio al que sales si la operación sale mal.']]},
+{t:'Gánale al mercado',k:'Rendimiento frente al índice',sum:'Tu examen final: 30 días con todo lo aprendido.',
+ sl:[{kv:'vs. SPY',h:'El rival es el índice',p:'Ganar 8 % suena bien, pero si el S&P 500 ganó 15 %, te habría ido mejor comprando SPY y sin hacer nada. Por eso los profesionales se miden contra un índice.',f:'En tu gráfico, la línea dorada eres tú y la gris es el índice.'},
+     {kv:'Sharpe',h:'Ganar con menos sustos',p:'El ratio de Sharpe divide lo que ganaste por encima de una inversión sin riesgo entre lo que se movió tu portafolio. Más de 1 suele considerarse bueno.',f:'Dos portafolios que ganan lo mismo no son iguales: el que se mueve menos es mejor.'},
+     {kv:'30 días',h:'Tu examen final',p:'Tienes 30 días de mercado. Arma tu portafolio con todo lo aprendido: diversifica, usa stop-loss, lee las noticias y no vendas en pánico.',f:'Apruebas si al día 30 tienes al menos 60 % invertido y diversificado. Ganarle al índice te da la estrella extra.'}],
+ ob:[{t:'Juega 30 días en este nivel',ok:x=>x.since>=30,pr:x=>`${Math.min(30,x.since)}/30`},{t:'Al día 30: al menos 60 % invertido y diversificado (SPY 20 % o 3 sectores)',ok:x=>x.since>=30&&x.inv/x.eq>=.6&&(x.spy/x.eq>=.2||x.secs.size>=3),pr:x=>`${fm(x.inv/x.eq*100,0)} % invertido`}],
+ bo:{t:'Gánale al índice en estos 30 días',ok:x=>(x.since>=30&&x.myR>x.ixR)||null,pr:1},
+ q:[['Ganaste 8 % y el índice 15 %. ¿Le ganaste al mercado?',['Sí','No, quedaste 7 puntos por debajo','Empate'],1,'Lo que cuenta es la diferencia con el índice: −7 puntos.'],
+    ['Dos portafolios ganan 10 %. Uno se movió mucho más. ¿Cuál tiene mejor Sharpe?',['El que se movió más','El que se movió menos','Igual'],1,'Mismo retorno con menos volatilidad da un Sharpe más alto.'],
+    ['Para un principiante, ¿qué suele ser más sensato a largo plazo?',['Comprar y vender todos los días','Un ETF del índice como base y diversificar','Todo en una sola acción'],1,'Las comisiones y los errores se acumulan al operar mucho. Una base indexada y diversificada es lo más recomendado para empezar.']]}];
+const BD=[
+ {id:'first',i:'01',t:'Primera campana',d:'Haz tu primera compra',ok:()=>S.tr.some(t=>t.t==='B')},
+ {id:'profit',i:'$',t:'Primera ganancia',d:'Vende con ganancia',ok:()=>S.tr.some(t=>t.t==='S'&&t.pl>0)},
+ {id:'sniper',i:'+10',t:'Francotirador',d:'Vende con 10 % o más sobre tu costo',ok:()=>S.tr.some(t=>t.t==='S'&&t.pp>=.1)},
+ {id:'rent',i:'3×',t:'Rentista',d:'Cobra dividendos 3 veces',ok:()=>(S.dvN||0)>=3},
+ {id:'five',i:'5',t:'Cinco sectores',d:'Ten 5 sectores a la vez',ok:()=>new Set(Object.keys(S.pos).map(s=>G[s].x).filter(x=>x!=='ETF')).size>=5},
+ {id:'diamond',i:'◆',t:'Manos de diamante',d:'Aguanta el crash sin vender',ok:()=>!!S.g.dm},
+ {id:'chute',i:'SL',t:'Paracaídas',d:'Que un stop-loss te saque a tiempo',ok:()=>S.tr.some(t=>t.auto==='SL')},
+ {id:'patient',i:'LIM',t:'Paciencia',d:'Que se ejecute una orden límite',ok:()=>S.tr.some(t=>t.auto==='LIM')},
+ {id:'beat',i:'>',t:'Por encima del índice',d:'Supera al índice tras 30 días o más',ok:()=>S.day>=30&&equity()/CAP*100>S.bm[S.bm.length-1]},
+ {id:'brain',i:'3/3',t:'Cerebrito',d:'Responde un quiz perfecto',ok:()=>!!S.g.qp},
+ {id:'grad',i:'NY',t:'Graduado de Wall Street',d:'Completa los 7 niveles',ok:()=>!!S.g.fin}];
+const RK=[[0,'Novato'],[150,'Aprendiz'],[400,'Operador'],[800,'Analista'],[1300,'Gestor de portafolios'],[2000,'Leyenda de Wall Street']];
+const rank=xp=>{let i=0;RK.forEach((r,k)=>{if(xp>=r[0])i=k});return i};
+function addXP(n){S.g.xp+=n;const b=$('xpb');if(b&&!$('sim').hidden){const r=b.getBoundingClientRect(),f=document.createElement('span');f.className='fly';f.textContent=`+${n} XP`;f.style.left=(r.left+r.width/2-24)+'px';f.style.top=(r.bottom+4)+'px';document.body.appendChild(f);setTimeout(()=>f.remove(),1200)}rXP()}
+function rXP(){const xp=S.g.xp,i=rank(xp),a=RK[i][0],b=RK[i+1]?RK[i+1][0]:a+1000;$('xpl').textContent=i+1;$('xpr').textContent=RK[i][1];$('xpt').textContent=`${xp} XP${RK[i+1]?` · ${b-xp} para ${RK[i+1][1]}`:''}`;$('xpi').style.transform=`scaleX(${Math.min(1,(xp-a)/(b-a))})`}
+
+function chk(){
+  if(!S||S.real)return;
+  BD.forEach(b=>{if(!S.g.bd.includes(b.id)&&b.ok()){S.g.bd.push(b.id);addXP(30);toast(`Insignia nueva: ${b.t}. ${b.d}.`)}});
+  if(S.g.fin||(S.g.ph!=='play'&&S.g.ph!=='ready'))return;
+  const L=LV[S.g.L],x=gx();let ch=false;
+  L.ob.forEach((o,i)=>{if(S.g.ph==='play'&&!S.g.ob[i]&&o.ok(x)){S.g.ob[i]=1;ch=true;addXP(20);toast(`Objetivo cumplido: ${o.t}.`);if(S.g.L===4&&i===0&&!S.g.cr)startCrash()}});
+  if(S.g.bo!==true&&S.g.bo!==false){const r=L.bo.ok(x);if(r!=null){S.g.bo=r;ch=true;if(r){addXP(40);toast(`Reto extra cumplido: ${L.bo.t}.`);if(S.g.L===4)S.g.dm=1}else toast('Reto extra perdido: vendiste durante el pánico.')}}
+  if(S.g.ph==='play'&&L.ob.every((_,i)=>S.g.ob[i])){S.g.ph='ready';ch=true;toast('Misión cumplida. Haz el quiz para cerrar el nivel.')}
+  if(ch)save();
+}
+function rMis(){
+  const el=$('mis');
+  if(S.real){const m=mkt(),live=WSst==='on';el.classList.remove('ready');el.innerHTML=`<div class="big">NY</div><div><h2>${m.open?'Bolsa de Nueva York abierta':'Bolsa de Nueva York cerrada'}</h2><p class="k">Bolsa real · precios de Finnhub · ${m.half?'hoy cierra temprano, a las 13:00 ET · ':''}horario de 9:30 a 16:00, hora de Nueva York</p><div class="clock" id="rclk">${rClock(m,1)}</div><ul class="obs stt" style="margin-top:10px"><li class="${KEY?'ok':''}"><span class="ck">${KEY?ck:''}</span><span>${KEY?'Clave de Finnhub conectada: puedes operar':'Para comprar y vender falta tu clave de Finnhub (⚙)'}</span></li><li class="${m.open&&live?'ok':''}"><span class="ck">${m.open&&live?ck:''}</span><span>${m.open?(live?'Precios en vivo, operación por operación':'Conectando con la transmisión en vivo…'):'Precios congelados en el último cierre'}</span></li><li class="${TVST==='ok'?'ok':TVST==='err'?'fail':''}"><span class="ck">${TVST==='ok'?ck:''}</span><span>${TVST==='ok'?'Precios y noticias en vivo de TradingView en pantalla':TVST==='err'?'TradingView no cargó aquí (ver el aviso)':'Cargando TradingView…'}</span></li><li class="${S.rn.length?'ok':''}"><span class="ck">${S.rn.length?ck:''}</span><span>Noticias de Finnhub: ${S.rn.length} recibidas, se revisan cada minuto</span></li></ul></div><div class="side">${KEY?'':`<button class="btn pri" onclick="$('rk').hidden=false">Conectar la clave</button>`}<button class="btn" onclick="setSrc('sim')">Ir al modo Práctica</button></div>`;return}
+  if(S.g.fin){el.innerHTML=`<div class="big">7/7</div><div><h2>Campaña completada: modo libre</h2><p class="k">Ya tienes todo desbloqueado: órdenes avanzadas, herramientas profesionales de la Academia y datos reales en ⚙. Sigue jugando o empieza de cero para mejorar tus estrellas.</p><div class="stars">${starStr(S.g.stars.reduce((a,b)=>a+(b||0),0),21)}</div></div><div class="side"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn" onclick="openBadges()">Ver tus insignias</button></div>`;return}
+  const L=LV[S.g.L],x=gx(),n=L.ob.length,d=L.ob.filter((_,i)=>S.g.ob[i]).length,rd=S.g.ph==='ready',bo=S.g.bo;
+  el.classList.toggle('ready',rd);
+  el.innerHTML=`<div class="big">${String(S.g.L+1).padStart(2,'0')}</div><div><h2>${L.t}</h2><p class="k">${L.k} · Misión del nivel ${S.g.L+1} de 7</p><ul class="obs">${L.ob.map((o,i)=>`<li class="${S.g.ob[i]?'ok':''}"><span class="ck">${ck}</span><span>${o.t}${!S.g.ob[i]&&o.pr&&S.g.ph==='play'?`<em>${o.pr(x)}</em>`:''}</span></li>`).join('')}<li class="bonus ${bo===true?'ok':bo===false?'fail':''}"><span class="ck">${bo===true?ck:''}</span><span><b style="color:var(--acc)">Reto extra:</b> ${L.bo.t}${bo===false?' <em>perdido</em>':''}${bo==null&&L.bo.pr&&S.g.ph!=='brief'?`<em>tú ${pc(x.myR*100)} · índice ${pc(x.ixR*100)}</em>`:''}</span></li></ul><div class="prog"><i style="transform:scaleX(${d/n})"></i></div></div>
+  <div class="side">${rd?`<button class="btn pri pulse" onclick="openQuiz()">Hacer el quiz del nivel</button>`:''}${S.g.ph==='brief'?`<button class="btn pri pulse" onclick="openBrief()">Empezar el nivel ${S.g.L+1}</button>`:''}<button class="btn ex" onclick="openBrief(true)">Repasar la lección</button><button class="btn ex" onclick="openMap()">Ver el mapa</button></div><button class="btn ghost s tog" onclick="$('mis').classList.toggle('min')" aria-label="Mostrar u ocultar la misión">▾</button>`;
+}
+const starStr=(n,t=3)=>`<span>${'★'.repeat(n)}</span><span class="off">${'★'.repeat(Math.max(0,t-n))}</span>`;
+
+/* ---------- Modal del juego ---------- */
+function openG(html,lbl){$('gmb').innerHTML=html;$('gm').hidden=false;$('gmb').setAttribute('aria-label',lbl||'');tourHide();run();setTimeout(()=>{const b=$('gmb').querySelector('.btn.pri,.qopt');b&&b.focus()},60)}
+function closeG(){$('gm').hidden=true;run();if(!$('sim').hidden)render()}
+let BS=0,BR=false;
+function openBrief(rev,li){BS=0;BR=!!rev;BL=li??S.g.L;drawBrief()}
+let BL=0;
+function drawBrief(){
+  const L=LV[BL],n=L.sl.length,last=BS===n,s=L.sl[BS];
+  const body=last?`<div class="slide"><p class="eyebrow">Tu misión</p><h2 id="gmt">${L.t}</h2><ul class="obs" style="margin-top:10px">${L.ob.map(o=>`<li><span class="ck"></span><span>${o.t}</span></li>`).join('')}<li class="bonus"><span class="ck"></span><span><b style="color:var(--acc)">Reto extra:</b> ${L.bo.t}</span></li></ul><p class="fact" style="margin-top:14px">Al cumplir los objetivos se abre un quiz de 3 preguntas. Estrellas: misión cumplida, reto extra y quiz perfecto.</p></div>`
+    :`<div class="slide"><div class="kv">${s.kv}</div><h2 id="gmt">${s.h}</h2><p>${s.p}</p>${s.f?`<p class="fact" style="margin-top:14px">${s.f}</p>`:''}</div>`;
+  openG(`<div class="gh"><span class="lvnum">${String(BL+1).padStart(2,'0')}</span><b>${L.t}</b><span class="sp"></span><span class="dots2">${Array.from({length:n+1},(_,i)=>`<i class="${i<=BS?'on':''}"></i>`).join('')}</span>${BR?`<button class="x" onclick="closeG()" aria-label="Cerrar la lección">✕</button>`:''}</div><div class="gb">${BR&&last?body.replace('Tu misión','Misión del nivel'):body}</div><div class="gf">${BS?`<button class="btn" onclick="BS--;drawBrief()">Atrás</button>`:'<span></span>'}${last?(BR?`<button class="btn pri" onclick="closeG()">Volver al juego</button>`:`<button class="btn pri" onclick="startLevel()">Empezar la misión</button>`):`<button class="btn pri" onclick="BS++;drawBrief()">Siguiente</button>`}</div>`,'Lección del nivel');
+}
+function startLevel(){S.g.ph='play';S.g.t0=S.day;S.g.ob={};S.g.bo=null;S.g.seen={};if(S.g.L===0&&S.g.tour<0&&!S.g.tourDone)S.g.tour=0;save();closeG();if(S.g.L>0)toast(`Nivel ${S.g.L+1} en marcha. Pulsa ▶ cuando estés listo.`)}
+let QS=null;
+function openQuiz(){const L=LV[S.g.L];QS={i:0,sc:0,qs:L.q.map(q=>{const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);return{q:q[0],o,a:q[2],w:q[3]}})};drawQuiz()}
+function drawQuiz(ans){
+  const q=QS.qs[QS.i],L=LV[S.g.L];
+  openG(`<div class="gh"><span class="lvnum">${String(S.g.L+1).padStart(2,'0')}</span><b>Quiz · ${L.t}</b><span class="sp"></span><span class="mono mut">${QS.i+1}/3</span></div><div class="gb"><div class="slide"><h2 id="gmt" style="font-size:24px;margin-bottom:14px">${q.q}</h2><div class="qopts">${q.o.map(([t,i],k)=>`<button class="qopt${ans!=null?(i===q.a?' right':k===ans?' wrong':''):''}" ${ans!=null?'disabled':''} onclick="qAns(${k})"><b>${'ABC'[k]}</b>${t}</button>`).join('')}</div>${ans!=null?`<p class="why ${q.o[ans][1]===q.a?'y':'n'}" style="margin-top:12px"><b>${q.o[ans][1]===q.a?'Correcto.':'No exactamente.'}</b> ${q.w}</p>`:''}</div></div><div class="gf"><span class="mono mut">${QS.sc} correctas</span>${ans!=null?`<button class="btn pri" onclick="qNext()">${QS.i<2?'Siguiente pregunta':'Ver el resultado'}</button>`:'<span></span>'}</div>`,'Quiz');
+}
+function qAns(k){const q=QS.qs[QS.i];if(q.o[k][1]===q.a)QS.sc++;drawQuiz(k)}
+function qNext(){if(QS.i<2){QS.i++;drawQuiz()}else finishLevel(QS.sc)}
+function finishLevel(sc){
+  const L=S.g.L,bo=S.g.bo===true,st=1+(bo?1:0)+(sc===3?1:0),xp=100+25*sc+(bo?50:0);
+  S.g.stars[L]=Math.max(S.g.stars[L]||0,st);if(sc===3)S.g.qp=1;addXP(xp);
+  const last=L===LV.length-1;if(last){S.g.fin=true;S.g.pro=true}else{S.g.L++;S.g.ph='brief';S.g.ob={};S.g.bo=null}
+  save();chk();rMis();
+  openG(`<div class="gb win"><p class="eyebrow">Nivel ${L+1} completado</p><h2 id="gmt" style="font-size:clamp(26px,4vw,38px)">${LV[L].t}</h2><div class="bigstars">${[0,1,2].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<st?'var(--gold)':'none'}" stroke="${i<st?'var(--gold)':'var(--line-2)'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div><p class="mut">${st} de 3 estrellas · misión ✓ · reto extra ${bo?'✓':'✗'} · quiz ${sc}/3</p><div class="kv" id="xpc">+0</div><p class="mut">XP ganada en este nivel</p>${last?`<p class="fact" style="text-align:left">Terminaste la campaña. Desbloqueaste el modo libre: órdenes avanzadas, análisis con datos históricos reales, el informe en Excel y datos de mercado en vivo (⚙).</p>`:`<p class="fact" style="text-align:left">Siguiente: <b>${LV[L+1].t}</b>. ${LV[L+1].sum}</p>`}</div><div class="gf"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn pri" onclick="${last?'closeG()':'openBrief()'}">${last?'Seguir en modo libre':`Empezar el nivel ${L+2}`}</button></div>`,'Nivel completado');
+  const svgs=$('gmb').querySelectorAll('.bigstars svg');svgs.forEach((s,i)=>setTimeout(()=>s.classList.add('in'),RM?0:250+i*220));
+  countUp($('xpc'),xp);confetti();
+}
+function countUp(el,n){if(RM){el.textContent='+'+n;return}const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1000),e=1-Math.pow(1-k,3);el.textContent='+'+Math.round(n*e);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function lvState(i){if(S.g.fin||i<S.g.L)return'done';if(i===S.g.L)return'cur';return'lock'}
+function openMap(){
+  openG(`<div class="gh"><b id="gmt">Mapa de la campaña</b><span class="sp"></span><button class="x" onclick="closeG()" aria-label="Cerrar el mapa">✕</button></div><div class="gb" style="gap:8px">${LV.map((l,i)=>{const s=lvState(i);return`<div class="bdg ${s==='lock'?'off':''}"><span class="ic">${String(i+1).padStart(2,'0')}</span><div style="flex:1"><b>${l.t}</b><small>${l.sum}</small></div>${s==='done'?`<span class="stars">${starStr(S.g.stars[i]||0)}</span><button class="btn s" onclick="openBrief(true,${i})">Repasar</button>`:s==='cur'?'<span class="tag nyse">En curso</span>':'<span class="mut">Bloqueado</span>'}</div>`}).join('')}</div>`,'Mapa');
+}
+function openBadges(){
+  const xp=S.g.xp,i=rank(xp);
+  openG(`<div class="gh"><b id="gmt">${RK[i][1]} · ${xp} XP</b><span class="sp"></span><button class="x" onclick="closeG()" aria-label="Cerrar">✕</button></div><div class="gb"><p class="mut">Rangos: ${RK.map(r=>`${r[1]} (${r[0]})`).join(' · ')}</p><div class="bdgs">${bdgHTML()}</div></div>`,'Insignias');
+}
+const bdgHTML=()=>BD.map(b=>{const on=S.g.bd.includes(b.id);return`<div class="bdg ${on?'':'off'}"><span class="ic">${b.i}</span><div><b>${b.t}</b><small>${b.d}</small></div></div>`}).join('');
+function confetti(){
+  if(RM)return;const c=$('fx'),x=c.getContext('2d'),W=c.width=innerWidth,H=c.height=innerHeight;c.hidden=false;
+  const cols=['#d4af37','#f1d77a','#7c3aed','#a78bfa'],P=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*120,y:H*.38,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
+  const t0=performance.now();(function f(t){const k=(t-t0)/1400;x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.1;x.save();x.globalAlpha=Math.max(0,1-k);x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});if(k<1)requestAnimationFrame(f);else c.hidden=true})(t0);
+}
+function unlockPro(){S.g.pro=true;save();rAP();toast('Herramientas profesionales desbloqueadas.')}
+
+/* ---------- Tutorial guiado (nivel 1) ---------- */
+const TOUR=[
+ {sel:'#cp',t:'Este es tu efectivo: $10,000 virtuales para invertir. No es dinero real.',next:1},
+ {sel:'#mis',t:'Aquí está tu misión. Cada objetivo se marca solo cuando lo cumples.',next:1},
+ {sel:'#t-mk',t:'Abre el Mercado para ver las 30 empresas.',w:()=>view==='mk',wt:'Toca Mercado'},
+ {sel:'#tk',t:'La etiqueta dorada NYSE marca las empresas de la Bolsa de Nueva York. Toca Coca-Cola (KO) u otra con esa etiqueta.',w:m=>S.g.pk>m&&isN(cur),wt:'Elige una empresa NYSE',mk:()=>S.g.pk},
+ {sel:'#bt-buy',t:'Pulsa Comprar para abrir la orden.',w:()=>!$('md').hidden,wt:'Toca Comprar'},
+ {sel:'#md .box',t:'Escribe cuántas acciones quieres. Mira la comisión: 0,1 % con mínimo de $1. Luego confirma.',w:m=>S.tr.filter(t=>t.t==='B').length>m,wt:'Confirma la compra',mk:()=>S.tr.filter(t=>t.t==='B').length,side:1},
+ {sel:'#pp',t:'El mercado está en pausa. Pulsa ▶ para que pasen los días.',w:()=>!paused,wt:'Toca ▶'},
+ {sel:'#t-pf',t:'Vuelve a Portafolio para comparar tu dinero con el índice.',w:()=>view==='pf',wt:'Toca Portafolio'},
+ {sel:'#ec',t:'La línea dorada eres tú; la gris, el índice. Completa la misión y haz el quiz del nivel.',next:1,end:1}];
+let TM=null,TI=-1;
+function tourTick(){
+  if(!S||S.real||S.g.tour<0||S.g.L!==0||S.g.ph!=='play'||!$('gm').hidden||$('sim').hidden){tourHide();return}
+  const st=TOUR[S.g.tour];if(!st){tourEnd();return}
+  if(TI!==S.g.tour){TI=S.g.tour;TM=st.mk?st.mk():null;const el=document.querySelector(st.sel);el&&el.scrollIntoView({block:'center',behavior:RM?'auto':'smooth'})}
+  if(st.w&&st.w(TM)){S.g.tour++;save();requestAnimationFrame(tourTick);return}
+  tourPos();
+}
+function tourPos(){
+  if(S.g.tour<0)return;const st=TOUR[S.g.tour];if(!st)return;const el=document.querySelector(st.sel),sp=$('spot'),tc=$('tcard');
+  if(!el||!el.getClientRects().length){sp.hidden=tc.hidden=true;return}
+  const r=el.getBoundingClientRect(),p=6;sp.hidden=false;tc.hidden=false;
+  Object.assign(sp.style,{left:r.left-p+'px',top:r.top-p+'px',width:r.width+p*2+'px',height:r.height+p*2+'px'});
+  tc.innerHTML=`<div class="row"><small>Tutorial · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Saltar el tutorial</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>`}`;
+  const w=tc.offsetWidth,h=tc.offsetHeight,vw=innerWidth,vh=innerHeight;let x,y;
+  if(st.side&&vw>900){x=r.right+16;y=r.top;if(x+w>vw-12)x=r.left-w-16}else{x=r.left;y=r.bottom+14;if(y+h>vh-12)y=r.top-h-14}
+  x=Math.max(12,Math.min(x,vw-w-12));y=Math.max(12,Math.min(y,vh-h-12));
+  tc.style.left=x+'px';tc.style.top=y+'px';
+}
+function tourNext(){const st=TOUR[S.g.tour];if(st&&st.end)return tourEnd();S.g.tour++;save();tourTick()}
+function tourEnd(silent){if(S){S.g.tour=-1;S.g.tourDone=1;save()}tourHide();TI=-1;if(!silent&&S&&S.g.L===0)toast('Tutorial terminado. Tu misión sigue arriba.')}
+function tourHide(){$('spot').hidden=true;$('tcard').hidden=true}
+addEventListener('scroll',()=>{if(S&&S.g.tour>=0)tourPos()},{passive:true});
+
+/* ---------- Portada: mapa de niveles y gráfico vivo ---------- */
+function rHome(){
+  const st=S.g,started=S.day>0||S.tr.length||st.L>0||st.ph!=='brief';
+  const lbl=st.fin?'Seguir en modo libre':started?`Continuar el nivel ${st.L+1}`:'Empezar el nivel 1';$('cta').textContent=lbl;$('cta2').textContent=lbl;$('cta3').textContent=lbl;
+  $('lmap').innerHTML=LV.map((l,i)=>{const s=lvState(i);return`<button class="lcard ${s==='lock'?'lock':s==='cur'?'cur':''}" onclick="lvClick(${i})"><span class="n">${String(i+1).padStart(2,'0')}</span>${lviz(i)}<h3>${l.t}</h3><p>${l.sum}</p><span class="st">${s==='done'?`<span class="stars">${starStr(st.stars[i]||0)}</span><span>Repasar la lección</span>`:s==='cur'?'<span class="tag nyse">Te toca</span><span>3 preguntas</span>':'<span>Bloqueado</span><span>Termina el anterior</span>'}</span></button>`}).join('')+`<button class="lcard fin" onclick="openReal()"><span class="n">NY</span><h3>Bolsa real</h3><p>Precios y noticias reales de Nueva York, en vivo mientras la NYSE está abierta. Disponible siempre, con tu clave de Finnhub.</p><span class="st"><span id="lmk">${mkt().open?'NYSE abierta':'NYSE cerrada'}</span><span>${st.bd.length}/${BD.length} insignias</span></span></button>`;
+}
+function lvClick(i){const s=lvState(i);if(s==='lock')return toast('Termina el nivel anterior para abrir este.');if(s==='done'){go('sim');openBrief(true,i);return}play()}
+let HC={a:[],on:!RM,t:null,p:62,d:1};
+function heroSeed(){let p=60.2;HC.a=[];for(let i=0;i<42;i++)HC.a.push(hcStep(p)),p=HC.a[HC.a.length-1].c;HC.p=p}
+function hcStep(o){const c=o*Math.exp(.0004+.011*g()),h=Math.max(o,c)*(1+Math.random()*.006),l=Math.min(o,c)*(1-Math.random()*.006);return{o,c,h,l}}
+function heroDraw(){
+  const el=$('hchart');if(!el)return;const a=HC.a,W=560,H=230,lo=Math.min(...a.map(x=>x.l)),hi=Math.max(...a.map(x=>x.h)),y=v=>8+(H-16)*(1-(v-lo)/(hi-lo||1)),bw=W/a.length;
+  let s='';for(let k=1;k<4;k++)s+=`<line x1="0" x2="${W}" y1="${H*k/4}" y2="${H*k/4}" stroke="var(--line)"/>`;
+  a.forEach((x,i)=>{const up=x.c>=x.o,c=up?'var(--up)':'var(--dn)',cx=i*bw+bw/2;s+=`<line x1="${cx}" x2="${cx}" y1="${y(x.h)}" y2="${y(x.l)}" stroke="${c}" stroke-width="1.2"/><rect x="${cx-bw*.32}" y="${Math.min(y(x.o),y(x.c))}" width="${bw*.64}" height="${Math.max(1.5,Math.abs(y(x.o)-y(x.c)))}" fill="${c}" rx="1"/>`});
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Velas diarias de Coca-Cola en el juego">${s}</svg>`;
+  const L=a[a.length-1],ch=(L.c/a[0].o-1)*100;$('hp').textContent=usd(L.c);$('hc').textContent=pc(ch)+' en 42 días';$('hc').className=cl(ch);
+}
+function heroLoop(){}
+
+function heroEnter(){
+  const h=$('hero-h');if(!h||RM){document.documentElement.classList.add('m-in');return}
+  const orig=h.innerHTML,wrap=(w,em)=>`<span class="w"><span>${em?`<em>${w}</em>`:w}</span></span>`;
+  h.innerHTML=[...h.childNodes].map(c=>(c.textContent||'').split(/\s+/).filter(Boolean).map(w=>wrap(w,c.nodeType===1)).join(' ')).join(' ');
+  const ws=[...h.querySelectorAll('.w')],tops=[...new Set(ws.map(w=>w.offsetTop))];
+  ws.forEach(w=>{w.firstElementChild.style.transitionDelay=Math.min(240,tops.indexOf(w.offsetTop)*80)+'ms'});
+  const ups=document.querySelectorAll('.hero [data-up]');ups.forEach((u,i)=>u.style.transitionDelay=(i===0?0:300+i*60)+'ms');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('m-in')));
+  setTimeout(()=>{h.innerHTML=orig;ups.forEach(u=>u.style.transitionDelay='')},1500);
+}
+
+/* ======================= ACADEMIA Y HERRAMIENTAS ======================= */
+let CD={};
+async function avs(sym,f){
+  const ck=sym+f;if(CD[ck])return CD[ck];if(!AVKEY)throw new Error('falta la clave de Alpha Vantage (⚙ Ajustes)');
+  const get=async(fn,os)=>(await fetch(`https://www.alphavantage.co/query?function=${fn}&symbol=${sym}&outputsize=${os}&apikey=${AVKEY}`)).json(),fk=j=>Object.keys(j).find(x=>x.includes('Time Series'));
+  const fns=f==='D'?[['TIME_SERIES_DAILY','full'],['TIME_SERIES_DAILY','compact']]:[['TIME_SERIES_MONTHLY_ADJUSTED','full'],['TIME_SERIES_MONTHLY','full']];
+  let j,k,fi=0,note='';
+  for(const[fn,os]of fns){j=await get(fn,os);k=fk(j);if(k)break;fi++}
+  if(!k)throw new Error(String(j.Information||j.Note||j['Error Message']||'sin datos').slice(0,140));
+  if(fi===1)note=f==='D'?'El plan gratuito de Alpha Vantage solo da unos 100 días de historial diario; usa datos mensuales para más años.':'Precios mensuales sin ajustar por splits ni dividendos.';
+  const ds=Object.keys(j[k]).sort(),gg=(i,x)=>+j[k][ds[i]][x],ad=!!j[k][ds[0]]['5. adjusted close'],m=i=>ds.map((_,n)=>gg(n,i));
+  let R={d:ds,t:ds,o:m('1. open'),h:m('2. high'),l:m('3. low'),c:m('4. close'),v:m(ad?'6. volume':'5. volume')};R.a=ad?m('5. adjusted close'):R.c;
+  if(f==='Y'){
+    const ys=[...new Set(ds.map(x=>x.slice(0,4)))],Z={d:[],t:ys,o:[],h:[],l:[],c:[],a:[],v:[]};
+    ys.forEach(y=>{const I=ds.map((x,i)=>x.slice(0,4)===y?i:-1).filter(i=>i>=0),L=I[I.length-1];
+      Z.d.push(ds[L]);Z.o.push(R.o[I[0]]);Z.h.push(Math.max(...I.map(i=>R.h[i])));Z.l.push(Math.min(...I.map(i=>R.l[i])));Z.c.push(R.c[L]);Z.a.push(R.a[L]);Z.v.push(I.reduce((t,i)=>t+R.v[i],0))});
+    R=Z}
+  if(f==='D'&&Math.min(...R.c.slice(1).map((v,i)=>v/R.c[i]-1))<-.35)note+=' Se detectó una caída diaria mayor al 35 %: posible split sin ajustar; usa datos mensuales para un análisis fiable.';
+  return CD[ck]={...R,note:note.trim()};
+}
+async function hist(sym){
+  try{const d=await avs(sym,'D');return{...d,src:'Alpha Vantage, datos diarios'+(d.note?` (${d.note})`:'')}}
+  catch(e){const a=S.h[sym]||[];return{src:`precios de esta partida (Alpha Vantage no respondió: ${e.message})`,t:a.map((_,i)=>'#'+(i+1)),d:a.map(()=>''),o:a,h:a,l:a,c:a,a,v:[]}}
+}
+function calc(c){
+  const n=c.length;if(n<15)return null;
+  const r=c.slice(1).map((v,i)=>Math.log(v/c[i])),sma=k=>c.slice(-k).reduce((x,y)=>x+y,0)/Math.min(k,n);
+  let pk=c[0],dd=0,gn=0,l=0;c.forEach(v=>{pk=Math.max(pk,v);dd=Math.min(dd,v/pk-1)});
+  for(let i=n-14;i<n;i++){const d=c[i]-c[i-1];d>0?gn+=d:l-=d}
+  const vol=sdv(r)*Math.sqrt(252)*100;
+  return{last:c[n-1],ret:(c[n-1]/c[0]-1)*100,vol,dd:dd*100,s20:sma(20),s50:sma(50),rsi:l?100-100/(1+gn/l):100,hi:Math.max(...c),lo:Math.min(...c),risk:vol<20?'Bajo':vol<35?'Medio':'Alto'};
+}
+async function anl(){
+  const q=$('ai').value.trim(),o=q?find(q):G[cur];if(!o)return toast('No encontré esa empresa. Elige un símbolo de la lista.');
+  cur=o.s;$('ai').value=o.s;$('at').innerHTML='<tbody><tr><td class="emp">Cargando datos…</td></tr></tbody>';
+  const d=await hist(o.s),m=calc(d.c);$('an').textContent=`Fuente: ${d.src}. Educativo: no es una recomendación de inversión.`;
+  if(!m){$('at').innerHTML='<tbody><tr><td class="emp">Faltan datos (se necesitan al menos 15 puntos).</td></tr></tbody>';return}
+  const up=m.s20>m.s50,rs=m.rsi>70?'Sobrecomprada: subió mucho y podría corregir':m.rsi<30?'Sobrevendida: bajó mucho y podría rebotar':'Zona neutral';
+  const R=[['Precio actual',usd(m.last),'Último precio recibido'],['Retorno del periodo',pc(m.ret),'Cuánto subió o bajó en todo el historial cargado'],['Volatilidad anual',fm(m.vol,1)+' %','Qué tanto se mueve el precio; más alta significa más riesgo'],['Caída máxima',fm(m.dd)+' %','La peor baja desde un máximo'],['Tendencia',up?'Alcista':'Bajista',`Media de 20 (${usd(m.s20)}) ${up?'por encima':'por debajo'} de la media de 50 (${usd(m.s50)})`],['RSI (14)',fm(m.rsi,0),rs],['Rango',`${usd(m.lo)} – ${usd(m.hi)}`,'Mínimo y máximo del periodo'],['Nivel de riesgo',m.risk,'Bajo (menos de 20 %), medio (20 a 35 %), alto (más de 35 %)']];
+  $('at').innerHTML='<tbody>'+R.map(([a,b,c])=>`<tr><td><b>${a}</b></td><td class="num">${b}</td><td><small>${c}</small></td></tr>`).join('')+'</tbody>';
+  if(!$('ce').value){$('ce').value=m.last.toFixed(2);rCalc()}
+}
+function ana(c,dt,tl,f){
+  const n=c.length,pp={D:252,M:12,Y:1}[f];if(n<3)return null;
+  const r=c.slice(1).map((v,i)=>v/c[i]-1),mu=r.reduce((a,b)=>a+b,0)/r.length,sd=sdv(r),yr=(new Date(dt[n-1])-new Date(dt[0]))/31557600000,q=[...r].sort((a,b)=>a-b);
+  let cp=0,dd=0,pi=0,ti=0;c.forEach((v,i)=>{if(v>c[cp])cp=i;const x=v/c[cp]-1;if(x<dd){dd=x;pi=cp;ti=i}});
+  return{n,from:tl[0],to:tl[n-1],c0:c[0],c1:c[n-1],ret:(c[n-1]/c[0]-1)*100,cagr:yr>0?((c[n-1]/c[0])**(1/yr)-1)*100:null,vol:sd*Math.sqrt(pp)*100,sh:sd>0?(mu*pp-.03)/(sd*Math.sqrt(pp)):null,dd:dd*100,pk:tl[pi],tr:tl[ti],best:Math.max(...r)*100,worst:Math.min(...r)*100,pos:r.filter(x=>x>0).length/r.length*100,v5:q[Math.floor(q.length*.05)]*100};
+}
+async function dlx(){
+  const o=find($('ai').value)||G[cur],f=$('fq').value,y=+$('py').value,P={D:'días',M:'meses',Y:'años'}[f],P1={D:'día',M:'mes',Y:'año'}[f];
+  try{await need('xlsx')}catch(e){return toast('No cargó la librería de Excel. Revisa tu internet y recarga la página.')}
+  toast(`Descargando datos de ${o.s}…`);let d;
+  try{d=await avs(o.s,f)}catch(err){return toast(`No se pudo descargar: ${err.message}`)}
+  const cut=y?new Date(Date.now()-y*31557600000).toISOString().slice(0,10):'',I=d.d.map((_,i)=>i).filter(i=>d.d[i]>=cut),F=k=>I.map(i=>d[k][i]),e={t:F('t'),d:F('d'),o:F('o'),h:F('h'),l:F('l'),c:F('c'),a:F('a'),v:F('v')},m=ana(e.a,e.d,e.t,f);
+  if(!m)return toast('Hay muy pocos datos en ese periodo. Elige un periodo más largo o datos más frecuentes.');
+  const lv=m.vol<20?'bajo':m.vol<35?'medio':'alto',
+  R=[['Periodo analizado',`${m.from} a ${m.to}`,`Datos ${{D:'diarios',M:'mensuales',Y:'anuales'}[f]}, fuente Alpha Vantage.`],
+  ['Datos disponibles',`${m.n} ${P}`,m.n<12?'Pocos datos: las cifras de riesgo son poco fiables.':'Cantidad suficiente para un análisis razonable.'],
+  ['Precio inicial → final',`${usd(m.c0)} → ${usd(m.c1)}`,f==='D'?'Precios diarios sin ajustar por splits ni dividendos.':'Precios ajustados por splits y dividendos (si el plan lo permitió).'],
+  ['Rentabilidad total',fm(m.ret)+' %',`Si hubieras invertido $1,000 al inicio, al final tendrías ${usd(1000*m.c1/m.c0)}.`],
+  ['Rentabilidad anualizada',m.cagr==null?'—':fm(m.cagr)+' %',m.cagr==null?'':m.cagr>3?'Superó el 3 % de una inversión sin riesgo.':'No superó el 3 % de una inversión sin riesgo.'],
+  ['Volatilidad anual',fm(m.vol,1)+' %',`Riesgo ${lv}. En un año típico el precio se aleja de su promedio unos ±${fm(m.vol,0)} %.`],
+  ['Caída máxima',fm(m.dd)+' %',`De ${m.pk} a ${m.tr}.`],
+  [`Mejor y peor ${P1}`,`${pc(m.best)} / ${pc(m.worst)}`,'Los extremos muestran qué tan violentos pueden ser los movimientos.'],
+  [`${P} con subida`,fm(m.pos,0)+' %',`Porcentaje de ${P} en los que la acción subió.`],
+  ['Pérdida en un mal periodo (VaR 95 %)',pc(m.v5),`En el 5 % de los peores ${P} la pérdida fue igual o mayor a esta.`],
+  ['Ratio de Sharpe',m.sh==null?'—':fm(m.sh),m.sh==null?'':m.sh<0?'Peor que no asumir riesgo.':m.sh<1?'Retorno modesto para el riesgo asumido.':'Buen retorno por cada unidad de riesgo.']],
+  cl2=`${o.s} entre ${m.from} y ${m.to}: rentabilidad de ${fm(m.cagr??m.ret)} % ${m.cagr==null?'total':'anual'} con riesgo ${lv} y una caída máxima de ${fm(m.dd,0)} %.`;
+  const A=[[`Análisis de ${o.s} · ${o.n}`],[`${{D:'Datos diarios',M:'Datos mensuales',Y:'Datos anuales'}[f]} · ${y?'últimos '+y+(y>1?' años':' año'):'todo el historial disponible'}`]];
+  if(d.note)A.push(['Aviso sobre los datos',d.note]);
+  A.push([],['Indicador','Valor','Interpretación'],...R,[],['Conclusión',cl2],['Aviso','El pasado no garantiza resultados futuros. Material educativo, no es asesoría financiera.']);
+  const w1=XLSX.utils.aoa_to_sheet(A);w1['!cols']=[{wch:34},{wch:26},{wch:100}];
+  const D=[['Fecha','Apertura','Máximo','Mínimo','Cierre','Cierre ajustado','Volumen','Retorno del periodo (%)'],...e.t.map((t,i)=>[t,e.o[i],e.h[i],e.l[i],e.c[i],e.a[i],e.v[i],i?(e.a[i]/e.a[i-1]-1)*100:''])],w2=XLSX.utils.aoa_to_sheet(D);w2['!cols']=Array(8).fill({wch:18});
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,w1,'Análisis');XLSX.utils.book_append_sheet(wb,w2,'Datos');
+  XLSX.writeFile(wb,`${o.s}-${{D:'diario',M:'mensual',Y:'anual'}[f]}.xlsx`);toast(`Excel de ${o.s} descargado (${m.n} ${P}).`);
+}
+function rCalc(){
+  const cap=equity(),r=+$('cr').value,e=+$('ce').value,s=+$('cs').value,o=$('co');
+  if(!(r>0&&e>0&&s>0))return o.textContent='Escribe el riesgo, el precio de entrada y el stop-loss.';
+  if(s>=e)return o.textContent='El stop-loss debe estar por debajo del precio de entrada (para una compra).';
+  const mx=cap*r/100,q=Math.floor(mx/(e-s));
+  o.textContent=`Con un patrimonio de ${usd(cap)} y arriesgando ${fm(r,1)} %, tu pérdida máxima sería ${usd(mx)}. Comprando a ${usd(e)} con stop en ${usd(s)}, te conviene comprar ${q} acciones (${usd(q*e)}, ${fm(q*e/cap*100,1)} % de tu patrimonio).`;
+}
+function rAP(){
+  rCalc();if(!$('ai').value)$('ai').value=cur;if(!$('ce').value&&px(cur))$('ce').value=px(cur).toFixed(2);
+  const pro=S.g.pro||S.g.fin;$('pro').hidden=!pro;$('pro-lock').hidden=pro;
+  const n=S.g.fin?LV.length:S.g.L+1;
+  $('lsl').innerHTML=LV.slice(0,n).map((l,i)=>`<button class="lcard" style="min-height:0" onclick="openBrief(true,${i})"><span class="n" style="font-size:22px">${String(i+1).padStart(2,'0')}</span><h3 style="font-size:16px">${l.t}</h3><p>${l.k}</p></button>`).join('');
+  $('bdl').innerHTML=bdgHTML();
+}
+/* Universo de acciones */
+const ALL=()=>ALLC||(ALLC=S&&S.real?[...M,...UNI.filter(o=>!MS.has(o.s))]:M);
+const splitC=l=>l.split(/[,;\t](?=(?:[^"]*"[^"]*")*[^"]*$)/).map(x=>x.replace(/^"|"$/g,'').trim());
+function uniParse(t){
+  let a;try{a=JSON.parse(t)}catch(e){const L=t.split(/\r?\n/).filter(Boolean),h=splitC(L.shift().toLowerCase());a=L.map(l=>{const c=splitC(l);return Object.fromEntries(h.map((k,i)=>[k,c[i]||'']))})}
+  return(Array.isArray(a)?a:[]).map(r=>({s:String(r.symbol||r.ticker||r.simbolo||r.s||'').toUpperCase().trim(),n:cln(r.name||r.company||r.empresa||r.description||r.n),x:cln(r.sector||r.x)||'Sin clasificar',e:cln(r.exchange||r.bolsa||r.mic||r.e)})).filter(o=>/^[A-Z][A-Z.\-]{0,5}$/.test(o.s)).map(o=>({...o,e:/XNYS|NYSE/i.test(o.e)?'NYSE':/XNAS|NASDAQ/i.test(o.e)?'NASDAQ':o.e}));
+}
+function setUni(a,fromStore){
+  const seen=new Set();UNI=a.filter(o=>!seen.has(o.s)&&seen.add(o.s));UNI.forEach(o=>{if(SEC[o.s])o.x=SEC[o.s];if(!G[o.s])G[o.s]=o});ALLC=null;fillSf();
+  if(!fromStore)try{localStorage.setItem('pf-uni',JSON.stringify(UNI.map(o=>[o.s,o.n,o.x,o.e])))}catch(e){toast('Universo cargado, pero no cabe en el almacenamiento del navegador.')}
+  $('us').textContent=`Universo: ${UNI.length+M.length} acciones (el mercado simulado usa solo las 30 fijas).`;
+}
+function uniLoad(){try{SEC=JSON.parse(localStorage.getItem('pf-sec'))||{};const a=JSON.parse(localStorage.getItem('pf-uni'));if(a)setUni(a.map(([s,n,x,e])=>({s,n,x,e})),true)}catch(e){}}
+async function uniFH(){
+  if(!KEY)return toast('Primero guarda tu clave de Finnhub.');
+  $('us').textContent='Descargando la lista de acciones…';
+  try{const r=await fetch(`https://finnhub.io/api/v1/stock/symbol?exchange=US&token=${encodeURIComponent(KEY)}`);if(!r.ok)throw new Error('HTTP '+r.status);
+    const a=await r.json();setUni(uniParse(JSON.stringify(a.filter(o=>o.type==='Common Stock'&&(!o.mic||/^X(NAS|NYS)$/.test(o.mic))))));
+    toast(`${UNI.length} acciones cargadas. El sector se completa al abrir cada una.`)}
+  catch(e){$('us').textContent=`No se pudo descargar la lista (${e.message}). Importa un CSV o JSON.`}
+}
+function fillSf(){const xs=[...new Set(ALL().map(o=>o.x||'Sin clasificar'))].sort(),el=$('sf');el.innerHTML='<option value="">Todos los sectores</option>'+xs.map(x=>`<option>${x}</option>`).join('');el.value=xs.includes(sfv)?sfv:''}
+function stub(){[...Object.keys(S.pos),...S.wl].forEach(s=>{G[s]||(G[s]={s,n:s,x:'Sin clasificar',e:''});S.h[s]=S.h[s]||[]})}
+function addWl(s){if(S.wl.includes(s))return toast(`${s} ya está en tu watchlist.`);S.wl.unshift(s);S.h[s]=S.h[s]||[];save();render()}
+function can(){const t=Date.now();CALLS=CALLS.filter(x=>t-x<6e4);if(CALLS.length>=50)return false;CALLS.push(t);return true}
+async function sec(s){
+  const o=G[s];if(!o||o.x!=='Sin clasificar'||!S.real||!KEY||o.q||!can())return;o.q=1;
+  try{const j=await(await fetch(`https://finnhub.io/api/v1/stock/profile2?symbol=${encodeURIComponent(s)}&token=${encodeURIComponent(KEY)}`)).json();
+    if(j.finnhubIndustry){o.x=SEC[s]=cln(j.finnhubIndustry);try{localStorage.setItem('pf-sec',JSON.stringify(SEC))}catch(e){}fillSf();if(view==='mk')rMK()}}catch(e){}
+}
+function ac(id,fn){
+  const el=$(id),box=document.createElement('div');box.className='ac';box.setAttribute('role','listbox');el.parentNode.style.position='relative';el.after(box);el.removeAttribute('list');
+  const close=()=>{box.innerHTML=''},show=()=>{
+    const q=el.value.trim().toUpperCase();if(!q&&!sfv)return close();const R=[];
+    for(const o of ALL()){if(sfv&&o.x!==sfv)continue;if(onlyN&&!/^NYSE/.test(o.e||''))continue;if(!q||o.s.startsWith(q))R.push([0,o]);else if(o.n.toUpperCase().includes(q))R.push([1,o]);if(R.length>600)break}
+    R.sort((a,b)=>a[0]-b[0]||a[1].s.length-b[1].s.length);
+    box.innerHTML=R.slice(0,40).map(([,o])=>`<button role="option" data-s="${o.s}"><b>${o.s}</b> ${o.n}<small>${o.e||''} ${o.x||''}</small></button>`).join('')||'<p class="emp">Sin resultados.</p>'};
+  el.oninput=el.onfocus=show;el.onblur=()=>setTimeout(close,150);
+  box.onmousedown=e=>{const b=e.target.closest('button');if(b){e.preventDefault();el.value='';close();fn(b.dataset.s)}};
+  el.onkeydown=e=>{if(e.key!=='Enter')return;const f=box.querySelector('button'),o=find(el.value)||(f&&G[f.dataset.s]);if(o){el.value='';close();fn(o.s)}else toast('No encontré esa empresa. Prueba con otro símbolo o nombre.')};
+}
+/* Carga diferida de librerías externas */
+const LIBS={xlsx:'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',tv:'https://s3.tradingview.com/tv.js'},LP={};
+const need=k=>LP[k]||(LP[k]=new Promise((ok,ko)=>{if(k==='xlsx'&&window.XLSX)return ok();if(k==='tv'&&window.TradingView)return ok();const s=document.createElement('script');s.src=LIBS[k];s.onload=ok;s.onerror=()=>{LP[k]=null;ko()};document.head.appendChild(s)}));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function xport(){
+  try{await need('xlsx')}catch(e){return toast('No cargó la librería de Excel. Revisa tu internet y recarga la página.')}
+  if(!AVKEY)return toast('Falta la clave de Alpha Vantage: ábrela en ⚙ Ajustes.');
+  const sy=[...new Set([...Object.keys(S.pos),...S.wl])].filter(s=>s!=='SPY').slice(0,14);sy.push('SPY');
+  const y=+$('xy').value,pg=$('pg'),st=$('xs'),end=()=>{$('xb').disabled=false;$('xc').hidden=true},D={};
+  xcan=false;$('xb').disabled=true;$('xc').hidden=false;pg.hidden=false;pg.max=sy.length;pg.value=0;
+  try{for(let i=0;i<sy.length;i++){
+    if(xcan){st.textContent=`Cancelado. Pulsa Generar el informe para reanudar: ${i} de ${sy.length} listas.`;return end()}
+    const had=!!CD[sy[i]+'M'];st.textContent=`Descargando ${sy[i]} (${i+1} de ${sy.length})…`;D[sy[i]]=await avs(sy[i],'M');pg.value=i+1;if(!had)await sleep(1200)}
+  }catch(err){st.textContent=`Se detuvo: ${err.message}. Lo ya descargado queda en memoria.`;return end()}
+  st.textContent='Calculando en segundo plano…';
+  const cut=y?new Date(Date.now()-y*31557600000).toISOString().slice(0,10):'0000',V=sy.map(q=>S.pos[q]?S.pos[q].q*(px(q)||0):0),tv=V.reduce((a,b)=>a+b,0),
+    w=tv>0?V.map(v=>v/tv):sy.map(q=>q==='SPY'&&sy.length>1?0:1/Math.max(1,sy.length-1));
+  const r=await new Promise((res,rej)=>{const k=new Worker(URL.createObjectURL(new Blob([$('wk').textContent],{type:'text/javascript'})));
+    k.onmessage=e=>{res(e.data);k.terminate()};k.onerror=()=>{rej(new Error('falló el cálculo'));k.terminate()};
+    k.postMessage({syms:sy,dates:Object.fromEntries(sy.map(q=>[q,D[q].d])),adj:Object.fromEntries(sy.map(q=>[q,D[q].a])),w,rf:.03,ppy:12,bench:'SPY',from:cut})}).catch(e=>({err:e.message}));
+  if(r.err){st.textContent=r.err;return end()}
+  r.syms=sy;LAST=r;
+  try{book(r,sy,D,cut)}catch(err){st.textContent='No se pudo armar el Excel: '+err.message;return end()}
+  st.textContent=`Informe listo: ${sy.length} acciones y ${r.n} meses. Revisa la hoja Interpretación.`;end();
+}
+function interp(r){
+  const p=r.pf,o=x=>fm(x*100,1)+' %',lv=p.vol<.12?'bajo':p.vol<.2?'moderado':'alto',tp=r.rc.map((x,i)=>[x,i]).sort((a,b)=>b[0]-a[0])[0];
+  return[`Rentabilidad: el portafolio reconstruido rindió ${o(p.tot)} en total (${o(p.cagr)} anual). El alfa frente a SPY fue ${o(p.alpha)} anual.`,
+  `Riesgo: volatilidad de ${o(p.vol)} anual (nivel ${lv}). En el 5 % de los peores meses perdió al menos ${o(-p.var95)} y, en promedio, ${o(-p.cvar)} (CVaR). Su peor caída fue ${o(-p.mdd)}.`,
+  `Eficiencia: Sharpe ${fm(p.sharpe,2)}.${p.sortino!=null?` Sortino ${fm(p.sortino,2)}.`:''}`,
+  `Mercado: beta ${fm(p.beta,2)} (${p.beta<.8?'más defensivo que SPY':p.beta<=1.2?'se mueve parecido a SPY':'más agresivo que SPY'}). Tracking error ${o(p.te)}${p.ir!=null?` y ratio de información ${fm(p.ir,2)}`:''}.`,
+  `Diversificación: HHI ${fm(r.hhi,2)}, equivalente a ${fm(r.neff,1)} posiciones iguales. La posición que más riesgo aporta es ${r.syms[tp[1]]}, con ${o(tp[0])} del riesgo total.`,
+  'Advertencias: datos mensuales; los pesos actuales se aplican al pasado (es una reconstrucción, no tu rendimiento real); el pasado no garantiza resultados futuros. Material educativo, no es asesoría financiera.'];
+}
+function book(r,sy,D,cut){
+  const U=XLSX.utils,n=sy.length,N=r.n,cc=i=>U.encode_col(i),rg=i=>`Retornos!${cc(i)}$2:${cc(i)}$${N+1}`,f=t=>({t:'n',f:t}),pu=v=>v==null?'':v,B=rg(sy.indexOf('SPY')+1),wb=U.book_new();
+  const fx=(ws,cols,z,r0,r1)=>{for(const c of cols)for(let i=r0;i<=r1;i++){const a=ws[cc(c)+(i+1)];if(a)a.z=z}},W=(ws,a)=>{ws['!cols']=a.map(x=>({wch:x}));return ws};
+  const pf=r.pf,eq=equity(),ps=Object.entries(S.pos),m=ps.length;
+  const RS=[['Resumen ejecutivo de Portfolia'],[`Periodo: ${r.D[0]} a ${r.D[r.D.length-1]} · ${N} meses · benchmark SPY · tasa libre de riesgo 3 % anual`],['Pesos: valor de mercado actual de tus posiciones (sin posiciones, pesos iguales de la watchlist). Es una reconstrucción hacia atrás.'],[],['Métrica','Valor','Qué significa'],
+  ['Patrimonio total',eq,'Efectivo más el valor de tus acciones'],['Efectivo',S.cash,'Dinero sin invertir'],['Retorno total',pf.tot,'Ganancia acumulada del portafolio reconstruido'],['CAGR',pf.cagr,'Rentabilidad anual compuesta'],['Volatilidad anual',pf.vol,'Cuánto fluctúa el portafolio'],['Sharpe',pf.sharpe,'Retorno por unidad de riesgo'],['Sortino',pu(pf.sortino),'Como Sharpe, pero solo penaliza las caídas'],['Caída máxima',pf.mdd,'Peor baja desde un máximo'],['VaR 95 % mensual',pf.var95,'Pérdida mensual superada solo el 5 % de las veces'],['CVaR 95 % mensual',pf.cvar,'Pérdida media en ese 5 % peor'],['Beta vs SPY',pf.beta,'Sensibilidad al mercado'],['Alfa anual vs SPY',pf.alpha,'Rendimiento no explicado por el mercado'],['Tracking error',pf.te,'Qué tanto se aleja de SPY'],['Ratio de información',pu(pf.ir),'Exceso de retorno sobre SPY por unidad de tracking error'],['HHI',r.hhi,'Concentración: 1 es todo en una acción'],['Posiciones equivalentes',r.neff,'Cuántas posiciones iguales equivaldría tu diversificación'],['Ratio de diversificación',r.dr,'Mayor que 1: la diversificación reduce el riesgo']];
+  const w1=W(U.aoa_to_sheet(RS),[30,18,70]);fx(w1,[1],'$#,##0.00',5,6);fx(w1,[1],'0.00%',7,9);fx(w1,[1],'0.00%',12,14);fx(w1,[1],'0.00%',16,17);fx(w1,[1],'0.00',10,11);fx(w1,[1],'0.00',15,15);fx(w1,[1],'0.00',18,21);
+  const PS=[['Símbolo','Empresa','Sector','Acciones','Costo medio','Precio','Valor','Peso','Ganancia','Ganancia %'],...ps.map(([q,p],i)=>{const k=i+2;return[q,G[q].n,G[q].x||'',p.q,p.avg,pu(px(q)),f(`D${k}*F${k}`),f(`G${k}/SUM(G$2:G$${m+1})`),f(`(F${k}-E${k})*D${k}`),f(`F${k}/E${k}-1`)]})];
+  if(!m)PS.push(['Sin posiciones abiertas: el informe usó pesos iguales entre tu watchlist.']);
+  const w2=W(U.aoa_to_sheet(PS),[10,30,22,10,12,12,14,10,14,12]);fx(w2,[7,9],'0.00%',1,m);fx(w2,[4,5,6,8],'$#,##0.00',1,m);
+  const HS=[['Símbolo','Fecha','Apertura','Máximo','Mínimo','Cierre','Cierre ajustado','Volumen']];
+  sy.forEach(q=>{const d=D[q];d.d.forEach((x,i)=>{if(x>=cut)HS.push([q,x,d.o[i],d.h[i],d.l[i],d.c[i],d.a[i],d.v[i]])})});
+  const w3=W(U.aoa_to_sheet(HS),[10,12,12,12,12,12,16,14]);
+  const w4=W(U.aoa_to_sheet([['Fecha',...sy,'Portafolio'],...r.D.slice(1).map((d,k)=>[d,...sy.map(q=>r.R[q][k]),r.rp[k]])]),[12,...sy.map(()=>11),12]);fx(w4,sy.map((_,i)=>i+1).concat(n+1),'0.00%',1,N);
+  const w5=W(U.aoa_to_sheet([['',...sy],...sy.map((a,i)=>[a,...sy.map((b,j)=>f(`CORREL(${rg(i+1)},${rg(j+1)})`))])]),[10,...sy.map(()=>9)]);fx(w5,sy.map((_,i)=>i+1),'0.00',1,n);
+  const row=(nm,w,s,c,rc)=>[nm,w,s.tot,s.cagr,f(`STDEV(${c})*SQRT($B$3)`),f(`(AVERAGE(${c})*$B$3-$B$2)/(STDEV(${c})*SQRT($B$3))`),pu(s.sortino),s.mdd,f(`PERCENTILE(${c},0.05)`),s.cvar,f(`SLOPE(${c},${B})`),f(`(AVERAGE(${c})-$B$2/$B$3-SLOPE(${c},${B})*(AVERAGE(${B})-$B$2/$B$3))*$B$3`),f(`CORREL(${c},${B})`),s.te,pu(s.ir),rc];
+  const RKS=[['Riesgo y rendimiento por acción'],['Tasa libre de riesgo anual',0.03],['Periodos por año',12],['Supuestos: retornos mensuales de precios ajustados; pesos constantes; VaR y CVaR históricos al 95 %.'],
+  ['Símbolo','Peso','Retorno total','CAGR','Volatilidad anual','Sharpe','Sortino','Caída máxima','VaR 95 % mensual','CVaR 95 % mensual','Beta vs SPY','Alfa anual vs SPY','Correlación vs SPY','Tracking error','Ratio de información','Contribución al riesgo'],
+  ...sy.map((q,i)=>row(q,r.w[i],r.per[q],rg(i+1),r.rc[i])),row('PORTAFOLIO',1,pf,rg(n+1),1)];
+  const w6=W(U.aoa_to_sheet(RKS),[14,9,13,10,14,9,9,13,15,15,12,15,15,13,16,16]);fx(w6,[1],'0.0%',5,5+n);fx(w6,[2,3,4,7,8,9,11,13,15],'0.00%',5,5+n);fx(w6,[5,6,10,12,14],'0.00',5,5+n);fx(w6,[1],'0.00%',1,1);
+  const w7=W(U.aoa_to_sheet([['Interpretación en español'],[],...interp(r).map(t=>[t])]),[160]);
+  [['Resumen ejecutivo',w1],['Posiciones',w2],['Históricos',w3],['Retornos',w4],['Matriz de correlación',w5],['Riesgo y rendimiento',w6],['Interpretación',w7]].forEach(([t,w])=>U.book_append_sheet(wb,w,t));
+  wb.Workbook={CalcPr:{fullCalcOnLoad:true}};XLSX.writeFile(wb,'portfolia-informe.xlsx');
+}
+
+/* ---------- Tutor ---------- */
+const norm=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''),DEF=['¿Qué es la NYSE?','Mi portafolio','Empezar el curso','Quiz'];
+const need2='Genera el informe de portafolio en la Academia (modo libre) para ver este dato con datos históricos reales.';
+const pfx=()=>{const V=Object.entries(S.pos).map(([q,p])=>[q,p.q*(px(q)||0)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),t=V.reduce((a,b)=>a+b[1],0),e=equity();return{V,t,e,n:V.length,top:V[0],h:t?V.reduce((a,b)=>a+(b[1]/t)**2,0):0,cash:S.cash/e,L:LAST&&LAST.pf}};
+const LS=[
+{t:'Retorno y riesgo',k:/retorno|rentab|riesgo|volatil/,b:'Paso 1: el retorno es cuánto ganas o pierdes en porcentaje.\nPaso 2: el riesgo es qué tanto varía ese retorno; se mide con la volatilidad.\nPaso 3: no se compara el retorno solo, sino el retorno por unidad de riesgo.',ex:x=>x.n?`Tu patrimonio es ${usd(x.e)} (${sg(x.e-CAP)} desde el inicio).`:'Aún no tienes posiciones; compra una para poder medirlo.',q:['Dos acciones rinden 10 % al año. ¿Cuál es mejor?',['La de mayor volatilidad','La de menor volatilidad','Da igual'],1,'Con igual retorno, menos volatilidad significa menos riesgo para el mismo resultado.']},
+{t:'Diversificación y correlación',k:/diversif|correlaci|hhi|concentr/,b:'Paso 1: repartir el dinero reduce el impacto de una sola mala noticia.\nPaso 2: la correlación (de −1 a 1) mide si dos acciones se mueven juntas.\nPaso 3: diversificas más con correlaciones bajas.',ex:x=>x.n?`Tienes ${x.n} posiciones; la mayor es ${x.top[0]} con ${fm(x.top[1]/x.t*100,0)} %.`:'Aún no tienes posiciones.',q:['Dos acciones con correlación 0,95 en tu portafolio…',['Diversifican mucho','Diversifican poco','Eliminan el riesgo'],1,'Una correlación alta indica que se mueven casi igual, así que aportan poca diversificación.']},
+{t:'Beta y alfa',k:/beta|alfa/,b:'Paso 1: la beta mide cuánto se mueve una acción frente al mercado.\nPaso 2: beta 1 se mueve igual; mayor que 1 amplifica; menor que 1 amortigua.\nPaso 3: el alfa es lo que rinde por encima de lo que explica su beta.',ex:x=>x.L?`La beta estimada de tu portafolio es ${fm(x.L.beta,2)}.`:need2,q:['Con beta 1,5, si el mercado cae 10 % esperarías que la acción caiga cerca de…',['6,7 %','10 %','15 %'],2,'Beta 1,5 amplifica el movimiento del mercado: 1,5 por 10 % son 15 %.']},
+{t:'Sharpe y Sortino',k:/sharpe|sortino/,b:'Paso 1: Sharpe = (retorno − tasa libre de riesgo) / volatilidad.\nPaso 2: más de 1 suele considerarse bueno; menos de 0 es peor que no arriesgar.\nPaso 3: Sortino solo cuenta la volatilidad a la baja.',ex:x=>x.L?`Tu Sharpe es ${fm(x.L.sharpe,2)}.`:need2,q:['¿En qué se diferencia el Sortino del Sharpe?',['Usa otro índice','Solo penaliza las caídas','Ignora la tasa libre de riesgo'],1,'El Sortino divide por la desviación a la baja, no por toda la volatilidad.']},
+{t:'Caída máxima y VaR',k:/drawdown|caida|\bvar\b|cvar/,b:'Paso 1: la caída máxima es la peor baja desde un máximo.\nPaso 2: el VaR 95 % es la pérdida que solo se supera el 5 % de las veces.\nPaso 3: el CVaR es la pérdida media en ese 5 % peor.',ex:x=>x.L?`Tu caída máxima reconstruida fue ${fm(-x.L.mdd*100,1)} %.`:need2,q:['El CVaR 95 % mide…',['La pérdida media en el 5 % peor','La ganancia media','La pérdida máxima posible'],0,'Es el promedio de las pérdidas más allá del VaR.']}];
+const addm=(t,c)=>{const L=$('bl');L.insertAdjacentHTML('beforeend',`<p class="${c||''}"></p>`);L.lastChild.textContent=t;L.scrollTop=L.scrollHeight},chips=a=>{$('bc').innerHTML=a.map(t=>`<button>${t}</button>`).join('')};
+function lesson(i){QL=(i+LS.length)%LS.length;QZ=null;const l=LS[QL];addm(`Lección ${QL+1} de ${LS.length}: ${l.t}\n${l.b}\n\nEn tu portafolio: ${l.ex(pfx())}`);chips(['Quiz de esta lección','Siguiente lección','Mi portafolio'])}
+function quiz(){const q=LS[QL].q;QZ=q;addm(`Quiz: ${q[0]}`);$('bc').innerHTML=q[1].map((t,i)=>`<button data-a="${i}">${t}</button>`).join('')}
+function ans(i){if(!QZ)return;addm(QZ[1][i],'u');addm((i===QZ[2]?'Correcto. ':'No exactamente. ')+QZ[3]);QZ=null;chips(['Siguiente lección','Repetir lección','Mi portafolio'])}
+function mine(){const x=pfx();addm(x.n?`Tu patrimonio: ${usd(x.e)}. Efectivo ${fm(x.cash*100,0)} %. Posiciones: ${x.V.map(([q,v])=>`${q} ${fm(v/x.e*100,0)} %`).join(', ')}. Es una descripción educativa, no una recomendación.`:'Todavía no tienes posiciones. Compra alguna en el Mercado y la describo con tus números.');chips(DEF)}
+const ctxText=()=>{const x=pfx();return JSON.stringify({patrimonio:Math.round(x.e),efectivoPct:+(x.cash*100).toFixed(1),posiciones:x.V.map(([q,v])=>({s:q,pesoPct:+(v/x.e*100).toFixed(1)}))})};
+async function llm(t){const u=ks().px;if(!u)return null;try{const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,context:ctxText()})}),j=await r.json();return j.reply||null}catch(e){return null}}
+async function say(t){
+  t=t.trim();if(!t)return;addm(t,'u');const n=norm(t);
+  if(/^repetir/.test(n))return lesson(QL);
+  if(/^empezar|curso/.test(n))return lesson(0);
+  if(/siguiente/.test(n))return lesson(QL+1);
+  if(/quiz|examen/.test(n))return quiz();
+  if(/mi portafolio|mi cartera|cuanto tengo/.test(n))return mine();
+  if(/nyse|bolsa de nueva york|wall street/.test(n))return addm('La NYSE (New York Stock Exchange) está en el 11 de Wall Street, Manhattan. Nació en 1792 con el Acuerdo de Buttonwood y abre de lunes a viernes de 9:30 a 16:00, hora de Nueva York. Es la bolsa más grande del mundo por el valor de sus empresas.');
+  if(/nasdaq/.test(n))return addm('NASDAQ es la otra gran bolsa de EE. UU. Nació en 1971 como mercado electrónico. Ahí cotizan muchas tecnológicas: Apple, Microsoft, NVIDIA, Amazon.');
+  if(/horario|hora|abre|cierra/.test(n))return addm('La sesión regular de la NYSE va de 9:30 a 16:00, hora del Este de EE. UU., de lunes a viernes. Hay negociación antes y después del horario, con menos volumen.');
+  if(/dividend/.test(n))return addm('Un dividendo es un pago en efectivo que la empresa hace a sus accionistas. En EE. UU. suele ser trimestral. En el juego llega cada 20 días para que lo veas antes.');
+  if(/limite|stop/.test(n))return addm('Orden límite: compras solo si el precio baja a tu límite. Stop-loss: vendes automáticamente si el precio cae a tu precio de salida. Se desbloquean en el nivel 6.');
+  if(/indice|etf|spy|s&p|dow/.test(n))return addm('Un índice resume a muchas empresas: el S&P 500 sigue a 500 y el Dow Jones a 30. Un ETF como SPY replica el S&P 500, así que con una compra te diversificas en 500 empresas.');
+  if(/circuit|crash|panico/.test(n))return addm('Si el S&P 500 cae 7 % en un día, la negociación se detiene 15 minutos; con 13 %, otra vez; con 20 %, la bolsa cierra el resto del día. Vender en pánico suele convertir una caída temporal en una pérdida real.');
+  if(/vela|candle/.test(n))return addm('Una vela resume un periodo con apertura, cierre, máximo y mínimo: verde si cerró arriba de donde abrió, roja si cerró abajo. Mira el dibujo en la Academia.');
+  if(/comisi|patrimonio|disminu/.test(n))return addm('Cada compra y venta cobra 0,1 % de comisión (mínimo $1). Por eso tu patrimonio baja un poco al comprar aunque el precio no se mueva.');
+  if(/analiz|evalu|como va/.test(n)){const m=calc((await hist(cur)).c);return addm(m?`${cur}: tendencia ${m.s20>m.s50?'alcista':'bajista'}, RSI ${fm(m.rsi,0)}, volatilidad ${fm(m.vol,1)} % (riesgo ${m.risk.toLowerCase()}). Es educativo, no una recomendación.`:'Aún no tengo suficientes datos de esta acción.')}
+  const i=[1,2,3,4,0].find(j=>LS[j].k.test(n));if(i!=null)return lesson(i);
+  const r=await llm(t);addm(r||'Sin conexión al tutor con IA no sé responder eso. Prueba con: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
+}
+function botT(){
+  const p=$('bp');p.hidden=!p.hidden;
+  if(!p.hidden&&!$('bl').children.length){addm('Hola, soy tu tutor. Pregúntame por la NYSE, los índices, los dividendos o tu portafolio. Solo educativo: no doy recomendaciones personalizadas de inversión.');$('bi').focus()}
+}
+/* ---------- Reloj de la NYSE y bolsa real (Finnhub) ---------- */
+/* Feriados y cierres tempranos de la NYSE 2026-2027 (revisar cada año en nyse.com/markets/hours-calendars) */
+const HOL=new Set(['2026-01-01','2026-01-19','2026-02-16','2026-04-03','2026-05-25','2026-06-19','2026-07-03','2026-09-07','2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-03-26','2027-05-31','2027-06-18','2027-07-05','2027-09-06','2027-11-25','2027-12-24']);
+const HALF=new Set(['2026-11-27','2026-12-24','2027-11-26']);
+const NYF=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'short'});
+function nyP(t){const o={};NYF.formatToParts(new Date(t)).forEach(p=>o[p.type]=p.value);const h=o.hour==='24'?0:+o.hour;return{y:+o.year,m:+o.month,d:+o.day,h,mi:+o.minute,s:+o.second,wd:o.weekday,key:`${o.year}-${o.month}-${o.day}`}}
+function etUTC(y,m,d,h,mi){const want=Date.UTC(y,m-1,d,h,mi);let t=want;for(let k=0;k<3;k++){const p=nyP(t);t+=want-Date.UTC(p.y,p.m-1,p.d,p.h,p.mi)}return t}
+const tday=p=>p.wd!=='Sat'&&p.wd!=='Sun'&&!HOL.has(p.key);
+function mkt(t=Date.now()){
+  const p=nyP(t),mins=p.h*60+p.mi,half=HALF.has(p.key),cm=half?780:960,td=tday(p),open=td&&mins>=570&&mins<cm;
+  let next=null;for(let k=0;k<14;k++){const q=nyP(t+k*864e5);if(!tday(q))continue;const o=etUTC(q.y,q.m,q.d,9,30);if(o>t){next=o;break}}
+  return{open,p,half,next,close:open?etUTC(p.y,p.m,p.d,Math.floor(cm/60),cm%60):null}
+}
+const dur=ms=>{ms=Math.max(0,ms);const h=Math.floor(ms/36e5),mi=Math.floor(ms%36e5/6e4),se=Math.floor(ms%6e4/1e3);return h>=24?`${Math.floor(h/24)} d ${h%24} h`:h?`${h} h ${String(mi).padStart(2,'0')} min`:`${mi} min ${String(se).padStart(2,'0')} s`};
+const WDF=new Intl.DateTimeFormat('es',{timeZone:'America/New_York',weekday:'long'});
+const nextLbl=t=>{const d=WDF.format(new Date(t)),same=nyP(t).key===nyP(Date.now()).key;return same?'hoy a las 9:30 ET':`${d} a las 9:30 ET`};
+const etTime=t=>{const p=nyP(t);return`${String(p.h).padStart(2,'0')}:${String(p.mi).padStart(2,'0')}`};
+const ETD=new Intl.DateTimeFormat('es',{timeZone:'America/New_York',weekday:'short',day:'numeric',month:'short'});
+function rClock(m,ret){m=m||mkt();const p=m.p,hh=`${String(p.h).padStart(2,'0')}:${String(p.mi).padStart(2,'0')}:${String(p.s).padStart(2,'0')}`;
+  const short=m.open?`NYSE abierta · cierra en ${dur(m.close-Date.now())}`:`NYSE cerrada · abre en ${dur(m.next-Date.now())}`;
+  const h=$('hstat');if(h)h.textContent=short;const lk=$('lmk');if(lk)lk.textContent=m.open?'NYSE abierta':'NYSE cerrada';
+  if(S&&S.real){$('day').textContent=`${short} · ${hh.slice(0,5)} ET`;$('mst').className='mstat '+(m.open?'on':'off');const c=$('rclk');if(c)c.textContent=`${hh} ET`}
+  return ret?`${hh} ET`:short}
+let WS=null,WSst='off',LIVE={},SUB=new Set(),lastMin=0,lastPoll=0,lastNews=0,RI=0;const CN={},NWID=new Set();
+const NETERR='No se pudo conectar con Finnhub. Si estás en la página de claude.ai, esta bloquea las conexiones a la bolsa: abre el archivo HTML en tu navegador o la versión en GitHub Pages. Si no, revisa tu internet.';
+async function fh(path){if(!can())throw new Error('Cuota de la API alcanzada: sigo en un momento (máx. 50 llamadas por minuto).');let r;
+  try{r=await fetch(`https://finnhub.io/api/v1${path}${path.includes('?')?'&':'?'}token=${encodeURIComponent(KEY)}`)}catch(e){throw new Error(NETERR)}
+  if(r.status===401||r.status===403)throw new Error('Finnhub rechazó la clave: revisa que la copiaste completa en ⚙.');if(r.status===429)throw new Error('Límite de Finnhub alcanzado (60 llamadas por minuto). Espera un minuto.');if(!r.ok)throw new Error('Finnhub respondió con error '+r.status+'.');return r.json()}
+const rsyms=()=>[...new Set(['SPY',cur,...Object.keys(S.pos),...S.wl,...S.ord.map(o=>o.s),...M.map(o=>o.s)])].filter(Boolean);
+function setPx(s,p,t){if(!(p>0))return;const a=S.h[s]||(S.h[s]=[]),mk=Math.floor((t||Date.now())/6e4);S.hm=S.hm||{};
+  if(S.hm[s]===mk&&a.length)a[a.length-1]=p;else{a.push(p);S.hm[s]=mk;if(a.length>420)a.shift()}
+  if(S.pc&&S.pc[s])S.dp[s]=(p/S.pc[s]-1)*100}
+async function quotes(list){let ok=0,err='';for(const s of list){try{const q=await fh(`/quote?symbol=${encodeURIComponent(s)}`);if(q&&q.c>0){S.pc=S.pc||{};S.pc[s]=q.pc;setPx(s,q.c,(q.t||0)*1000||Date.now());S.dp[s]=q.dp||0;ok++}}catch(e){err=e.message;break}}return{ok,err}}
+async function rinit(force){if(!S.real||!KEY)return;if(!force&&Date.now()-RI<5*6e4)return;RI=Date.now();const st=S;$('rs').textContent='Cargando precios de la NYSE y NASDAQ…';
+  const r=await quotes(rsyms().slice(0,40));if(st!==S)return;if(!S.p0&&S.pc&&S.pc.SPY)S.p0=S.pc.SPY;
+  $('rs').textContent=r.err||`Conectado a Finnhub · ${r.ok} precios cargados · ${mkt().open?'recibiendo operaciones en vivo':'la bolsa está cerrada: ves el precio del último cierre'}.`;
+  if(r.err&&!r.ok)toast(r.err);save();render();rnews()}
+function wsOpen(){if(WS||!KEY)return;try{WS=new WebSocket(`wss://ws.finnhub.io?token=${encodeURIComponent(KEY)}`)}catch(e){WSst='err';return}WSst='con';
+  WS.onopen=()=>{WSst='on';SUB.clear();wsSub()};
+  WS.onmessage=e=>{try{const m=JSON.parse(e.data);if(m.type==='trade')m.data.forEach(d=>{LIVE[d.s]=[d.p,d.t]})}catch(_){}};
+  WS.onclose=()=>{WS=null;SUB.clear();WSst='off';if(S&&S.real&&mkt().open&&!$('sim').hidden)setTimeout(wsOpen,5000)};
+  WS.onerror=()=>{WSst='err'}}
+function wsSub(){if(!WS||WS.readyState!==1)return;const want=new Set(rsyms().slice(0,50));SUB.forEach(s=>{if(!want.has(s)){WS.send(JSON.stringify({type:'unsubscribe',symbol:s}));SUB.delete(s)}});want.forEach(s=>{if(!SUB.has(s)){WS.send(JSON.stringify({type:'subscribe',symbol:s}));SUB.add(s)}})}
+function wsClose(){if(WS){WS.onclose=null;try{WS.close()}catch(e){}WS=null}SUB.clear();WSst='off'}
+function rtick(){if(!S.real)return;const m=mkt();
+  if(m.open&&KEY){wsOpen();wsSub();let ch=false;for(const s in LIVE){const[p,t]=LIVE[s];setPx(s,p,t);ch=true}LIVE={};
+    if(WSst!=='on'&&Date.now()-lastPoll>20000){lastPoll=Date.now();quotes([...new Set(['SPY',cur,...Object.keys(S.pos),...S.wl])].slice(0,15)).then(r=>{if(r.err)$('rs').textContent=r.err})}
+    if(ch)proc();if(!S.p0&&px('SPY'))S.p0=px('SPY');
+    const mk=Math.floor(Date.now()/6e4);if(mk!==lastMin){lastMin=mk;S.day++;S.bm.push(S.p0&&px('SPY')?px('SPY')/S.p0*100:100);S.eq.push(equity());save()}else S.eq[S.eq.length-1]=equity();
+  }else wsClose();
+  if(KEY&&Date.now()-lastNews>60000)rnews();
+  if(!$('sim').hidden){if(m.open||Date.now()%10000<1000)render();else{rClock(m);rMis()}}}
+async function rnews(){lastNews=Date.now();if(!KEY||!S.real)return;
+  try{addRN(await fh('/news?category=general'))}catch(e){$('rs').textContent=e.message}
+  if(cur&&!(CN[cur]>Date.now()-6e5)){CN[cur]=Date.now();const to=new Date().toISOString().slice(0,10),from=new Date(Date.now()-3*864e5).toISOString().slice(0,10);try{addRN(await fh(`/company-news?symbol=${encodeURIComponent(cur)}&from=${from}&to=${to}`),cur)}catch(e){}}
+  if(!$('sim').hidden)render()}
+function addRN(a,sym){if(!Array.isArray(a))return;if(!NWID.size)S.rn.forEach(n=>NWID.add(n.id));let n=0;
+  a.slice(0,40).forEach(x=>{const id=String(x.id||x.url||'');if(!id||NWID.has(id)||!x.headline)return;NWID.add(id);S.rn.push({id,t:(x.datetime||0)*1000,h:String(x.headline).slice(0,200),sm:String(x.summary||'').slice(0,320),src:String(x.source||'').slice(0,40),url:/^https:\/\//.test(x.url||'')?x.url:'',rel:sym||String(x.related||'').slice(0,40)});n++});
+  S.rn.sort((a,b)=>b.t-a.t);S.rn=S.rn.slice(0,80);if(n&&view!=='nw')S.g.unread=Math.min(99,(S.g.unread||0)+n)}
+function rRN(){
+  $('nwl').innerHTML=`<p class="mut" style="margin:4px 0">Arriba, las noticias en vivo de TradingView. Abajo, las de Finnhub, en inglés, que se revisan cada minuto.</p>`+(S.rn.map(n=>`<article class="nw"><span class="d">${esc(ETD.format(new Date(n.t)))}<br>${etTime(n.t)} ET</span><div><h4>${n.url?`<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.h)}</a>`:esc(n.h)}</h4><p>${esc(n.sm)}</p><div class="tags"><span class="tag">${esc(n.src)}</span>${n.rel?n.rel.split(',').slice(0,3).map(r=>`<span class="tag nyse">${esc(r)}</span>`).join(''):''}</div></div></article>`).join('')||`<p class="emp">${KEY?'Cargando noticias de Finnhub…':'Con tu clave de Finnhub (⚙) también verás aquí las noticias de las empresas de tu portafolio.'}</p>`);
+}
+function rHLreal(){const n=S.rn[0],h=$('hl');if(!n){h.hidden=true;return}const k=n.id;if(h.dataset.k!==k){h.dataset.k=k;h.classList.remove('new');void h.offsetWidth;h.classList.add('new')}
+  h.hidden=false;h.innerHTML=`<span class="live">EN VIVO</span><span class="tag nyse">${etTime(n.t)} ET</span><span class="t"><b>${esc(n.h)}</b></span><span class="mut hide-s">Ver noticias →</span>`;const c=$('nwc');c.hidden=!S.g.unread;c.textContent=S.g.unread||''}
+/* TradingView: widgets oficiales con precios y noticias en tiempo real (solo se ven; la app no puede leer sus números) */
+const tvSym=s=>{const e=(G[s]||{}).e||'';return /Arca/.test(e)?'AMEX:'+s:/^NYSE/.test(e)?'NYSE:'+s:/NASDAQ/.test(e)?'NASDAQ:'+s:s};
+let TVST='';const TVW={},TVFAIL='<p class="emp">No se pudo cargar TradingView. Revisa tu internet. Si estás en la página de claude.ai, ahí está bloqueado: abre el archivo HTML en tu navegador o la versión en GitHub Pages.</p>';
+function tvWidget(id,kind,cfg){const el=$(id);if(!el)return;const key=kind+JSON.stringify(cfg);if(TVW[id]===key)return;TVW[id]=key;
+  el.innerHTML='<div class="tradingview-widget-container__widget"></div>';const sc=document.createElement('script');
+  sc.src=`https://s3.tradingview.com/external-embedding/embed-widget-${kind}.js`;sc.async=true;sc.type='text/javascript';
+  sc.textContent=JSON.stringify({colorTheme:'dark',isTransparent:true,locale:'es',...cfg});
+  sc.onload=()=>{TVST='ok'};sc.onerror=()=>{el.innerHTML=TVFAIL;TVW[id]='';TVST='err'};el.appendChild(sc);
+  el.insertAdjacentHTML('beforeend','<div class="tradingview-widget-copyright"><a href="https://es.tradingview.com/" rel="noopener nofollow" target="_blank">Datos y gráficos de TradingView</a></div>')}
+function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>$(i).hidden=!r);$('mpl').hidden=!r;if(!r)return;
+  const L=[...new Set(['SPY',...Object.keys(S.pos),...S.wl,'KO','JPM','AAPL','MSFT','NVDA','XOM','DIS'])].slice(0,14);
+  tvWidget('tvtape','ticker-tape',{symbols:L.map(s=>({proName:tvSym(s),title:s==='SPY'?'S&P 500 (SPY)':s})),showSymbolLogo:true,displayMode:'adaptive'});
+  if(view==='mk')tvWidget('tvinfo','symbol-info',{symbol:tvSym(cur),width:'100%'});
+  if(view==='nw')tvWidget('tvnews','timeline',{feedMode:'all_symbols',displayMode:'regular',width:'100%',height:'100%'})}
+let tvKey='';
+function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
+  new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:'dark',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
+}
+function uiSrc(){
+  $('m-sim').classList.toggle('on',!S.real);$('m-real').classList.toggle('on',S.real);$('pp').hidden=S.real;$('spd').hidden=S.real;
+  if(S.real&&!KEY)$('rk').hidden=false;ALLC=null;stub();fillSf();
+  $('key').placeholder=KEY?'API key guardada · pega otra para cambiarla':'API key de Finnhub';
+  if(S.real&&!KEY)$('rs').textContent='Pega tu API key de Finnhub para recibir precios y noticias reales.';
+}
+function setSrc(v){const r=v==='real';if(!!S.real===r)return;save();wsClose();S=load(r);if(!S){fresh(r);if(r)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};NWID.clear();RI=0;lastNews=0;try{localStorage.setItem('pf-src',v)}catch(e){}uiSrc();tourHide();closeM();if(!$('gm').hidden)$('gm').hidden=true;run();if(!$('sim').hidden){render();if(!r&&!S.g.fin&&S.g.ph==='brief')openBrief()}
+  toast(r?'Modo Bolsa real: precios y noticias de Nueva York.':'Modo Práctica: mercado simulado y los 7 niveles.')}
+function conn(){
+  const o=ks(),k={fh:$('key').value.trim()||o.fh||'',av:$('avk').value.trim()||o.av||'',px:$('pxu').value.trim()||o.px||''};
+  try{localStorage.setItem('pf-keys',JSON.stringify(k))}catch(e){}
+  $('key').value=$('avk').value=$('pxu').value='';loadKeys();$('rs').textContent='Claves guardadas en este navegador.';uiSrc();if(S.real){rinit(true);run()}
+}
+
+/* ---------- Arranque ---------- */
+(function(){
+  let r0=false;try{r0=localStorage.getItem('pf-src')==='real'}catch(e){}loadKeys();
+  uniLoad();S=load(r0);if(!S){fresh(r0);if(r0)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};uiSrc();
+  $('dl').innerHTML=M.map(o=>`<option value="${o.s}">${o.n}</option>`).join('');
+  ac('si',pick);ac('wi',addWl);ac('ai',x=>{$('ai').value=x;anl()});
+  $('uf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const a=uniParse(await f.text());e.target.value='';if(!a.length)return toast('No encontré acciones en ese archivo. Necesita columnas symbol, name, sector y exchange.');setUni(a);toast(`${UNI.length} acciones importadas.`)};
+  $('per').onclick=e=>{const p=e.target.dataset.p;if(p){pe=+p;[...$('per').children].forEach(b=>b.classList.toggle('on',b===e.target));rMK()}};
+  $('otg').onclick=e=>{const o=e.target.dataset.o;if(o){ot=o;if(o==='L'&&!$('lim').value&&px(cur))$('lim').value=(px(cur)*.98).toFixed(2);rM()}};
+  $('sma').onchange=rMK;$('qt').oninput=rM;$('lim').oninput=rM;$('slp').oninput=rM;$('onlyN').onchange=e=>{onlyN=e.target.checked;rMK()};
+  ['cr','ce','cs'].forEach(i=>$(i).oninput=rCalc);
+  chips(DEF);
+  $('bc').onclick=e=>{const b=e.target;if(b.tagName!=='BUTTON')return;b.dataset.a!=null?ans(+b.dataset.a):say(b.textContent)};
+  $('bi').onkeydown=e=>{if(e.key==='Enter'){say(e.target.value);e.target.value=''}};
+  $('qk').onclick=e=>{const f=+e.target.dataset.f;if(!f)return;const c=ot==='L'&&+$('lim').value>0?+$('lim').value:px(cur);let m;
+    if(side==='B'){m=Math.max(0,Math.floor((S.cash-1)/(c*(1+FEE))));while(m>0&&m*c+Math.max(1,m*c*FEE)>S.cash)m--}else m=(S.pos[cur]||{q:0}).q;
+    $('qt').value=f===1?m:Math.max(1,Math.floor(m*f));rM()};
+  $('md').onclick=e=>{if(e.target===e.currentTarget)closeM()};
+  onkeydown=e=>{if(e.key==='Escape'){if(!$('md').hidden)closeM();else if(!$('gm').hidden&&$('gmb').querySelector('.x'))closeG()}};
+  onresize=()=>{if(!$('sim').hidden){document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);render()}else heroDraw()};
+  document.onvisibilitychange=run;
+  onpagehide=save;
+  heroSeed();heroDraw();rHome();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
+  if(location.hash==='#jugar')play();
+})();
+</script>
+</body>
+</html>
