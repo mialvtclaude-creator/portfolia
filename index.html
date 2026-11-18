@@ -971,10 +971,10 @@ function unlockPro(){S.g.pro=true;save();rAP();toast('Herramientas profesionales
 const TOUR=[
  {sel:'#cp, #mx',t:'Este es tu efectivo: $10,000 virtuales para invertir. No es dinero real.',next:1},
  {sel:'#mis',t:'Aquí está tu misión. Cada objetivo se marca solo cuando lo cumples.',next:1},
- {sel:'#t-mk',t:'Abre el Mercado para ver las empresas, agrupadas por sector.',w:()=>view==='mk'&&mkv==='grid',wt:'Toca Mercado'},
- {sel:'.tkb[data-s="KO"], #tk',t:'La etiqueta dorada NYSE marca las empresas de la Bolsa de Nueva York. Toca Coca-Cola (KO) u otra con esa etiqueta.',w:m=>S.g.pk>m&&isN(cur),wt:'Elige una empresa NYSE',mk:()=>S.g.pk},
- {sel:'#bt-buy',t:'Pulsa Comprar para abrir la orden.',w:()=>!$('md').hidden,wt:'Toca Comprar'},
- {sel:'#md .box',t:'Escribe cuántas acciones quieres. Mira la comisión: 0,1 % con mínimo de $1. Luego confirma.',w:m=>S.tr.filter(t=>t.t==='B').length>m,wt:'Confirma la compra',mk:()=>S.tr.filter(t=>t.t==='B').length,side:1},
+ {sel:'#t-mk',t:'Abre el Mercado para ver las empresas, agrupadas por sector.',w:()=>view==='mk'&&mkv==='grid',wt:'Toca Mercado',go:()=>{scrollTo(0,0)}},
+ {sel:'.tkb[data-s="KO"], #tk',t:'La etiqueta dorada NYSE marca las empresas de la Bolsa de Nueva York. Toca Coca-Cola (KO) u otra con esa etiqueta.',w:m=>S.g.pk>m&&isN(cur),wt:'Elige una empresa NYSE',mk:()=>S.g.pk,go:()=>{mkv='grid';tab('mk')}},
+ {sel:'#bt-buy',t:'Pulsa Comprar para abrir la orden.',w:()=>!$('md').hidden,wt:'Toca Comprar',go:()=>pick(isN(cur)?cur:'KO')},
+ {sel:'#md .box',t:'Escribe cuántas acciones quieres. Mira la comisión: 0,1 % con mínimo de $1. Luego confirma.',w:m=>S.tr.filter(t=>t.t==='B').length>m,wt:'Confirma la compra',mk:()=>S.tr.filter(t=>t.t==='B').length,side:1,go:()=>{if(view!=='mk'||mkv!=='det')pick(isN(cur)?cur:'KO');openM(cur,'B')}},
  {sel:'#pp',t:'El mercado está en pausa. Pulsa ▶ para que pasen los días.',w:()=>!paused,wt:'Toca ▶'},
  {sel:'#t-pf',t:'Vuelve a Portafolio para comparar tu dinero con el índice.',w:()=>view==='pf',wt:'Toca Portafolio'},
  {sel:'#ec',t:'La línea dorada eres tú; la gris, el índice. Completa la misión y haz el quiz del nivel.',next:1,end:1}];
@@ -990,7 +990,7 @@ function tourPos(){
   if(S.g.tour<0)return;const st=TOUR[S.g.tour];if(!st)return;const el=tEl(st.sel),sp=$('spot'),tc=$('tcard');
   const r=el?el.getBoundingClientRect():{left:innerWidth/2,right:innerWidth/2,top:innerHeight-40,bottom:innerHeight-40,width:0,height:0},p=6;sp.hidden=!el;tc.hidden=false;
   if(el)Object.assign(sp.style,{left:r.left-p+'px',top:r.top-p+'px',width:r.width+p*2+'px',height:r.height+p*2+'px'});
-  tc.innerHTML=`<div class="row"><small>Tutorial · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Saltar el tutorial</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>`}`;
+  tc.innerHTML=`<div class="row"><small>Tutorial · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Saltar el tutorial</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>${!el&&st.go?`<button class="btn pri" onclick="tourGo()">Llévame ahí</button>`:''}`}`;
   const w=tc.offsetWidth,h=tc.offsetHeight,vw=innerWidth,vh=innerHeight;let x,y;
   if(st.side&&vw>900){x=r.right+16;y=r.top;if(x+w>vw-12)x=r.left-w-16}else{x=r.left;y=r.bottom+14;if(y+h>vh-12)y=r.top-h-14}
   x=Math.max(12,Math.min(x,vw-w-12));y=Math.max(12,Math.min(y,vh-h-12));
@@ -998,6 +998,7 @@ function tourPos(){
 }
 const tEl=sel=>sel.split(',').map(x=>document.querySelector(x.trim())).find(e=>e&&e.getClientRects().length);
 function tourStart(){if(S.real)setSrc('sim');S.g.tour=0;S.g.tourDone=0;TI=-1;mkv='grid';save();if($('sim').hidden)go('sim');if(!$('gm').hidden&&S.g.ph!=='brief')closeG();tab('pf');scrollTo(0,0);if(S.g.ph==='brief'){openBrief();toast('El tutorial empieza al terminar la lección del nivel.')}}
+function tourGo(){const st=TOUR[S.g.tour];if(st&&st.go){st.go();TI=-1;tourTick()}}
 function tourNext(){const st=TOUR[S.g.tour];if(st&&st.end)return tourEnd();S.g.tour++;save();tourTick()}
 function tourEnd(silent){if(S){S.g.tour=-1;S.g.tourDone=1;save()}tourHide();TI=-1;if(!silent&&S&&S.g.L===0)toast('Tutorial terminado. Tu misión sigue arriba.')}
 function tourHide(){$('spot').hidden=true;$('tcard').hidden=true}
@@ -1367,7 +1368,7 @@ function conn(){
 /* ---------- Arranque ---------- */
 (function(){
   let r0=false;try{r0=localStorage.getItem('pf-src')==='real'}catch(e){}loadKeys();
-  uniLoad();S=load(r0);if(!S){fresh(r0);if(r0)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};uiSrc();
+  uniLoad();S=load(r0);if(!S){fresh(r0);if(r0)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};if(S.g.tour>=3&&S.g.tour<=5)S.g.tour=2;uiSrc();
   $('dl').innerHTML=M.map(o=>`<option value="${o.s}">${o.n}</option>`).join('');
   ac('si',pick);ac('wi',addWl);ac('ai',x=>{$('ai').value=x;anl()});
   $('uf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const a=uniParse(await f.text());e.target.value='';if(!a.length)return toast('No encontré acciones en ese archivo. Necesita columnas symbol, name, sector y exchange.');setUni(a);toast(`${UNI.length} acciones importadas.`)};
