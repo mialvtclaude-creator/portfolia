@@ -7,27 +7,29 @@
 <meta name="description" content="Juego educativo para aprender a invertir en la Bolsa de Nueva York: 7 niveles de práctica y un modo con precios y noticias reales en vivo.">
 <meta name="page-type" content="software">
 <meta name="site-kind" content="gaming">
-<meta name="theme-color" content="#0e0b14">
+<meta name="theme-color" content="#f6f4f8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..900,100,1;1,9..144,500..900,100,1&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
 <style>
-/* Estilo B "Bóveda": negro violáceo, dorado y morado, esquinas cortadas. Un solo look oscuro a propósito. Chakra Petch + IBM Plex Mono. */
+/* Estilo "Nácar": fondo perla, tornasol pastel de concha, muy redondeado. Un solo look claro a propósito. Fraunces itálica + Bricolage Grotesque + DM Mono.
+   --gold/--acc quedan como nombres del acento sólido (lila nácar); --iris es el tornasol de botones y detalles. */
 :root{
-  --bg:#0e0b14;--surface:#17121f;--surface-2:#211a2e;--ink:#efeaf7;--ink-2:#d7cfe6;--mut:#a99fbb;--line:#2e2540;--line-2:#45385e;
-  --acc:#e2bf4f;--gold:#d4af37;--gold-ink:#0e0b14;--soft:rgba(212,175,55,.13);
-  --violet:#7c3aed;--violet-2:#a78bfa;--vsoft:rgba(124,58,237,.18);
-  --up:#4ade80;--dn:#f87171;--up-soft:rgba(74,222,128,.12);--dn-soft:rgba(248,113,113,.12);
-  --shade:rgba(5,3,10,.74);--sh:none;
-  --font:"Chakra Petch",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --bg:#f6f4f8;--surface:#ffffff;--surface-2:#efecf3;--ink:#1b1725;--ink-2:#3a3447;--mut:#6a6478;--line:#e6e2ec;--line-2:#d3cddc;
+  --acc:#6a4fe6;--gold:#6d4fe0;--gold-ink:#ffffff;--soft:rgba(123,97,255,.10);
+  --violet:#d45aa6;--violet-2:#2f9fd6;--vsoft:rgba(212,90,166,.12);
+  --up:#138a5a;--dn:#c23a4f;--up-soft:rgba(19,138,90,.10);--dn-soft:rgba(194,58,79,.10);
+  --shade:rgba(27,23,37,.45);--sh:0 24px 48px -30px rgba(60,40,90,.35);
+  --iris:linear-gradient(110deg,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8);
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;--display:"Fraunces",Georgia,serif;--mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);--ease-enter:cubic-bezier(.22,1,.36,1);
-  --r:2px;--r-lg:2px;--cut:10px;color-scheme:dark}
+  --r:14px;--r-lg:22px;color-scheme:light}
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 html{-webkit-text-size-adjust:100%}
-body{font:400 15px/1.55 var(--font);background:radial-gradient(55% 40% at 85% -8%,rgba(124,58,237,.28),transparent 65%),radial-gradient(40% 30% at -5% 105%,rgba(212,175,55,.08),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{font:400 15px/1.55 var(--font);background:radial-gradient(50% 40% at 88% -6%,rgba(216,204,255,.55),transparent 65%),radial-gradient(40% 35% at 8% 4%,rgba(255,209,232,.45),transparent 65%),radial-gradient(45% 35% at -5% 105%,rgba(191,233,255,.45),transparent 70%),radial-gradient(35% 30% at 100% 100%,rgba(201,247,223,.4),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;min-height:100vh}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .num,.mono{font-family:var(--mono);font-feature-settings:"tnum"}
@@ -308,13 +310,26 @@ progress{accent-color:var(--gold);height:8px}
 .tvbox .emp{padding:14px}
 .tradingview-widget-copyright{font-size:11px;padding:4px 10px;text-align:right}.tradingview-widget-copyright a{color:var(--mut)}
 .pr small{display:block;font-size:11.5px}
-/* Esquinas cortadas del estilo Bóveda */
-.btn,.card,.mc,.mis,.frame,.lcard,.box,.tkb,.headline,.cash,.xp,.qopt,.bdg,.tcard,.sum,.note,.minimis,.fact,.why{clip-path:polygon(var(--cut) 0,100% 0,100% calc(100% - var(--cut)),calc(100% - var(--cut)) 100%,0 100%,0 var(--cut))}
-.btn.s,.cash,.xp,.qopt,.bdg,.note,.why,.fact,.sum{--cut:6px}
-.btn:focus-visible,.lcard:focus-visible,.tkb:focus-visible,.qopt:focus-visible,.xp:focus-visible,.headline:focus-visible{outline-offset:-4px}
-.frame{border-color:var(--line-2);background:linear-gradient(160deg,rgba(124,58,237,.12),transparent 45%),var(--surface)}
-.mis,.card{background:linear-gradient(165deg,rgba(124,58,237,.07),transparent 40%),var(--surface)}
-.modes{flex:none}.modes button{min-height:34px;font-weight:600}.modes button.on{background:var(--gold);color:var(--gold-ink);box-shadow:none}
+/* Estilo Nácar: titulares en Fraunces itálica blanda, tornasol pastel en lo que se toca */
+@keyframes sheen{to{background-position:200% 50%}}
+h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:800;letter-spacing:-.025em}
+.logo{font-size:20px}
+.mis .big,.lcard .n{color:var(--ink)}
+.btn{border-radius:999px}.btn.s{border-radius:999px}
+.btn.pri,.logo i,.lvnum,.tabs .cnt,.chip.on,.modes button.on,.skip{background:var(--iris);background-size:200% 100%;animation:sheen 7s linear infinite;color:var(--ink);border-color:transparent}
+@media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
+.logo i,.lvnum,.tabs .cnt{border-radius:10px}
+.hero h1 em{background:linear-gradient(110deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a,#8a6cff);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite;padding-right:.08em}
+.mis::after,.xp .bar i,.tabs button::after,.mis .prog i{background:linear-gradient(90deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a)}
+.mis::after{width:4px}
+.frame{border-color:var(--line-2);box-shadow:var(--sh);background:linear-gradient(140deg,rgba(255,209,232,.35),rgba(216,204,255,.25) 30%,rgba(191,233,255,.25) 60%,transparent 85%),var(--surface)}
+.mis{background:linear-gradient(120deg,rgba(255,209,232,.45),rgba(216,204,255,.35) 30%,rgba(191,233,255,.35) 60%,rgba(201,247,223,.4)),var(--surface)}
+.card,.lcard,.mc,.tkb{box-shadow:0 1px 0 rgba(60,40,90,.04)}
+.lgo{border:1px solid var(--line)}
+.chip{clip-path:none;border-radius:999px}
+.home::before{opacity:.35}
+.modes{flex:none}.modes button{min-height:34px;font-weight:600;border-radius:999px}.modes button.on{box-shadow:none}
+.seg{border-radius:999px}.seg button{border-radius:999px}
 .live{white-space:nowrap;flex:none;font:600 10.5px/1 var(--mono);letter-spacing:.08em;color:#fff;background:var(--dn);padding:4px 6px}
 .nw h4 a{color:var(--ink);text-decoration:none;background:linear-gradient(var(--violet-2),var(--violet-2)) 0 100%/0 1px no-repeat;transition:background-size 150ms var(--ease)}.nw h4 a:hover{background-size:100% 1px}
 .clock{font:500 clamp(28px,4vw,40px)/1 var(--mono);letter-spacing:-.03em}
@@ -323,7 +338,7 @@ progress{accent-color:var(--gold);height:8px}
 </style>
 </head>
 <body>
-<!-- Plan: juego educativo (site-kind gaming). Paleta warm-black-gold, tipografía mona, radio sharp. Hero split con la ventana del juego en vivo; mapa de 7 niveles; pantalla de juego con misión, tutorial guiado, quiz, XP e insignias. -->
+<!-- Plan: juego educativo (site-kind gaming). Estilo Nácar: fondo perla con tornasol pastel, Fraunces itálica + Bricolage Grotesque, muy redondeado. Hero split con la ventana del juego en vivo; mapa de 7 niveles; pantalla de juego con misión, tutorial guiado, quiz, XP e insignias. -->
 <a class="skip" href="#main">Saltar al contenido</a>
 
 <section id="home" class="home">
@@ -962,7 +977,7 @@ function openBadges(){
 const bdgHTML=()=>BD.map(b=>{const on=S.g.bd.includes(b.id);return`<div class="bdg ${on?'':'off'}"><span class="ic">${b.i}</span><div><b>${b.t}</b><small>${b.d}</small></div></div>`}).join('');
 function confetti(){
   if(RM)return;const c=$('fx'),x=c.getContext('2d'),W=c.width=innerWidth,H=c.height=innerHeight;c.hidden=false;
-  const cols=['#d4af37','#f1d77a','#7c3aed','#a78bfa'],P=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*120,y:H*.38,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
+  const cols=['#ffb3d6','#b9a8ff','#8fd6ff','#9eeec4'],P=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*120,y:H*.38,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
   const t0=performance.now();(function f(t){const k=(t-t0)/1400;x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.1;x.save();x.globalAlpha=Math.max(0,1-k);x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});if(k<1)requestAnimationFrame(f);else c.hidden=true})(t0);
 }
 function unlockPro(){S.g.pro=true;save();rAP();toast('Herramientas profesionales desbloqueadas.')}
@@ -1340,7 +1355,7 @@ let TVST='';const TVW={},TVFAIL='<p class="emp">No se pudo cargar TradingView. R
 function tvWidget(id,kind,cfg){const el=$(id);if(!el)return;const key=kind+JSON.stringify(cfg);if(TVW[id]===key)return;TVW[id]=key;
   el.innerHTML='<div class="tradingview-widget-container__widget"></div>';const sc=document.createElement('script');
   sc.src=`https://s3.tradingview.com/external-embedding/embed-widget-${kind}.js`;sc.async=true;sc.type='text/javascript';
-  sc.textContent=JSON.stringify({colorTheme:'dark',isTransparent:true,locale:'es',...cfg});
+  sc.textContent=JSON.stringify({colorTheme:'light',isTransparent:true,locale:'es',...cfg});
   sc.onload=()=>{TVST='ok'};sc.onerror=()=>{el.innerHTML=TVFAIL;TVW[id]='';TVST='err'};el.appendChild(sc);
   el.insertAdjacentHTML('beforeend','<div class="tradingview-widget-copyright"><a href="https://es.tradingview.com/" rel="noopener nofollow" target="_blank">Datos y gráficos de TradingView</a></div>')}
 function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>$(i).hidden=!r);$('mpl').hidden=!r;if(!r)return;
@@ -1349,7 +1364,7 @@ function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>
   if(view==='mk'&&mkv==='det')tvWidget('tvinfo','symbol-info',{symbol:tvSym(cur),width:'100%'});}
 let tvKey='';
 function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
-  new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:'dark',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
+  new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:'light',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
 }
 function uiSrc(){
   $('m-sim').classList.toggle('on',!S.real);$('m-real').classList.toggle('on',S.real);$('pp').hidden=S.real;$('spd').hidden=S.real;
