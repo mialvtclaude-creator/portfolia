@@ -426,6 +426,43 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 /* cada letra toma su tramo del mismo degradado, así el tornasol recorre la palabra entera */
 .mega span{display:inline-block;background:var(--iris-ink);background-size:900% 100%;background-position:calc(var(--i)*12.5%) 50%;-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em;transition:transform 1000ms var(--ease-enter);transition-delay:calc(var(--i)*55ms)}.rv .mega:not(.in) span{transform:translateY(105%)}
 @media (prefers-reduced-motion:reduce){.tape-t{animation:none}#intro{display:none}}
+
+/* ===== LucIA, la mascota: robot blanco con visor oscuro y ojos cian; el "IA" siempre resaltado ===== */
+.lu-name{font-weight:700;letter-spacing:-.01em}.lu-name b{background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.lu{display:block;overflow:visible;animation:luF 3s ease-in-out infinite}
+.lu .eye{transform-box:fill-box;transform-origin:center;animation:luBlink 4.5s infinite}
+.lu .jet{transform-box:fill-box;transform-origin:50% 0;animation:luJet .55s ease-in-out infinite alternate}
+.lu .arm-r,.lu .arm-l{transform-box:fill-box;transform-origin:50% 12%}
+.lu.hi .arm-r{animation:luWave 2.4s ease-in-out infinite}
+.lu.focus .arm-r{transform:rotate(-38deg)}.lu.focus .scan{animation:luScan 1.4s ease-in-out infinite}
+.lu.happy,.lu.wow{animation:luHop 1s ease-in-out infinite}.lu.wow .arm-l{transform:rotate(32deg)}.lu.wow .arm-r{transform:rotate(-32deg)}
+.lu.sad .head{transform:rotate(-7deg);transform-origin:60px 70px}.lu.sad{animation-duration:4.5s}
+.lu.q .head{animation:luTilt 2.6s ease-in-out infinite;transform-origin:60px 70px}
+@keyframes luF{50%{transform:translateY(-6px)}}
+@keyframes luHop{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}60%{transform:translateY(-12px) rotate(3deg)}}
+@keyframes luBlink{0%,93%,100%{transform:none}96%{transform:scaleY(.12)}}
+@keyframes luJet{to{transform:scale(1.2,1.5);opacity:.55}}
+@keyframes luWave{0%,55%,100%{transform:none}12%,36%{transform:rotate(-40deg)}24%,48%{transform:rotate(-12deg)}}
+@keyframes luScan{50%{opacity:.25}}
+@keyframes luTilt{50%{transform:rotate(8deg)}}
+@keyframes luPop{from{opacity:0;transform:translateY(14px) scale(.7)}}
+.lu-pop{animation:luPop 600ms var(--ease-enter) both}
+/* LucIA junto al contenido de lecciones, quiz y pasos */
+.lu-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;align-items:start}
+.lu-row .lu{width:96px;height:128px}
+.lu-say{font-size:12.5px;color:var(--mut);margin-top:4px;text-align:center}
+@media (max-width:700px){.lu-row{grid-template-columns:64px minmax(0,1fr);gap:12px}.lu-row .lu{width:64px;height:86px}}
+.tcard .lu-t{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:start}.tcard .lu-t .lu{width:52px;height:70px}
+.win .lu{width:110px;height:146px;margin:0 auto -6px}
+/* Botón de LucIA en la Bolsa real: media cabeza asomando con globito */
+.bb.lu-bb{background:none;border:0;padding:0;min-height:0;width:84px;height:58px;align-items:flex-end;justify-content:center;overflow:visible;color:var(--ink)}
+.bb.lu-bb .lu-head{width:84px;height:58px;display:block;filter:drop-shadow(0 6px 14px rgba(40,30,80,.25));transition:transform 300ms var(--ease-enter)}
+.bb.lu-bb:hover .lu-head{transform:translateY(-4px) rotate(-4deg)}
+.lu-bubble{position:absolute;right:6px;bottom:calc(100% + 8px);white-space:nowrap;background:var(--surface);color:var(--ink);border:1px solid var(--line-2);border-radius:14px 14px 4px 14px;padding:8px 12px;font:600 13.5px/1 var(--font);box-shadow:var(--sh);animation:luPop 600ms 300ms var(--ease-enter) both,luF 3s 1s ease-in-out infinite}
+.bb.lu-bb.open .lu-bubble{display:none}
+.bb.lu-bb .lu-head .eye{animation:luBlink 4.5s infinite;transform-box:fill-box;transform-origin:center}
+@media (max-width:700px){.lu-bubble{bottom:calc(100% + 18px)}}
+@media (max-width:360px){.bb.lu-bb,.bb.lu-bb .lu-head{width:64px;height:44px}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 @media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
@@ -588,7 +625,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <canvas id="fx" hidden></canvas>
 <button class="bb" id="bb" onclick="botT()" aria-label="Abrir el tutor" hidden>Tutor</button>
 <div class="fabs" id="fab" hidden><button class="btn buy" onclick="buyNow()"><span class="hide-s">Comprar acciones</span><span class="show-s">Comprar</span></button><button class="btn sell" onclick="sellNow()"><span class="hide-s">Vender acciones</span><span class="show-s">Vender</span></button></div>
-<div class="bp" id="bp" hidden><div class="row"><b>Tutor de inversión</b><button class="x" onclick="botT()" aria-label="Cerrar el tutor">✕</button></div><div class="bl" id="bl" aria-live="polite"></div><div class="bc" id="bc"></div><input id="bi" placeholder="Pregúntame algo…" aria-label="Escribe tu pregunta"></div>
+<div class="bp" id="bp" hidden><div class="row"><b><span class="lu-name">Luc<b>IA</b></span> · tu tutora</b><button class="x" onclick="botT()" aria-label="Cerrar el tutor">✕</button></div><div class="bl" id="bl" aria-live="polite"></div><div class="bc" id="bc"></div><input id="bi" placeholder="Pregúntame algo…" aria-label="Escribe tu pregunta"></div>
 <div class="ov" id="gate" hidden><div class="box gbox" role="dialog" aria-modal="true" aria-labelledby="gt-h"><div class="gb" id="gate-b"></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <datalist id="dl"></datalist>
@@ -996,7 +1033,7 @@ async function gateSave(){
   if(started()){$('gate').hidden=true;if(S.real){rinit(true);run()}}else gateChoice()}
 function gateChoice(){
   try{localStorage.setItem('pf-start','ask')}catch(e){}
-  gateOpen(`<div class="slide"><p class="eyebrow">Paso 2 de 2</p><h2 id="gt-h">¿Quieres hacer el tutorial?</h2><p>Son ${UNLOCK} niveles cortos en un mercado simulado: comprar, vender, diversificar, usar un índice y aguantar una caída. Al terminar el nivel ${UNLOCK} se abre la Bolsa real y ahí juegas los niveles 6 y 7.</p>
+  gateOpen(`<div class="slide"><div class="lu-row" style="align-items:center;margin-bottom:6px"><div class="lu-pop">${lucia('hi')}</div><p>Hola, soy ${luName}. Si quieres, te acompaño en cada paso del tutorial.</p></div><p class="eyebrow">Paso 2 de 2</p><h2 id="gt-h">¿Quieres hacer el tutorial?</h2><p>Son ${UNLOCK} niveles cortos en un mercado simulado: comprar, vender, diversificar, usar un índice y aguantar una caída. Al terminar el nivel ${UNLOCK} se abre la Bolsa real y ahí juegas los niveles 6 y 7.</p>
   <p class="fact" style="margin-top:14px">Empiezas con $10,000 virtuales y es un solo saldo: lo que ganes o pierdas en el tutorial pasa a la Bolsa real.</p>
   <div style="display:grid;gap:10px;margin-top:16px"><button class="btn pri xl full" onclick="gateTut()">Sí, hacer el tutorial</button><button class="btn xl full" onclick="gateSkip()">Saltar el tutorial e ir a la Bolsa real</button></div></div>`)}
 function gateTut(){try{localStorage.setItem('pf-start','tut')}catch(e){}$('gate').hidden=true;play()}
@@ -1129,6 +1166,27 @@ function rMis(){
   el.innerHTML=`<div class="big">${String(S.g.L+1).padStart(2,'0')}</div><div><h2>${L.t}</h2><p class="k">${L.k} · Misión del nivel ${S.g.L+1} de ${S.prac?UNLOCK:7}${S.prac?' · Tutorial de práctica: su saldo es aparte y tu saldo real no cambia. Tu avance se guarda.':''}</p><ul class="obs">${L.ob.map((o,i)=>`<li class="${S.g.ob[i]?'ok':''}"><span class="ck">${ck}</span><span>${o.t}${!S.g.ob[i]&&o.pr&&S.g.ph==='play'?`<em>${o.pr(x)}</em>`:''}</span></li>`).join('')}<li class="bonus ${bo===true?'ok':bo===false?'fail':''}"><span class="ck">${bo===true?ck:''}</span><span><b style="color:var(--acc)">Reto extra:</b> ${L.bo.t}${bo===false?' <em>perdido</em>':''}${bo==null&&L.bo.pr&&S.g.ph!=='brief'?`<em>tú ${pc(x.myR*100)} · índice ${pc(x.ixR*100)}</em>`:''}</span></li></ul><div class="prog"><i style="transform:scaleX(${d/n})"></i></div></div>
   <div class="side">${rd?`<button class="btn pri pulse" onclick="openQuiz()">Hacer el quiz del nivel</button>`:''}${S.g.ph==='brief'?`<button class="btn pri pulse" onclick="openBrief()">Empezar el nivel ${S.g.L+1}</button>`:''}<button class="btn ex" onclick="openBrief(true)">Repasar la lección</button>${S.real?'':`<button class="btn ex" onclick="tourStart()">Ver la guía</button>`}<button class="btn ex" onclick="openMap()">Ver el mapa</button>${S.prac?`<button class="btn" onclick="endPractice()">Salir del tutorial</button>`:''}</div><button class="btn ghost s tog" onclick="$('mis').classList.toggle('min')" aria-label="Mostrar u ocultar la misión">▾</button>`;
 }
+/* LucIA en SVG. mood: hi (saludo), focus (escaneando), q (pregunta), happy (acierto), sad (error), wow (resultado).
+   head=true devuelve solo la media cabeza para el botón de la Bolsa real. */
+let LUN=0;
+function lucia(mood='hi',head=false){const k='lu'+(++LUN),C='#5ee4f5',st=`stroke="${C}" stroke-width="4" stroke-linecap="round" fill="none"`;
+  const E={hi:`<path class="eye" d="M44 50 Q49 43 54 50" ${st}/><path class="eye" d="M66 50 Q71 43 76 50" ${st}/><path d="M53 57 Q60 62 67 57" ${st} stroke-width="3"/>`,
+    happy:`<path class="eye" d="M44 50 Q49 42 54 50" ${st}/><path class="eye" d="M66 50 Q71 42 76 50" ${st}/><path d="M50 55 Q60 66 70 55 Z" fill="${C}"/>`,
+    wow:`<path class="eye" d="M43 49 Q49 39 55 49" ${st}/><path class="eye" d="M65 49 Q71 39 77 49" ${st}/><ellipse cx="60" cy="58" rx="6" ry="5" fill="${C}"/>`,
+    focus:`<g class="scan" ${st} stroke-width="2.5"><path d="M42 38 h-4 v6M78 38 h4 v6M42 62 h-4 v-6M78 62 h4 v-6"/></g><rect class="eye" x="46" y="46" width="9" height="4" rx="2" fill="${C}"/><rect class="eye" x="65" y="46" width="9" height="4" rx="2" fill="${C}"/><circle cx="60" cy="56" r="2" fill="${C}"/>`,
+    q:`<text x="60" y="60" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="28" fill="${C}">?</text>`,
+    sad:`<path class="eye" d="M44 47 Q49 52 54 48" ${st}/><path class="eye" d="M66 48 Q71 52 76 47" ${st}/><path d="M53 61 Q60 56 67 61" ${st} stroke-width="3"/><path d="M78 53 q3 5 0 7 q-3-2 0-7Z" fill="${C}"/>`};
+  const headSvg=`<g class="head"><ellipse cx="60" cy="44" rx="40" ry="34" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M33 47 Q33 28 60 28 Q87 28 87 47 Q87 66 60 67 Q33 66 33 47Z" fill="#0f1424"/><path d="M38 40 Q44 31 56 30" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none" stroke-linecap="round"/>${E[mood]||E.hi}</g>`;
+  const defs=`<defs><linearGradient id="${k}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ecf5"/></linearGradient><linearGradient id="${k}i" x1="0" x2="1"><stop offset="0" stop-color="#8a6cff"/><stop offset=".5" stop-color="#d45aa6"/><stop offset="1" stop-color="#2f9fd6"/></linearGradient><radialGradient id="${k}j"><stop offset="0" stop-color="#bff6ff"/><stop offset=".5" stop-color="${C}" stop-opacity=".8"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></radialGradient></defs>`;
+  if(head)return`<svg class="lu-head" viewBox="16 6 88 56" role="img" aria-hidden="true">${defs}${headSvg}</svg>`;
+  return`<svg class="lu ${mood}" viewBox="0 0 120 160" role="img" aria-label="LucIA, la tutora de Portfolia">${defs}
+    <ellipse class="jet" cx="60" cy="140" rx="11" ry="10" fill="url(#${k}j)"/>
+    <ellipse class="arm-l" cx="22" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
+    <ellipse class="arm-r" cx="98" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
+    <path d="M34 80 Q60 72 86 80 L81 124 Q60 134 39 124Z" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M48 126 h24 l-3 8 h-18Z" fill="#cfd8e6" stroke="#1b1725" stroke-width="2"/>
+    <circle cx="60" cy="100" r="13" fill="#fff" stroke="url(#${k}i)" stroke-width="2.5"/><text x="60" y="105" text-anchor="middle" font-family="Bricolage Grotesque,system-ui,sans-serif" font-weight="800" font-size="13" fill="url(#${k}i)">IA</text>
+    ${headSvg}</svg>`}
+const luName='<span class="lu-name">Luc<b>IA</b></span>';
 const starStr=(n,t=3)=>`<span>${'★'.repeat(n)}</span><span class="off">${'★'.repeat(Math.max(0,t-n))}</span>`;
 
 /* ---------- Modal del juego ---------- */
@@ -1141,14 +1199,14 @@ function drawBrief(){
   const L=LV[BL],n=L.sl.length,last=BS===n,s=L.sl[BS];
   const body=last?`<div class="slide"><p class="eyebrow">Tu misión</p><h2 id="gmt">${L.t}</h2><ul class="obs" style="margin-top:10px">${L.ob.map(o=>`<li><span class="ck"></span><span>${o.t}</span></li>`).join('')}<li class="bonus"><span class="ck"></span><span><b style="color:var(--acc)">Reto extra:</b> ${L.bo.t}</span></li></ul><p class="fact" style="margin-top:14px">Al cumplir los objetivos se abre un quiz de 3 preguntas. Estrellas: misión cumplida, reto extra y quiz perfecto.</p></div>`
     :`<div class="slide"><div class="kv">${s.kv}</div><h2 id="gmt">${s.h}</h2><p>${s.p}</p>${s.f?`<p class="fact" style="margin-top:14px">${s.f}</p>`:''}</div>`;
-  openG(`<div class="gh"><span class="lvnum">${String(BL+1).padStart(2,'0')}</span><b>${L.t}</b><span class="sp"></span><span class="dots2">${Array.from({length:n+1},(_,i)=>`<i class="${i<=BS?'on':''}"></i>`).join('')}</span>${BR?`<button class="x" onclick="closeG()" aria-label="Cerrar la lección">✕</button>`:''}</div><div class="gb">${BR&&last?body.replace('Tu misión','Misión del nivel'):body}</div><div class="gf">${BS?`<button class="btn" onclick="BS--;drawBrief()">Atrás</button>`:'<span></span>'}${last?(BR?`<button class="btn pri" onclick="closeG()">Volver al juego</button>`:`<button class="btn pri" onclick="startLevel()">Empezar la misión</button>`):`<button class="btn pri" onclick="BS++;drawBrief()">Siguiente</button>`}</div>`,'Lección del nivel');
+  openG(`<div class="gh"><span class="lvnum">${String(BL+1).padStart(2,'0')}</span><b>${L.t}</b><span class="sp"></span><span class="dots2">${Array.from({length:n+1},(_,i)=>`<i class="${i<=BS?'on':''}"></i>`).join('')}</span>${BR?`<button class="x" onclick="closeG()" aria-label="Cerrar la lección">✕</button>`:''}</div><div class="gb"><div class="lu-row"><div class="lu-pop">${lucia(BS===0?'hi':last?'wow':'focus')}<p class="lu-say">${luName}</p></div><div>${BR&&last?body.replace('Tu misión','Misión del nivel'):body}</div></div></div><div class="gf">${BS?`<button class="btn" onclick="BS--;drawBrief()">Atrás</button>`:'<span></span>'}${last?(BR?`<button class="btn pri" onclick="closeG()">Volver al juego</button>`:`<button class="btn pri" onclick="startLevel()">Empezar la misión</button>`):`<button class="btn pri" onclick="BS++;drawBrief()">Siguiente</button>`}</div>`,'Lección del nivel');
 }
 function startLevel(){if(S.prac&&S.g.L>=UNLOCK)return endPractice();S.g.ph='play';S.g.t0=S.day;S.g.ts=Date.now();S.g.ob={};S.g.bo=null;S.g.seen={};if(S.g.L===0&&S.g.tour<0&&!S.g.tourDone)S.g.tour=0;save();closeG();if(S.g.L>0)toast(S.real?`Nivel ${S.g.L+1} en marcha en la Bolsa real.`:`Nivel ${S.g.L+1} en marcha. Pulsa ▶ cuando estés listo.`)}
 let QS=null;
 function openQuiz(){const L=LV[S.g.L];QS={i:0,sc:0,qs:L.q.map(q=>{const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);return{q:q[0],o,a:q[2],w:q[3]}})};drawQuiz()}
 function drawQuiz(ans){
   const q=QS.qs[QS.i],L=LV[S.g.L];
-  openG(`<div class="gh"><span class="lvnum">${String(S.g.L+1).padStart(2,'0')}</span><b>Quiz · ${L.t}</b><span class="sp"></span><span class="mono mut">${QS.i+1}/3</span></div><div class="gb"><div class="slide"><h2 id="gmt" style="font-size:24px;margin-bottom:14px">${q.q}</h2><div class="qopts">${q.o.map(([t,i],k)=>`<button class="qopt${ans!=null?(i===q.a?' right':k===ans?' wrong':''):''}" ${ans!=null?'disabled':''} onclick="qAns(${k})"><b>${'ABC'[k]}</b>${t}</button>`).join('')}</div>${ans!=null?`<p class="why ${q.o[ans][1]===q.a?'y':'n'}" style="margin-top:12px"><b>${q.o[ans][1]===q.a?'Correcto.':'No exactamente.'}</b> ${q.w}</p>`:''}</div></div><div class="gf"><span class="mono mut">${QS.sc} correctas</span>${ans!=null?`<button class="btn pri" onclick="qNext()">${QS.i<2?'Siguiente pregunta':'Ver el resultado'}</button>`:'<span></span>'}</div>`,'Quiz');
+  openG(`<div class="gh"><span class="lvnum">${String(S.g.L+1).padStart(2,'0')}</span><b>Quiz · ${L.t}</b><span class="sp"></span><span class="mono mut">${QS.i+1}/3</span></div><div class="gb"><div class="lu-row"><div>${lucia(ans==null?'q':q.o[ans][1]===q.a?'happy':'sad')}<p class="lu-say">${luName}</p></div><div class="slide"><h2 id="gmt" style="font-size:24px;margin-bottom:14px">${q.q}</h2><div class="qopts">${q.o.map(([t,i],k)=>`<button class="qopt${ans!=null?(i===q.a?' right':k===ans?' wrong':''):''}" ${ans!=null?'disabled':''} onclick="qAns(${k})"><b>${'ABC'[k]}</b>${t}</button>`).join('')}</div>${ans!=null?`<p class="why ${q.o[ans][1]===q.a?'y':'n'}" style="margin-top:12px"><b>${q.o[ans][1]===q.a?'Correcto.':'No exactamente.'}</b> ${q.w}</p>`:''}</div></div></div><div class="gf"><span class="mono mut">${QS.sc} correctas</span>${ans!=null?`<button class="btn pri" onclick="qNext()">${QS.i<2?'Siguiente pregunta':'Ver el resultado'}</button>`:'<span></span>'}</div>`,'Quiz');
 }
 function qAns(k){const q=QS.qs[QS.i];if(q.o[k][1]===q.a)QS.sc++;drawQuiz(k)}
 function qNext(){if(QS.i<2){QS.i++;drawQuiz()}else finishLevel(QS.sc)}
@@ -1158,7 +1216,7 @@ function finishLevel(sc){
   const last=L===LV.length-1;if(last){S.g.fin=true;S.g.pro=true}else{S.g.L++;S.g.ph='brief';S.g.ob={};S.g.bo=null}
   const pend=L===UNLOCK-1&&!!S.prac,grad=L===UNLOCK-1&&!S.real&&!pend,gv=equity();if(grad)toReal(false);
   save();chk();rMis();
-  openG(`<div class="gb win"><p class="eyebrow">Nivel ${L+1} completado</p><h2 id="gmt" style="font-size:clamp(26px,4vw,38px)">${LV[L].t}</h2><div class="bigstars">${[0,1,2].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<st?'var(--gold)':'none'}" stroke="${i<st?'var(--gold)':'var(--line-2)'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div><p class="mut">${st} de 3 estrellas · misión ✓ · reto extra ${bo?'✓':'✗'} · quiz ${sc}/3</p><div class="kv" id="xpc">+0</div><p class="mut">XP ganada en este nivel</p>${last?`<p class="fact" style="text-align:left">Terminaste la campaña. Desbloqueaste las herramientas profesionales de la Academia: análisis con datos históricos reales y el informe en Excel.</p>`:pend?`<p class="fact" style="text-align:left"><b>Terminaste el tutorial de práctica.</b> El saldo de práctica se descarta y vuelves a tu Bolsa real con el saldo que tenías.</p>`:grad?`<p class="fact" style="text-align:left"><b>Desbloqueaste la Bolsa real.</b> El mercado simulado se cierra: tus acciones de práctica se vendieron a su último precio y tus ${usd(gv)} pasan a la Bolsa real. Ahí juegas los niveles 6 y 7, con precios de verdad.</p>`:`<p class="fact" style="text-align:left">Siguiente: <b>${LV[L+1].t}</b>. ${LV[L+1].sum}</p>`}</div><div class="gf"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn pri" onclick="${last?'closeG()':pend?'endPractice()':'openBrief()'}">${last?'Seguir en modo libre':pend?'Volver a la Bolsa real':`Empezar el nivel ${L+2}`}</button></div>`,'Nivel completado');
+  openG(`<div class="gb win"><div class="lu-pop">${lucia('wow')}</div><p class="eyebrow">Nivel ${L+1} completado</p><h2 id="gmt" style="font-size:clamp(26px,4vw,38px)">${LV[L].t}</h2><div class="bigstars">${[0,1,2].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<st?'var(--gold)':'none'}" stroke="${i<st?'var(--gold)':'var(--line-2)'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div><p class="mut">${st} de 3 estrellas · misión ✓ · reto extra ${bo?'✓':'✗'} · quiz ${sc}/3</p><div class="kv" id="xpc">+0</div><p class="mut">XP ganada en este nivel</p>${last?`<p class="fact" style="text-align:left">Terminaste la campaña. Desbloqueaste las herramientas profesionales de la Academia: análisis con datos históricos reales y el informe en Excel.</p>`:pend?`<p class="fact" style="text-align:left"><b>Terminaste el tutorial de práctica.</b> El saldo de práctica se descarta y vuelves a tu Bolsa real con el saldo que tenías.</p>`:grad?`<p class="fact" style="text-align:left"><b>Desbloqueaste la Bolsa real.</b> El mercado simulado se cierra: tus acciones de práctica se vendieron a su último precio y tus ${usd(gv)} pasan a la Bolsa real. Ahí juegas los niveles 6 y 7, con precios de verdad.</p><p class="fact" style="text-align:left">Desde ahora ${luName} te espera abajo a la derecha: tócala y pregúntale lo que quieras.</p>`:`<p class="fact" style="text-align:left">Siguiente: <b>${LV[L+1].t}</b>. ${LV[L+1].sum}</p>`}</div><div class="gf"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn pri" onclick="${last?'closeG()':pend?'endPractice()':'openBrief()'}">${last?'Seguir en modo libre':pend?'Volver a la Bolsa real':`Empezar el nivel ${L+2}`}</button></div>`,'Nivel completado');
   const svgs=$('gmb').querySelectorAll('.bigstars svg');svgs.forEach((s,i)=>setTimeout(()=>s.classList.add('in'),RM?0:250+i*220));
   countUp($('xpc'),xp);confetti();
 }
@@ -1202,7 +1260,8 @@ function tourPos(){
   if(S.g.tour<0)return;const st=TOUR[S.g.tour];if(!st)return;const el=tEl(st.sel),sp=$('spot'),tc=$('tcard');
   const r=el?el.getBoundingClientRect():{left:innerWidth/2,right:innerWidth/2,top:innerHeight-40,bottom:innerHeight-40,width:0,height:0},p=6;sp.hidden=!el;tc.hidden=false;
   if(el)Object.assign(sp.style,{left:r.left-p+'px',top:r.top-p+'px',width:r.width+p*2+'px',height:r.height+p*2+'px'});
-  tc.innerHTML=`<div class="row"><small>Guía · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Cerrar la guía</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>${!el&&st.go?`<button class="btn pri" onclick="tourGo()">Llévame ahí</button>`:''}`}`;
+  const tk=S.g.tour+(el?'e':'n');if(tc.dataset.k!==tk){tc.dataset.k=tk;// solo se redibuja al cambiar de paso, para no reiniciar las animaciones de LucIA al hacer scroll
+  tc.innerHTML=`<div class="row"><small>${luName} · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Cerrar la guía</button></div><div class="lu-t"><div class="lu-pop">${lucia(st.next?(st.end?'happy':'hi'):'focus')}</div><p>${st.t}</p></div>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>${!el&&st.go?`<button class="btn pri" onclick="tourGo()">Llévame ahí</button>`:''}`}`}
   const w=tc.offsetWidth,h=tc.offsetHeight,vw=innerWidth,vh=innerHeight;let x,y;
   if(st.side&&vw>900){x=r.right+16;y=r.top;if(x+w>vw-12)x=r.left-w-16}else{x=r.left;y=r.bottom+14;if(y+h>vh-12)y=r.top-h-14}
   x=Math.max(12,Math.min(x,vw-w-12));y=Math.max(12,Math.min(y,vh-h-12));
@@ -1213,7 +1272,7 @@ function tourStart(){if(S.real)return;S.g.tour=0;S.g.tourDone=0;TI=-1;mkv='grid'
 function tourGo(){const st=TOUR[S.g.tour];if(st&&st.go){st.go();TI=-1;tourTick()}}
 function tourNext(){const st=TOUR[S.g.tour];if(st&&st.end)return tourEnd();S.g.tour++;save();tourTick()}
 function tourEnd(silent){if(S){S.g.tour=-1;S.g.tourDone=1;save()}tourHide();TI=-1;if(!silent&&S&&S.g.L===0)toast('Guía terminada. Tu misión sigue arriba.')}
-function tourHide(){$('spot').hidden=true;$('tcard').hidden=true}
+function tourHide(){$('spot').hidden=true;$('tcard').hidden=true;$('tcard').dataset.k=''}
 addEventListener('scroll',()=>{if(S&&S.g.tour>=0)tourPos()},{passive:true});
 
 /* ---------- Portada: mapa de niveles y gráfico vivo ---------- */
@@ -1502,8 +1561,8 @@ async function say(t){
   const r=await llm(t);addm(r||'Sin conexión al tutor con IA no sé responder eso. Prueba con: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
 }
 function botT(){
-  const p=$('bp');p.hidden=!p.hidden;
-  if(!p.hidden&&!$('bl').children.length){addm('Hola, soy tu tutor. Pregúntame por la NYSE, los índices, los dividendos o tu portafolio. Solo educativo: no doy recomendaciones personalizadas de inversión.');$('bi').focus()}
+  const p=$('bp');p.hidden=!p.hidden;$('bb').classList.toggle('open',!p.hidden);
+  if(!p.hidden&&!$('bl').children.length){addm('Hola, soy LucIA, tu tutora con IA. Pregúntame por la NYSE, los índices, los dividendos o tu portafolio. Solo educativo: no doy recomendaciones personalizadas de inversión.');$('bi').focus()}
 }
 /* ---------- Reloj de la NYSE y bolsa real (Finnhub) ---------- */
 /* Feriados y cierres tempranos de la NYSE 2026-2027 (revisar cada año en nyse.com/markets/hours-calendars) */
@@ -1594,6 +1653,8 @@ function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
 function uiSrc(){
   $('m-sim').classList.toggle('on',!S.real);$('m-real').classList.toggle('on',S.real);$('pp').hidden=S.real;$('spd').hidden=S.real;
   $('m-sim').parentElement.hidden=S.real;$('m-real').textContent=S.real||S.prac?'Bolsa real':'Bolsa real 🔒';$('m-real').title=S.prac?'Salir del tutorial y volver a tu saldo real':S.real?'':`Se desbloquea al terminar el nivel ${UNLOCK}`;
+  // al desbloquear la Bolsa real, el botón del tutor se vuelve la media cabeza de LucIA con su globito
+  const bb=$('bb'),lb=!!S.real;if(bb.classList.contains('lu-bb')!==lb){bb.classList.toggle('lu-bb',lb);bb.innerHTML=lb?`${lucia('hi',true)}<span class="lu-bubble">Pregúntame algo</span>`:'Tutor';bb.setAttribute('aria-label',lb?'Pregúntale algo a LucIA, tu tutora':'Abrir el tutor')}
   $('tut-b').hidden=!S.real;$('tut-b').textContent=hasP()?'Seguir el tutorial':'Tutorial';
   if(S.real&&!KEY)$('rk').hidden=false;ALLC=null;stub();fillSf();
   $('key').placeholder=KEY?'API key guardada · pega otra para cambiarla':'API key de Finnhub';
