@@ -452,10 +452,10 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 @keyframes luPop{from{opacity:0;transform:translateY(14px) scale(.7)}}
 .lu-pop{animation:luPop 600ms var(--ease-enter) both}
 /* LucIA junto al contenido de lecciones, quiz y pasos */
-.lu-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:18px;align-items:start}
-.lu-row .lu{width:96px;height:128px}
+.lu-row{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;align-items:start}
+.lu-row .lu{width:150px;height:168px}
 .lu-say{font-size:12.5px;color:var(--mut);margin-top:4px;text-align:center}
-@media (max-width:700px){.lu-row{grid-template-columns:64px minmax(0,1fr);gap:12px}.lu-row .lu{width:64px;height:86px}}
+@media (max-width:700px){.lu-row{grid-template-columns:92px minmax(0,1fr);gap:12px}.lu-row .lu{width:92px;height:103px}}
 .tcard .lu-t{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:start}.tcard .lu-t .lu{width:52px;height:70px}
 .win .lu{width:110px;height:146px;margin:0 auto -6px}
 /* Botón de LucIA en la Bolsa real: media cabeza asomando con globito */
@@ -467,7 +467,6 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .bb.lu-bb .lu-head .eye{animation:luBlink 4.5s infinite;transform-box:fill-box;transform-origin:center}
 @media (max-width:700px){.lu-bubble{bottom:calc(100% + 18px)}}
 /* LucIA como identidad: logo, telón de carga, portada, niveles, preguntas y pie */
-.logo i.luh{background:none!important;animation:none!important;width:40px;height:26px;border-radius:0}.logo i.luh svg{width:100%;height:100%;overflow:visible}
 .in-lu{width:120px;height:160px;margin-bottom:-6px;animation:luRocket 1.1s var(--ease-enter) both}.in-lu .lu{width:100%;height:100%}
 @keyframes luRocket{from{transform:translateY(70vh) scale(.5) rotate(-20deg)}70%{transform:translateY(-18px) rotate(6deg)}}
 .art-w{position:relative}
@@ -1323,7 +1322,6 @@ function reveal(els){els.forEach(e=>IO?IO.observe(e):e.classList.add('in'))}
 function cnt(b){const n=+b.dataset.cnt,p=b.dataset.pre||'',s=b.dataset.suf||'';if(RM)return;const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1400),v=Math.round(n*(1-Math.pow(1-k,4)));b.textContent=p+v+s;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function homeFx(){
   // LucIA en toda la portada y como logo
-  document.querySelectorAll('.logo i').forEach(i=>{i.classList.add('luh');i.innerHTML=lucia('hi',true)});
   luMount('hero-lu','hi',1);luMount('lv-lu','focus',1);luMount('faq-lu','q',1);luMount('mega-lu','wow');
   document.querySelectorAll('.qa details').forEach(d=>d.ontoggle=()=>{if(!d.open)return;luMount('faq-lu','happy',1);clearTimeout(d._t);d._t=setTimeout(()=>luMount('faq-lu','q',1),1600)});
   // cinta: dos copias para que el desplazamiento sea continuo
