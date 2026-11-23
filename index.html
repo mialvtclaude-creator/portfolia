@@ -431,17 +431,17 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .lu-name{font-weight:700;letter-spacing:-.01em}.lu-name b{background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
 .lu{display:block;overflow:visible;animation:luF 2.8s ease-in-out infinite}
 .lu .eyes,.lu-head .eyes{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform 120ms linear;filter:drop-shadow(0 0 2.5px #5ee4f5)}
-.lu .head{transform:rotate(var(--tilt,0deg));transform-origin:60px 72px;transition:transform 200ms ease-out}
+.lu .head{transform:rotate(var(--tilt,0deg));transform-origin:85px 88px;transition:transform 200ms ease-out}
 .lu.spin{animation:luSpin 900ms cubic-bezier(.5,-.4,.3,1.4)}
 @keyframes luSpin{0%{transform:none}35%{transform:translateY(-40px) scale(1.1)}100%{transform:translateY(0) rotate(360deg)}}
 .lu .eye{transform-box:fill-box;transform-origin:center;animation:luBlink 4.5s infinite}
 .lu .jet{transform-box:fill-box;transform-origin:50% 0;animation:luJet .55s ease-in-out infinite alternate}
 .lu .arm-r,.lu .arm-l{transform-box:fill-box;transform-origin:50% 12%}
 .lu.hi .arm-r{animation:luWave 2.4s ease-in-out infinite}
-.lu.focus .arm-r{transform:rotate(-38deg)}
+.lu.focus .arm-r{transform:rotate(-38deg)}.lu.focus .scan{animation:luScan 1.4s ease-in-out infinite}
 .lu.happy,.lu.wow{animation:luHop 1s ease-in-out infinite}.lu.wow .arm-l{transform:rotate(32deg)}.lu.wow .arm-r{transform:rotate(-32deg)}
-.lu.sad .head{transform:rotate(-7deg);transform-origin:60px 70px}.lu.sad{animation-duration:4.5s}
-.lu.q .head{animation:luTilt 2.6s ease-in-out infinite;transform-origin:60px 70px}
+.lu.sad .head{transform:rotate(-7deg);transform-origin:85px 88px}.lu.sad{animation-duration:4.5s}
+.lu.q .head{animation:luTilt 2.6s ease-in-out infinite;transform-origin:85px 88px}
 @keyframes luF{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(3deg)}}
 @keyframes luHop{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-22px) scale(1.05,.95) rotate(-6deg)}55%{transform:translateY(-22px) rotate(8deg)}80%{transform:translateY(0) scale(1.06,.92)}}
 @keyframes luBlink{0%,93%,100%{transform:none}96%{transform:scaleY(.12)}}
@@ -1196,21 +1196,21 @@ function rMis(){
 /* LucIA en SVG. mood: hi (saludo), focus (escaneando), q (pregunta), happy (acierto), sad (error), wow (resultado).
    head=true devuelve solo la media cabeza para el botón de la Bolsa real. */
 let LUN=0;
-function lucia(mood='hi',head=false){const k='lu'+(++LUN),C='#5ee4f5',st=`stroke="${C}" stroke-width="4" stroke-linecap="round" fill="none"`;
-  // solo ojos, sin boca: achinados en arco cuando sonríe, abiertos cuando mira o pregunta, caídos cuando se equivoca
-  const smile=`<path class="eye" d="M44 50 Q50 42 56 50" ${st}/><path class="eye" d="M64 50 Q70 42 76 50" ${st}/>`,
-    open=`<ellipse class="eye" cx="50" cy="47" rx="4.2" ry="5.4" fill="${C}"/><ellipse class="eye" cx="70" cy="47" rx="4.2" ry="5.4" fill="${C}"/>`,
-    down=`<path class="eye" d="M44 45 Q50 51 56 45" ${st}/><path class="eye" d="M64 45 Q70 51 76 45" ${st}/>`;
-  const E={hi:smile,happy:smile,wow:smile,focus:open,q:open,sad:down};
-  const headSvg=`<g class="head"><ellipse cx="60" cy="42" rx="39" ry="31" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M29 47 Q29 27 60 27 Q91 27 91 47 Q91 65 60 65 Q29 65 29 47Z" fill="#0f1424"/><path d="M35 40 Q41 31 54 29" stroke="#fff" stroke-opacity=".16" stroke-width="3" fill="none" stroke-linecap="round"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
-  const defs=`<defs><linearGradient id="${k}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ecf5"/></linearGradient><linearGradient id="${k}i" x1="0" x2="1"><stop offset="0" stop-color="#8a6cff"/><stop offset=".5" stop-color="#d45aa6"/><stop offset="1" stop-color="#2f9fd6"/></linearGradient><linearGradient id="${k}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C}" stop-opacity=".55"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></linearGradient><radialGradient id="${k}j"><stop offset="0" stop-color="#bff6ff"/><stop offset=".5" stop-color="${C}" stop-opacity=".8"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></radialGradient></defs>`;
-  if(head)return`<svg class="lu-head" viewBox="16 6 88 56" role="img" aria-hidden="true">${defs}${headSvg}</svg>`;
-  return`<svg class="lu ${mood}" viewBox="0 0 120 160" role="img" aria-label="LucIA, la tutora de Portfolia">${defs}
-    <path d="M51 128 L69 128 L80 158 L40 158Z" fill="url(#${k}c)"/><ellipse class="jet" cx="60" cy="133" rx="9" ry="7" fill="url(#${k}j)"/>
-    <g transform="rotate(10 23 97)"><ellipse class="arm-l" cx="23" cy="97" rx="6.5" ry="20" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/></g>
-    <g transform="rotate(-10 97 97)"><ellipse class="arm-r" cx="97" cy="97" rx="6.5" ry="20" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/></g>
-    <path d="M37 79 Q60 72 83 79 Q89 84 87 97 Q83 117 69 126 L51 126 Q37 117 33 97 Q31 84 37 79Z" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M41 88 Q60 95 79 88" stroke="#c9d2e0" stroke-width="1.5" fill="none"/>
-    <ellipse cx="60" cy="127" rx="10" ry="3" fill="#cfd8e6" stroke="#1b1725" stroke-width="2"/>
+function lucia(mood='hi',head=false){const C='#5ee4f5',O='stroke="#1b1725" stroke-width="2.4"',st=`stroke="${C}" stroke-width="3.6" stroke-linecap="round" fill="none"`;LUN++;
+  // modelo aprobado: blanco plano, sin sombras ni boca; cada gesto vive solo en el visor
+  const arc=(d)=>`<path class="eye" d="M70 ${61-d} Q75 ${53-d} 80 ${61-d}" ${st}/><path class="eye" d="M90 ${61-d} Q95 ${53-d} 100 ${61-d}" ${st}/>`;
+  const E={hi:arc(0),happy:arc(0),wow:`<path class="eye" d="M69 61 Q75 50 81 61" ${st}/><path class="eye" d="M89 61 Q95 50 101 61" ${st}/>`,
+    focus:`<path class="scan" d="M66 45 h-4 v5M104 45 h4 v5M66 71 h-4 v-5M104 71 h4 v-5" stroke="${C}" stroke-width="2.4" stroke-linecap="round" fill="none"/><rect class="eye" x="71" y="56.5" width="8" height="3.6" rx="1.8" fill="${C}"/><rect class="eye" x="91" y="56.5" width="8" height="3.6" rx="1.8" fill="${C}"/>`,
+    q:`<text x="85" y="66" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="24" fill="${C}">?</text>`,
+    sad:`<path class="eye" d="M70 56 Q75 62 80 56" ${st}/><path class="eye" d="M90 56 Q95 62 100 56" ${st}/><path d="M104 62 q2.6 4.4 0 6.2 q-2.6-1.8 0-6.2Z" fill="${C}"/>`};
+  const headSvg=`<g class="head"><ellipse cx="85" cy="54" rx="35" ry="32" fill="#fff" ${O}/><ellipse cx="85" cy="57" rx="25" ry="18" fill="#0f1424"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
+  if(head)return`<svg class="lu-head" viewBox="48 20 74 52" role="img" aria-hidden="true">${headSvg}</svg>`;
+  return`<svg class="lu ${mood}" viewBox="0 0 170 190" role="img" aria-label="LucIA, la tutora de Portfolia">
+    <ellipse class="jet" cx="85" cy="176" rx="10" ry="6" fill="${C}" opacity=".35"/><ellipse cx="85" cy="174" rx="5" ry="3.5" fill="#bff6ff"/>
+    <g transform="rotate(9 40 126)"><ellipse class="arm-l" cx="40" cy="126" rx="8" ry="27" fill="#fff" ${O}/></g>
+    <g transform="rotate(-9 130 126)"><ellipse class="arm-r" cx="130" cy="126" rx="8" ry="27" fill="#fff" ${O}/></g>
+    <path d="M51 96 C51 142 65 168 85 169 C105 168 119 142 119 96Z" fill="#fff" ${O} stroke-linejoin="round"/>
+    <ellipse cx="85" cy="96" rx="34" ry="9" fill="#fff" ${O}/><ellipse cx="85" cy="95" rx="19" ry="5" fill="#9fb0c4" stroke="#1b1725" stroke-width="2"/>
     ${headSvg}</svg>`}
 const luName='<span class="lu-name">Luc<b>IA</b></span>';
 function luMount(id,mood,track){const e=$(id);if(e)e.innerHTML=lucia(mood).replace('class="lu ',`class="lu ${track?'track ':''}`)}
