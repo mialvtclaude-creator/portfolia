@@ -11,25 +11,52 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..900,100,1;1,9..144,500..900,100,1&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
+<script>try{const t=localStorage.getItem('pf-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
 <style>
-/* Estilo "Nácar": fondo perla, tornasol pastel de concha, muy redondeado. Un solo look claro a propósito. Fraunces itálica + Bricolage Grotesque + DM Mono.
+/* Estilo "Nácar": fondo perla, tornasol pastel de concha, muy redondeado. Claro por defecto, oscuro con el botón ☾ o según el sistema. Fraunces itálica + Bricolage Grotesque + DM Mono.
    --gold/--acc quedan como nombres del acento sólido (lila nácar); --iris es el tornasol de botones y detalles. */
 :root{
   --bg:#f6f4f8;--surface:#ffffff;--surface-2:#efecf3;--ink:#1b1725;--ink-2:#3a3447;--mut:#6a6478;--line:#e6e2ec;--line-2:#d3cddc;
   --acc:#6a4fe6;--gold:#6d4fe0;--gold-ink:#ffffff;--soft:rgba(123,97,255,.10);
   --violet:#d45aa6;--violet-2:#2f9fd6;--vsoft:rgba(212,90,166,.12);
-  --up:#138a5a;--dn:#c23a4f;--up-soft:rgba(19,138,90,.10);--dn-soft:rgba(194,58,79,.10);
+  --up:#0f7a4f;--dn:#c23a4f;--up-soft:rgba(15,122,79,.10);--dn-soft:rgba(194,58,79,.10);
   --shade:rgba(27,23,37,.45);--sh:0 24px 48px -30px rgba(60,40,90,.35);
   --iris:linear-gradient(110deg,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8);
+  --iris-on:#1b1725;--on-up:#ffffff;--on-dn:#ffffff;
+  --iris-ink:linear-gradient(110deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a,#8a6cff);
+  --b1:rgba(216,204,255,.55);--b2:rgba(255,209,232,.45);--b3:rgba(191,233,255,.45);--b4:rgba(201,247,223,.4);
+  --pearl:linear-gradient(120deg,rgba(255,209,232,.45),rgba(216,204,255,.35) 30%,rgba(191,233,255,.35) 60%,rgba(201,247,223,.4));
   --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;--display:"Fraunces",Georgia,serif;--mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);--ease-enter:cubic-bezier(.22,1,.36,1);
   --r:14px;--r-lg:22px;color-scheme:light}
+/* Nácar de noche: el interior oscuro de la concha; el tornasol pastel se queda igual en botones */
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121019;--surface:#1b1824;--surface-2:#252131;--ink:#f1eef7;--ink-2:#d6d0e2;--mut:#a69fb6;--line:#2c2738;--line-2:#3f384f;
+  --acc:#b7a6ff;--gold:#9d86ff;--gold-ink:#120f1a;--soft:rgba(157,134,255,.14);
+  --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
+  --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
+  --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
+  --on-up:#06170f;--on-dn:#1f070b;
+  --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
+  --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
+  --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121019;--surface:#1b1824;--surface-2:#252131;--ink:#f1eef7;--ink-2:#d6d0e2;--mut:#a69fb6;--line:#2c2738;--line-2:#3f384f;
+  --acc:#b7a6ff;--gold:#9d86ff;--gold-ink:#120f1a;--soft:rgba(157,134,255,.14);
+  --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
+  --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
+  --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
+  --on-up:#06170f;--on-dn:#1f070b;
+  --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
+  --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
+  --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
+  color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 html{-webkit-text-size-adjust:100%}
-body{font:400 15px/1.55 var(--font);background:radial-gradient(50% 40% at 88% -6%,rgba(216,204,255,.55),transparent 65%),radial-gradient(40% 35% at 8% 4%,rgba(255,209,232,.45),transparent 65%),radial-gradient(45% 35% at -5% 105%,rgba(191,233,255,.45),transparent 70%),radial-gradient(35% 30% at 100% 100%,rgba(201,247,223,.4),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{font:400 15px/1.55 var(--font);background:radial-gradient(50% 40% at 88% -6%,var(--b1),transparent 65%),radial-gradient(40% 35% at 8% 4%,var(--b2),transparent 65%),radial-gradient(45% 35% at -5% 105%,var(--b3),transparent 70%),radial-gradient(35% 30% at 100% 100%,var(--b4),transparent 70%),var(--bg);background-attachment:fixed;color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;min-height:100vh}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .num,.mono{font-family:var(--mono);font-feature-settings:"tnum"}
@@ -43,7 +70,7 @@ h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.08}
 /* Botones: un estilo, paso al pasar el puntero, presión al pulsar */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r);padding:8px 14px;font-weight:500;cursor:pointer;text-decoration:none;color:var(--ink);transition:background-color 150ms var(--ease),border-color 150ms var(--ease),transform 150ms var(--ease),color 150ms}
 .btn.pri{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
-.btn.buy{background:var(--up);border-color:var(--up);color:#fff}.btn.sell{background:var(--dn);border-color:var(--dn);color:#fff}
+.btn.buy{background:var(--up);border-color:var(--up);color:var(--on-up)}.btn.sell{background:var(--dn);border-color:var(--dn);color:var(--on-dn)}
 .btn.ghost{border-color:transparent;background:transparent}
 .btn.s{min-height:32px;padding:5px 10px;font-size:13px}
 .btn.xl{min-height:52px;padding:12px 22px;font-size:16px}
@@ -316,14 +343,20 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .logo{font-size:20px}
 .mis .big,.lcard .n{color:var(--ink)}
 .btn{border-radius:999px}.btn.s{border-radius:999px}
-.btn.pri,.logo i,.lvnum,.tabs .cnt,.chip.on,.modes button.on,.skip{background:var(--iris);background-size:200% 100%;animation:sheen 7s linear infinite;color:var(--ink);border-color:transparent}
+.btn.pri,.logo i,.lvnum,.tabs .cnt,.chip.on,.modes button.on,.skip{background:var(--iris);background-size:200% 100%;animation:sheen 7s linear infinite;color:var(--iris-on);border-color:transparent}
+.thm{min-width:44px;min-height:44px;padding:8px;font-size:18px;line-height:1}
+.lgo.mono{color:var(--acc);background:var(--soft)}
+.lcard.fin{background:var(--pearl),var(--surface);color:var(--ink);border-color:var(--line-2)}.lcard.fin p,.lcard.fin .st{color:var(--mut)}.lcard.fin .n{color:var(--ink)}
+.foot .link,.ft .link{min-height:44px;display:inline-flex;align-items:center}
+.gtop .logo{min-width:44px;flex:none}
+#v-mk{overflow-x:clip}
 @media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
 .logo i,.lvnum,.tabs .cnt{border-radius:10px}
-.hero h1 em{background:linear-gradient(110deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a,#8a6cff);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite;padding-right:.08em}
+.hero h1 em{background:var(--iris-ink);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite;padding-right:.08em}
 .mis::after,.xp .bar i,.tabs button::after,.mis .prog i{background:linear-gradient(90deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a)}
 .mis::after{width:4px}
-.frame{border-color:var(--line-2);box-shadow:var(--sh);background:linear-gradient(140deg,rgba(255,209,232,.35),rgba(216,204,255,.25) 30%,rgba(191,233,255,.25) 60%,transparent 85%),var(--surface)}
-.mis{background:linear-gradient(120deg,rgba(255,209,232,.45),rgba(216,204,255,.35) 30%,rgba(191,233,255,.35) 60%,rgba(201,247,223,.4)),var(--surface)}
+.frame{border-color:var(--line-2);box-shadow:var(--sh);background:var(--pearl),var(--surface)}
+.mis{background:var(--pearl),var(--surface)}
 .card,.lcard,.mc,.tkb{box-shadow:0 1px 0 rgba(60,40,90,.04)}
 .lgo{border:1px solid var(--line)}
 .chip{clip-path:none;border-radius:999px}
@@ -342,7 +375,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <a class="skip" href="#main">Saltar al contenido</a>
 
 <section id="home" class="home">
-<header class="nav"><div class="wrap"><button class="logo" onclick="go('home')" aria-label="Portfolia, inicio"><i>PF</i>Portfolia</button><span class="sp"></span><button class="btn pri hide-s" onclick="play()" id="cta2">Empezar el nivel 1</button></div></header>
+<header class="nav"><div class="wrap"><button class="logo" onclick="go('home')" aria-label="Portfolia, inicio"><i>PF</i>Portfolia</button><span class="sp"></span><button class="btn ghost thm" onclick="theme()" aria-label="Cambiar a modo oscuro">☾</button><button class="btn pri hide-s" onclick="play()" id="cta2">Empezar el nivel 1</button></div></header>
 <main id="main">
 <section class="hero wrap" data-enter aria-labelledby="hero-h">
   <div>
@@ -383,6 +416,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
   <button class="xp" id="xpb" onclick="openBadges()" aria-label="Ver tu nivel, XP e insignias"><span class="lv" id="xpl">1</span><span><b id="xpr">Novato</b><small id="xpt">0 XP</small><span class="bar"><i id="xpi" style="transform:scaleX(0)"></i></span></span></button>
   <span class="cash" id="cp"></span>
   
+  <button class="btn ghost thm" onclick="theme()" aria-label="Cambiar a modo oscuro">☾</button>
   <button class="btn ghost" onclick="$('rk').hidden=!$('rk').hidden" aria-label="Ajustes y clave de la API">⚙</button>
 </div></header>
 <main class="gwrap" id="gmain">
@@ -560,7 +594,9 @@ function save(){try{localStorage.setItem(S.real?KR:K,JSON.stringify(S))}catch(e)
 function load(r){try{const o=JSON.parse(localStorage.getItem(r?KR:K));if(o&&o.h&&o.cash!=null&&o.g&&!!o.real===!!r){const L=(o.h.SPY||[]).length||1;
   M.forEach(x=>{if(o.h[x.s])return;if(r){o.h[x.s]=[];return}let p=x.p;const a=[p];for(let i=1;i<L;i++){p*=Math.exp(-(x.m/252)+x.v/Math.sqrt(252)*g());a.unshift(p)}const k=x.p/a[a.length-1];o.h[x.s]=a.map(v=>v*k)});return o}}catch(e){}return null}
 
-function theme(){const r=document.documentElement,d=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=d?'light':'dark';try{localStorage.setItem('pf-theme',r.dataset.theme)}catch(e){}tvKey='';document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);if(!$('sim').hidden)render()}
+function dk(){const r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches}
+function thmUI(){const d=dk();document.querySelectorAll('.thm').forEach(b=>{b.textContent=d?'☀':'☾';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro')});const m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#121019':'#f6f4f8'}
+function theme(){const r=document.documentElement;r.dataset.theme=dk()?'light':'dark';try{localStorage.setItem('pf-theme',r.dataset.theme)}catch(e){}thmUI();tvKey='';document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);if(!$('sim').hidden)render()}
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3800)}
 
 /* ---------- Noticias ---------- */
@@ -1355,7 +1391,7 @@ let TVST='';const TVW={},TVFAIL='<p class="emp">No se pudo cargar TradingView. R
 function tvWidget(id,kind,cfg){const el=$(id);if(!el)return;const key=kind+JSON.stringify(cfg);if(TVW[id]===key)return;TVW[id]=key;
   el.innerHTML='<div class="tradingview-widget-container__widget"></div>';const sc=document.createElement('script');
   sc.src=`https://s3.tradingview.com/external-embedding/embed-widget-${kind}.js`;sc.async=true;sc.type='text/javascript';
-  sc.textContent=JSON.stringify({colorTheme:'light',isTransparent:true,locale:'es',...cfg});
+  sc.textContent=JSON.stringify({colorTheme:dk()?'dark':'light',isTransparent:true,locale:'es',...cfg});
   sc.onload=()=>{TVST='ok'};sc.onerror=()=>{el.innerHTML=TVFAIL;TVW[id]='';TVST='err'};el.appendChild(sc);
   el.insertAdjacentHTML('beforeend','<div class="tradingview-widget-copyright"><a href="https://es.tradingview.com/" rel="noopener nofollow" target="_blank">Datos y gráficos de TradingView</a></div>')}
 function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>$(i).hidden=!r);$('mpl').hidden=!r;if(!r)return;
@@ -1364,7 +1400,7 @@ function tvSync(){const r=!!(S&&S.real);['tvtape','tvinfo','tvnews'].forEach(i=>
   if(view==='mk'&&mkv==='det')tvWidget('tvinfo','symbol-info',{symbol:tvSym(cur),width:'100%'});}
 let tvKey='';
 function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
-  new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:'light',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
+  new TradingView.widget({container_id:'tv',autosize:true,symbol:tvSym(cur),interval:'5',timezone:'America/New_York',theme:dk()?'dark':'light',style:'1',locale:'es',enable_publishing:false,allow_symbol_change:false,hide_side_toolbar:true});
 }
 function uiSrc(){
   $('m-sim').classList.toggle('on',!S.real);$('m-real').classList.toggle('on',S.real);$('pp').hidden=S.real;$('spd').hidden=S.real;
@@ -1406,6 +1442,7 @@ function conn(){
   heroSeed();heroDraw();rHome();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
   if(location.hash==='#jugar')play();
 })();
+thmUI();
 </script>
 </body>
 </html>
