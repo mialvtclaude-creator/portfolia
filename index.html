@@ -11,7 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..900,100,1;1,9..144,500..900,100,1&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script>try{const t=localStorage.getItem('pf-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
+<script>try{const t=localStorage.getItem('pf-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+{const R=document.documentElement.classList,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;let seen=true;try{seen=!!sessionStorage.getItem('pf-intro')}catch(e){}if(rm||seen)R.add('no-intro');if(!rm&&'IntersectionObserver' in window)R.add('rv')}document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
 <style>
 /* Estilo "Nácar": fondo perla, tornasol pastel de concha, muy redondeado. Claro por defecto, oscuro con el botón ☾ o según el sistema. Fraunces itálica + Bricolage Grotesque + DM Mono.
    --gold/--acc quedan como nombres del acento sólido (lila nácar); --iris es el tornasol de botones y detalles. */
@@ -362,6 +363,69 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .pki:hover,.pki:focus-visible{border-color:var(--gold);background:var(--soft)}
 .pkn b{display:block;font-size:15px}.pkn small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pkq{font-size:16px;min-height:48px}
+
+/* ===== Portada animada (inspirada en webs de estudio: telón de carga, cinta, lista con vista previa, pie gigante) ===== */
+/* Telón de carga: una vez por sesión */
+#intro{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;transition:clip-path 900ms cubic-bezier(.76,0,.24,1);clip-path:inset(0 0 0 0)}
+#intro.out{clip-path:inset(0 0 100% 0)}
+.no-intro #intro{display:none}
+.in-w{display:grid;justify-items:center;gap:6px;overflow:hidden}
+.in-logo{font:800 italic clamp(56px,13vw,180px)/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.04em;background:var(--iris-ink);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:inUp 900ms var(--ease-enter) both,sheen 3s linear infinite;padding:0 .08em}
+.in-n{font:500 14px/1 var(--mono);color:var(--mut);letter-spacing:.2em;animation:inUp 900ms 150ms var(--ease-enter) both}
+.in-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--iris-ink);transform-origin:0 50%;transform:scaleX(0)}
+@keyframes inUp{from{transform:translateY(110%);opacity:0}}
+/* Aparición al hacer scroll: solo si hay JS, IntersectionObserver y movimiento permitido */
+.rv .reveal{opacity:0;transform:translateY(32px);transition:opacity 800ms var(--ease-enter),transform 900ms var(--ease-enter);transition-delay:var(--d,0ms)}
+.rv .reveal.in{opacity:1;transform:none}
+/* Cinta de cotizaciones */
+.tape{position:relative;overflow:hidden;border-block:1px solid var(--line);background:var(--surface);padding:14px 0;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tape-t{display:flex;gap:36px;width:max-content;animation:tape 60s linear infinite}
+.tape:hover .tape-t{animation-play-state:paused}
+.tape-i{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;font:500 14px/1 var(--mono)}
+.tape-i b{font:600 15px var(--font)}
+@keyframes tape{to{transform:translateX(-50%)}}
+/* Lista de niveles con vista previa que sigue al cursor */
+.llist{border-top:1px solid var(--line-2)}
+.lrow{display:grid;grid-template-columns:72px minmax(0,1fr) auto 40px;gap:20px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line-2);padding:26px 8px;cursor:pointer;color:var(--ink);position:relative;transition:padding 400ms var(--ease-enter),color 300ms}
+.lrow::before{content:"";position:absolute;inset:0;background:var(--pearl),var(--surface);transform:scaleY(0);transform-origin:50% 100%;transition:transform 450ms var(--ease-enter);z-index:-1}
+.lrow{isolation:isolate}
+.lrow .n{font:800 italic 30px/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;color:var(--mut);transition:color 300ms}
+.lrow .lt b{display:block;font:800 italic clamp(22px,3vw,38px)/1.05 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.025em}
+.lrow .lt small{display:block;margin-top:6px;font-size:14px}
+.lrow .ls{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mut);white-space:nowrap}
+.lrow .la{font-size:22px;transition:transform 400ms var(--ease-enter);color:var(--mut)}
+.lrow.lock{cursor:not-allowed}.lrow.lock .lt{opacity:.55}
+.lrow.cur .n{color:var(--acc)}
+@media (hover:hover) and (pointer:fine){
+  .lrow:not(.lock):hover{padding-left:24px;padding-right:24px}
+  .lrow:not(.lock):hover::before{transform:scaleY(1)}
+  .lrow:not(.lock):hover .n{color:var(--acc)}
+  .lrow:not(.lock):hover .la{transform:translateX(6px) rotate(-45deg);color:var(--ink)}
+}
+.lprev{position:fixed;left:0;top:0;z-index:30;width:260px;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:14px;box-shadow:var(--sh);opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity 250ms,transform 400ms var(--ease-enter)}
+.lprev.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
+.lprev .lviz{width:100%;height:120px;display:block;background:var(--pearl),var(--bg);border-radius:var(--r);padding:8px;border:1px solid var(--line)}
+.lprev b{display:block;margin-top:10px;font:800 italic 18px/1.1 var(--display)}
+@media (max-width:700px){.lrow{grid-template-columns:44px minmax(0,1fr) 24px;gap:8px 12px;padding:20px 4px}.lrow .n{grid-area:1/1;font-size:22px}.lrow .lt{grid-area:1/2}.lrow .la{grid-area:1/3}.lrow .ls{grid-area:2/2;white-space:normal;flex-wrap:wrap}}
+/* Preguntas frecuentes */
+.faq{padding-block:clamp(56px,10vh,110px);border-top:1px solid var(--line)}
+.faq-g{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(24px,5vw,72px);align-items:start}
+.faq h2{font-size:clamp(28px,3.4vw,44px);margin-top:12px}
+.qa details{border-bottom:1px solid var(--line-2)}
+.qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:22px 0;font-size:18px;font-weight:600;min-height:44px}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:400 22px/1 var(--mono);background:var(--surface);border:1px solid var(--line-2);transition:transform 400ms var(--ease-enter),background-color 300ms}
+.qa details[open] summary::after{transform:rotate(135deg);background:var(--iris);background-size:200% 100%;color:var(--iris-on);border-color:transparent}
+.qa details p{padding:0 0 22px;color:var(--ink-2);max-width:56ch;font-size:16px}
+.qa details[open] p{animation:qaIn 450ms var(--ease-enter)}
+@keyframes qaIn{from{opacity:0;transform:translateY(-8px)}}
+@media (max-width:800px){.faq-g{grid-template-columns:1fr}}
+/* Pie: nombre gigante en tornasol, letra por letra */
+.foot{padding-top:0}
+.mega{font:800 italic clamp(64px,19vw,300px)/.9 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.05em;text-align:center;padding:clamp(24px,5vw,56px) 0 12px;overflow:hidden;white-space:nowrap;user-select:none}
+/* cada letra toma su tramo del mismo degradado, así el tornasol recorre la palabra entera */
+.mega span{display:inline-block;background:var(--iris-ink);background-size:900% 100%;background-position:calc(var(--i)*12.5%) 50%;-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em;transition:transform 1000ms var(--ease-enter);transition-delay:calc(var(--i)*55ms)}.rv .mega:not(.in) span{transform:translateY(105%)}
+@media (prefers-reduced-motion:reduce){.tape-t{animation:none}#intro{display:none}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 @media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
@@ -387,6 +451,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <body>
 <!-- Plan: juego educativo (site-kind gaming). Estilo Nácar: fondo perla con tornasol pastel, Fraunces itálica + Bricolage Grotesque, muy redondeado. Hero split con la ventana del juego en vivo; mapa de 7 niveles; pantalla de juego con misión, tutorial guiado, quiz, XP e insignias. -->
 <a class="skip" href="#main">Saltar al contenido</a>
+<div id="intro" aria-hidden="true"><div class="in-w"><b class="in-logo">Portfolia</b><span class="in-n"><span id="in-n">0</span>%</span></div><i class="in-bar" id="in-bar"></i></div>
 
 <section id="home" class="home">
 <header class="nav"><div class="wrap"><button class="logo" onclick="go('home')" aria-label="Portfolia, inicio"><i>PF</i>Portfolia</button><span class="sp"></span><button class="btn ghost thm" onclick="theme()" aria-label="Cambiar a modo oscuro">☾</button><button class="btn pri hide-s" onclick="play()" id="cta2">Empezar el nivel 1</button></div></header>
@@ -397,7 +462,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
     <h1 id="hero-h">Aprende a invertir en <em>Wall Street</em> jugando</h1>
     <p class="lead" data-up>Empiezas con $10,000 virtuales y un tutorial de cinco niveles en un mercado simulado. Después pasas, con el mismo saldo, a la bolsa real: precios y noticias de Nueva York en vivo mientras la NYSE está abierta. Sin arriesgar dinero real.</p>
     <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" id="cta-real" onclick="S.real?startPractice():openReal()">Saltar a la bolsa real</button></div>
-    <div class="facts" data-up><div><b>$10k</b><span>virtuales para invertir</span></div><div><b>112</b><span>empresas de EE. UU.</span></div><div><b>7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
+    <div class="facts" data-up><div><b data-cnt="10" data-pre="$" data-suf="k">$10k</b><span>virtuales para invertir</span></div><div><b data-cnt="112">112</b><span>empresas de EE. UU.</span></div><div><b data-cnt="7">7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
   </div>
   <div class="hero__art frame" aria-label="Vista del juego: gráfico de Coca-Cola y la misión del nivel 1">
     <div class="frame__bar"><span class="dots"><i></i><i></i><i></i></span><span class="mono mut" id="hstat">NYSE</span><span class="sp"></span><span class="cash hide-s" id="hcash">$10,000.00</span></div>
@@ -408,15 +473,26 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
     </div>
   </div>
 </section>
+<div class="tape" aria-hidden="true"><div class="tape-t" id="tape"></div></div>
 <section class="levels" id="niveles" aria-labelledby="lv-h"><div class="wrap">
-  <p class="eyebrow">La campaña</p>
-  <h2 id="lv-h">Siete niveles, de la campana de apertura al índice</h2>
-  <p class="sub">Cada nivel trae una lección corta, una misión dentro del mercado y un quiz de 3 preguntas. Ganas hasta 3 estrellas: por cumplir la misión, por el reto extra y por el quiz perfecto.</p>
-  <div class="lgrid" id="lmap"></div>
-  <div class="acts" style="margin-top:28px"><button class="btn pri xl" id="cta3" onclick="play()">Empezar el nivel 1</button></div>
+  <p class="eyebrow reveal">La campaña</p>
+  <h2 id="lv-h" class="reveal">Siete niveles, de la campana de apertura al índice</h2>
+  <p class="sub reveal">Cada nivel trae una lección corta, una misión dentro del mercado y un quiz de 3 preguntas. Ganas hasta 3 estrellas: por cumplir la misión, por el reto extra y por el quiz perfecto.</p>
+  <div class="llist" id="lmap"></div>
+  <div class="acts reveal" style="margin-top:28px"><button class="btn pri xl" id="cta3" onclick="play()">Empezar el nivel 1</button></div>
+</div><div class="lprev" id="lprev" aria-hidden="true"></div></section>
+<section class="faq" aria-labelledby="faq-h"><div class="wrap faq-g">
+  <div><p class="eyebrow reveal">Preguntas frecuentes</p><h2 id="faq-h" class="reveal">Lo que suelen preguntar antes de empezar</h2></div>
+  <div class="qa">
+    <details class="reveal"><summary>¿Se usa dinero real?</summary><p>No. Empiezas con $10,000 virtuales y Portfolia no se conecta a ningún bróker. Puedes equivocarte todo lo que quieras.</p></details>
+    <details class="reveal"><summary>¿Para qué necesito la clave de Finnhub?</summary><p>Para traer precios y noticias reales de la NYSE y NASDAQ. Es gratis y se guarda solo en tu navegador.</p></details>
+    <details class="reveal"><summary>¿Puedo saltarme el tutorial?</summary><p>Sí. La Bolsa real se abre al instante y tu avance del tutorial queda guardado para retomarlo con el botón Tutorial.</p></details>
+    <details class="reveal"><summary>¿Qué pasa si la bolsa está cerrada?</summary><p>Ves el precio del último cierre y tus órdenes se ejecutan cuando abre: de lunes a viernes, de 9:30 a 16:00, hora de Nueva York.</p></details>
+    <details class="reveal"><summary>¿Es asesoría financiera?</summary><p>No. Portfolia es un prototipo educativo para aprender cómo funciona la bolsa.</p></details>
+  </div>
 </div></section>
 </main>
-<footer class="foot"><div class="wrap"><span>Portfolia · prototipo educativo, sin dinero real. No es asesoría financiera.</span><button class="link" onclick="reset(this)">Empezar una partida nueva</button></div></footer>
+<footer class="foot"><div class="mega" id="mega" aria-hidden="true">Portfolia</div><div class="wrap"><span>Portfolia · prototipo educativo, sin dinero real. No es asesoría financiera.</span><button class="link" onclick="reset(this)">Empezar una partida nueva</button></div></footer>
 </section>
 
 <section id="sim" hidden>
@@ -1145,8 +1221,35 @@ function rHome(){
   const st=S.g,started=S.day>0||S.tr.length||st.L>0||st.ph!=='brief';
   const lbl=st.fin?'Ir a la Bolsa real':started?`Continuar el nivel ${st.L+1}`:'Empezar el nivel 1';$('cta').textContent=lbl;$('cta2').textContent=lbl;$('cta3').textContent=lbl;
   $('cta-real').textContent=S.real?(hasP()?'Seguir el tutorial':'Hacer el tutorial'):S.prac?'Volver a la Bolsa real':'Saltar a la bolsa real';
-  $('lmap').innerHTML=LV.map((l,i)=>{const s=lvState(i);return`<button class="lcard ${s==='lock'?'lock':s==='cur'?'cur':''}" onclick="lvClick(${i})"><span class="n">${String(i+1).padStart(2,'0')}</span>${lviz(i)}<h3>${l.t}</h3><p>${l.sum}</p><span class="st">${s==='done'?`<span class="stars">${starStr(st.stars[i]||0)}</span><span>Repasar la lección</span>`:s==='cur'?'<span class="tag nyse">Te toca</span><span>3 preguntas</span>':'<span>Bloqueado</span><span>Termina el anterior</span>'}</span></button>`}).join('')+`<button class="lcard fin" onclick="openReal()"><span class="n">NY</span><h3>Bolsa real</h3><p>${S.real?'Precios y noticias reales de Nueva York, en vivo mientras la NYSE está abierta.':`Se desbloquea al terminar el nivel ${UNLOCK}. Ahí juegas los niveles 6 y 7 con precios de verdad.`}</p><span class="st"><span id="lmk">${mkt().open?'NYSE abierta':'NYSE cerrada'}</span><span>${st.bd.length}/${BD.length} insignias</span></span></button>`;
+  const m=$('lmap'),seen=m.dataset.seen;
+  m.innerHTML=LV.map((l,i)=>{const s=lvState(i);return`<button class="lrow reveal ${seen?'in':''} ${s==='lock'?'lock':s==='cur'?'cur':''}" style="--d:${i*70}ms" data-i="${i}" onclick="lvClick(${i})"><span class="n">${String(i+1).padStart(2,'0')}</span><span class="lt"><b>${l.t}</b><small>${l.sum}</small></span><span class="ls">${i>=UNLOCK?'<span class="tag">Bolsa real</span>':''}${s==='done'?`<span class="stars">${starStr(st.stars[i]||0)}</span><span>Repasar</span>`:s==='cur'?'<span class="tag nyse">Te toca</span>':'<span>Bloqueado</span>'}</span><span class="la" aria-hidden="true">→</span></button>`}).join('')+`<button class="lrow reveal ${seen?'in':''}" style="--d:${LV.length*70}ms" data-i="ny" onclick="${S.real?'openReal()':'S.real?startPractice():openReal()'}"><span class="n">NY</span><span class="lt"><b>Bolsa real</b><small>${S.real?'Precios y noticias reales de Nueva York, en vivo mientras la NYSE está abierta.':`Se desbloquea al terminar el nivel ${UNLOCK}. Ahí juegas los niveles 6 y 7 con precios de verdad.`}</small></span><span class="ls"><span id="lmk">${mkt().open?'NYSE abierta':'NYSE cerrada'}</span><span>${st.bd.length}/${BD.length} insignias</span></span><span class="la" aria-hidden="true">→</span></button>`;
+  if(!seen)reveal(m.querySelectorAll('.reveal'));
 }
+/* Animaciones de la portada */
+let IOok=false;
+const IO='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEach(e=>{IOok=true;if(e.isIntersecting){e.target.classList.add('in');IO.unobserve(e.target);if(e.target.id==='lmap'||e.target.closest('#lmap'))$('lmap').dataset.seen=1;e.target.querySelectorAll?.('[data-cnt]').forEach(cnt)}}),{threshold:.15,rootMargin:'0px 0px -8% 0px'}):null;
+function reveal(els){els.forEach(e=>IO?IO.observe(e):e.classList.add('in'))}
+function cnt(b){const n=+b.dataset.cnt,p=b.dataset.pre||'',s=b.dataset.suf||'';if(RM)return;const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1400),v=Math.round(n*(1-Math.pow(1-k,4)));b.textContent=p+v+s;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function homeFx(){
+  // cinta: dos copias para que el desplazamiento sea continuo
+  const it=M.slice(0,28).map(o=>{const p=px(o.s)||o.p,d=dc(o.s);return`<span class="tape-i">${logo(o.s,22)}<b>${o.s}</b>${usd(p)}<span class="${cl(d)}">${pc(d)}</span></span>`}).join('');$('tape').innerHTML=it+it;
+  const mg=$('mega');mg.innerHTML=[...mg.textContent].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
+  reveal([...document.querySelectorAll('#home .reveal'),mg]);
+  // seguro: si el observador nunca responde, se muestra todo sin animación para no dejar contenido oculto
+  setTimeout(()=>{if(!IOok)document.documentElement.classList.remove('rv')},3000);
+  // los contadores arrancan cuando entra el héroe (tras el telón)
+  setTimeout(()=>document.querySelectorAll('.facts [data-cnt]').forEach(cnt),document.documentElement.classList.contains('no-intro')?600:1900);
+  // vista previa que sigue al cursor sobre la lista de niveles (solo con mouse)
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches&&!RM){const pv=$('lprev'),L=$('lmap');let x=0,y=0,tx=0,ty=0,raf=0,cur='';
+    const loop=()=>{x+=(tx-x)*.16;y+=(ty-y)*.16;pv.style.left=x+'px';pv.style.top=y+'px';raf=pv.classList.contains('on')||Math.abs(tx-x)>.5?requestAnimationFrame(loop):0};
+    L.addEventListener('mousemove',e=>{const r=e.target.closest('.lrow');tx=e.clientX+200;ty=e.clientY-20;if(!r||r.classList.contains('lock')){pv.classList.remove('on');return}
+      const i=r.dataset.i;if(i!==cur){cur=i;pv.innerHTML=i==='ny'?`<div class="lviz" style="display:grid;place-items:center;font:800 italic 56px/1 var(--display)"><span style="background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em">NY</span></div><b>Bolsa real</b>`:`${lviz(+i)}<b>${LV[i].t}</b><span class="stars">${starStr(S.g.stars[i]||0)}</span>`}
+      if(!pv.classList.contains('on')){x=tx;y=ty;pv.classList.add('on')}if(!raf)raf=requestAnimationFrame(loop)});
+    L.addEventListener('mouseleave',()=>{pv.classList.remove('on');cur=''})}
+}
+function intro(){const el=$('intro');if(document.documentElement.classList.contains('no-intro')){el.remove();return}
+  try{sessionStorage.setItem('pf-intro',1)}catch(e){}const n=$('in-n'),b=$('in-bar'),t0=performance.now();
+  const f=t=>{const k=Math.min(1,(t-t0)/1300),e=1-Math.pow(1-k,3);n.textContent=Math.round(e*100);b.style.transform=`scaleX(${e})`;if(k<1)requestAnimationFrame(f);else{el.classList.add('out');setTimeout(()=>el.remove(),950)}};requestAnimationFrame(f)}
 function lvClick(i){const s=lvState(i);if(s==='lock')return toast('Termina el nivel anterior para abrir este.');if(s==='done'){go('sim');openBrief(true,i);return}play()}
 let HC={a:[],on:!RM,t:null,p:62,d:1};
 function heroSeed(){let p=60.2;HC.a=[];for(let i=0;i<42;i++)HC.a.push(hcStep(p)),p=HC.a[HC.a.length-1].c;HC.p=p}
@@ -1530,7 +1633,7 @@ function conn(){
   onresize=()=>{if(!$('sim').hidden){document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);render()}else heroDraw()};
   document.onvisibilitychange=run;
   onpagehide=save;
-  heroSeed();heroDraw();rHome();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
+  heroSeed();heroDraw();rHome();homeFx();intro();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
   if(location.hash==='#jugar'&&KEY&&started())play();
   onb();
 })();
