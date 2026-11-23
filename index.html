@@ -429,7 +429,13 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 
 /* ===== LucIA, la mascota: robot blanco con visor oscuro y ojos cian; el "IA" siempre resaltado ===== */
 .lu-name{font-weight:700;letter-spacing:-.01em}.lu-name b{background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
-.lu{display:block;overflow:visible;animation:luF 3s ease-in-out infinite}
+.lu{display:block;overflow:visible;animation:luF 2.8s ease-in-out infinite}
+.lu .eyes{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform 120ms linear}
+.lu .head{transform:rotate(var(--tilt,0deg));transform-origin:60px 72px;transition:transform 200ms ease-out}
+.lu .core{transform-box:fill-box;transform-origin:center;animation:luCore 1.6s ease-in-out infinite}
+@keyframes luCore{50%{transform:scale(1.6);opacity:.55}}
+.lu.spin{animation:luSpin 900ms cubic-bezier(.5,-.4,.3,1.4)}
+@keyframes luSpin{0%{transform:none}35%{transform:translateY(-40px) scale(1.1)}100%{transform:translateY(0) rotate(360deg)}}
 .lu .eye{transform-box:fill-box;transform-origin:center;animation:luBlink 4.5s infinite}
 .lu .jet{transform-box:fill-box;transform-origin:50% 0;animation:luJet .55s ease-in-out infinite alternate}
 .lu .arm-r,.lu .arm-l{transform-box:fill-box;transform-origin:50% 12%}
@@ -438,11 +444,11 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .lu.happy,.lu.wow{animation:luHop 1s ease-in-out infinite}.lu.wow .arm-l{transform:rotate(32deg)}.lu.wow .arm-r{transform:rotate(-32deg)}
 .lu.sad .head{transform:rotate(-7deg);transform-origin:60px 70px}.lu.sad{animation-duration:4.5s}
 .lu.q .head{animation:luTilt 2.6s ease-in-out infinite;transform-origin:60px 70px}
-@keyframes luF{50%{transform:translateY(-6px)}}
-@keyframes luHop{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}60%{transform:translateY(-12px) rotate(3deg)}}
+@keyframes luF{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+@keyframes luHop{0%,100%{transform:translateY(0) scale(1)}30%{transform:translateY(-22px) scale(1.05,.95) rotate(-6deg)}55%{transform:translateY(-22px) rotate(8deg)}80%{transform:translateY(0) scale(1.06,.92)}}
 @keyframes luBlink{0%,93%,100%{transform:none}96%{transform:scaleY(.12)}}
-@keyframes luJet{to{transform:scale(1.2,1.5);opacity:.55}}
-@keyframes luWave{0%,55%,100%{transform:none}12%,36%{transform:rotate(-40deg)}24%,48%{transform:rotate(-12deg)}}
+@keyframes luJet{to{transform:scale(1.45,2.1);opacity:.5}}
+@keyframes luWave{0%,55%,100%{transform:none}12%,36%{transform:rotate(-70deg)}24%,48%{transform:rotate(-25deg)}}
 @keyframes luScan{50%{opacity:.25}}
 @keyframes luTilt{50%{transform:rotate(8deg)}}
 @keyframes luPop{from{opacity:0;transform:translateY(14px) scale(.7)}}
@@ -462,6 +468,27 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .bb.lu-bb.open .lu-bubble{display:none}
 .bb.lu-bb .lu-head .eye{animation:luBlink 4.5s infinite;transform-box:fill-box;transform-origin:center}
 @media (max-width:700px){.lu-bubble{bottom:calc(100% + 18px)}}
+/* LucIA como identidad: logo, telón de carga, portada, niveles, preguntas y pie */
+.logo i.luh{background:none!important;animation:none!important;width:40px;height:26px;border-radius:0}.logo i.luh svg{width:100%;height:100%;overflow:visible}
+.in-lu{width:120px;height:160px;margin-bottom:-6px;animation:luRocket 1.1s var(--ease-enter) both}.in-lu .lu{width:100%;height:100%}
+@keyframes luRocket{from{transform:translateY(70vh) scale(.5) rotate(-20deg)}70%{transform:translateY(-18px) rotate(6deg)}}
+.art-w{position:relative}
+.art-w{margin-top:120px}
+.hero-lu{position:absolute;left:-10px;top:-152px;width:120px;height:160px;z-index:3;background:none;border:0;padding:0;cursor:pointer;animation:luFly 1.3s 1.7s cubic-bezier(.2,1.4,.4,1) both}
+.no-intro .hero-lu{animation-delay:.3s}
+.hero-lu .lu{width:100%;height:100%}
+@media (hover:hover) and (pointer:fine){.hero-lu:hover .lu:not(.spin){animation:luHop .9s ease-in-out infinite}}
+@keyframes luFly{from{opacity:0;transform:translate(320px,-260px) rotate(50deg) scale(.3)}60%{opacity:1;transform:translate(-14px,14px) rotate(-12deg) scale(1.06)}}
+.hero-say{position:absolute;left:116px;top:-110px;z-index:4;margin:0;white-space:nowrap;background:var(--surface);border:1px solid var(--line-2);border-radius:16px 16px 16px 4px;padding:9px 14px;font:600 14.5px/1.2 var(--font);box-shadow:var(--sh);animation:luPop 600ms 2.7s var(--ease-enter) both}
+.no-intro .hero-say{animation-delay:1.3s}
+.hero-say.bump{animation:luPop 450ms var(--ease-enter) both}
+.levels .wrap{position:relative}
+.lv-lu{position:absolute;right:clamp(0px,4vw,48px);top:-28px;width:130px;height:173px;pointer-events:none}.lv-lu .lu{width:100%;height:100%}
+.faq-lu{width:150px;height:200px;margin-top:28px}.faq-lu .lu{width:100%;height:100%}
+.mega-w{position:relative}
+.mega-lu{position:absolute;right:5%;top:-18px;width:120px;height:160px;pointer-events:none}.mega-lu .lu{width:100%;height:100%}
+@media (max-width:900px){.art-w{margin-top:96px}.hero-lu{left:-4px;top:-114px;width:84px;height:112px}.hero-say{left:86px;top:-84px;font-size:13px}}
+@media (max-width:700px){.lv-lu{position:relative;top:auto;right:auto;margin:-24px 0 4px auto;width:78px;height:104px}.faq-lu{width:96px;height:128px;margin-top:16px}.mega-lu{width:64px;height:86px;top:-26px;right:2%}}
 @media (max-width:360px){.bb.lu-bb,.bb.lu-bb .lu-head{width:64px;height:44px}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
@@ -488,7 +515,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <body>
 <!-- Plan: juego educativo (site-kind gaming). Estilo Nácar: fondo perla con tornasol pastel, Fraunces itálica + Bricolage Grotesque, muy redondeado. Hero split con la ventana del juego en vivo; mapa de 7 niveles; pantalla de juego con misión, tutorial guiado, quiz, XP e insignias. -->
 <a class="skip" href="#main">Saltar al contenido</a>
-<div id="intro" aria-hidden="true"><div class="in-w"><b class="in-logo">Portfolia</b><span class="in-n"><span id="in-n">0</span>%</span></div><i class="in-bar" id="in-bar"></i></div>
+<div id="intro" aria-hidden="true"><div class="in-w"><div class="in-lu" id="in-lu"></div><b class="in-logo">Portfolia</b><span class="in-n"><span id="in-n">0</span>%</span></div><i class="in-bar" id="in-bar"></i></div>
 
 <section id="home" class="home">
 <header class="nav"><div class="wrap"><button class="logo" onclick="go('home')" aria-label="Portfolia, inicio"><i>PF</i>Portfolia</button><span class="sp"></span><button class="btn ghost thm" onclick="theme()" aria-label="Cambiar a modo oscuro">☾</button><button class="btn pri hide-s" onclick="play()" id="cta2">Empezar el nivel 1</button></div></header>
@@ -501,6 +528,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
     <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" id="cta-real" onclick="S.real?startPractice():openReal()">Saltar a la bolsa real</button></div>
     <div class="facts" data-up><div><b data-cnt="10" data-pre="$" data-suf="k">$10k</b><span>virtuales para invertir</span></div><div><b data-cnt="112">112</b><span>empresas de EE. UU.</span></div><div><b data-cnt="7">7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
   </div>
+  <div class="art-w"><button class="hero-lu" id="hero-lu" onclick="luPoke(this)" aria-label="LucIA, la tutora de Portfolia. Tócala"></button><p class="hero-say" id="hero-say" aria-live="polite">¡Hola! Soy <span class="lu-name">Luc<b>IA</b></span></p>
   <div class="hero__art frame" aria-label="Vista del juego: gráfico de Coca-Cola y la misión del nivel 1">
     <div class="frame__bar"><span class="dots"><i></i><i></i><i></i></span><span class="mono mut" id="hstat">NYSE</span><span class="sp"></span><span class="cash hide-s" id="hcash">$10,000.00</span></div>
     <div class="frame__body">
@@ -508,10 +536,11 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
       <div class="hc" id="hchart"></div>
       <div class="minimis"><span class="lvnum">01</span><div><b>Suena la campana</b><small>Compra acciones de una empresa de la NYSE</small></div><span class="stars" aria-label="0 de 3 estrellas"><span class="off">★★★</span></span></div>
     </div>
-  </div>
+  </div></div>
 </section>
 <div class="tape" aria-hidden="true"><div class="tape-t" id="tape"></div></div>
 <section class="levels" id="niveles" aria-labelledby="lv-h"><div class="wrap">
+  <div class="lv-lu" id="lv-lu" aria-hidden="true"></div>
   <p class="eyebrow reveal">La campaña</p>
   <h2 id="lv-h" class="reveal">Siete niveles, de la campana de apertura al índice</h2>
   <p class="sub reveal">Cada nivel trae una lección corta, una misión dentro del mercado y un quiz de 3 preguntas. Ganas hasta 3 estrellas: por cumplir la misión, por el reto extra y por el quiz perfecto.</p>
@@ -519,7 +548,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
   <div class="acts reveal" style="margin-top:28px"><button class="btn pri xl" id="cta3" onclick="play()">Empezar el nivel 1</button></div>
 </div><div class="lprev" id="lprev" aria-hidden="true"></div></section>
 <section class="faq" aria-labelledby="faq-h"><div class="wrap faq-g">
-  <div><p class="eyebrow reveal">Preguntas frecuentes</p><h2 id="faq-h" class="reveal">Lo que suelen preguntar antes de empezar</h2></div>
+  <div><p class="eyebrow reveal">Preguntas frecuentes</p><h2 id="faq-h" class="reveal">Lo que suelen preguntar antes de empezar</h2><div class="faq-lu reveal" id="faq-lu" aria-hidden="true"></div></div>
   <div class="qa">
     <details class="reveal"><summary>¿Se usa dinero real?</summary><p>No. Empiezas con $10,000 virtuales y Portfolia no se conecta a ningún bróker. Puedes equivocarte todo lo que quieras.</p></details>
     <details class="reveal"><summary>¿Para qué necesito la clave de Finnhub?</summary><p>Para traer precios y noticias reales de la NYSE y NASDAQ. Es gratis y se guarda solo en tu navegador.</p></details>
@@ -529,7 +558,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
   </div>
 </div></section>
 </main>
-<footer class="foot"><div class="mega" id="mega" aria-hidden="true">Portfolia</div><div class="wrap"><span>Portfolia · prototipo educativo, sin dinero real. No es asesoría financiera.</span><button class="link" onclick="reset(this)">Empezar una partida nueva</button></div></footer>
+<footer class="foot"><div class="mega-w"><div class="mega" id="mega" aria-hidden="true">Portfolia</div><div class="mega-lu" id="mega-lu" aria-hidden="true"></div></div><div class="wrap"><span>Portfolia · prototipo educativo, sin dinero real. No es asesoría financiera.</span><button class="link" onclick="reset(this)">Empezar una partida nueva</button></div></footer>
 </section>
 
 <section id="sim" hidden>
@@ -1020,7 +1049,7 @@ function skipNow(){toReal(true);closeG();go('sim');toast('Bolsa real desbloquead
 const started=()=>{try{return /^(tut|real)$/.test(localStorage.getItem('pf-start')||'')}catch(e){return true}};
 function gateOpen(html){$('gate-b').innerHTML=html;$('gate').hidden=false;setTimeout(()=>{const i=$('gate').querySelector('input,.btn.pri');i&&i.focus()},60)}
 function gateKey(){
-  gateOpen(`<div class="slide">${started()?'':'<p class="eyebrow">Paso 1 de 2</p>'}<h2 id="gt-h">Conecta tu clave de Finnhub</h2><p>Portfolia usa Finnhub para traer precios y noticias reales de la Bolsa de Nueva York. La clave es gratis y se guarda solo en este navegador.</p>
+  gateOpen(`<div class="slide"><div class="lu-row" style="align-items:center;margin-bottom:6px"><div class="lu-pop">${lucia('focus')}</div><p>Soy ${luName}. Para traerte precios reales de Nueva York necesito tu clave de Finnhub.</p></div>${started()?'':'<p class="eyebrow">Paso 1 de 2</p>'}<h2 id="gt-h">Conecta tu clave de Finnhub</h2><p>Portfolia usa Finnhub para traer precios y noticias reales de la Bolsa de Nueva York. La clave es gratis y se guarda solo en este navegador.</p>
   <ol class="steps"><li>Crea una cuenta en <a href="https://finnhub.io/register" target="_blank" rel="noopener">finnhub.io/register</a>.</li><li>En el Dashboard, copia tu API key.</li><li>Pégala aquí abajo.</li></ol>
   <label for="gkey" style="display:grid;gap:6px;margin-top:14px;color:var(--mut);font-size:13px">API key de Finnhub<input id="gkey" type="password" autocomplete="off" onkeydown="if(event.key==='Enter')gateSave()"></label><p class="err" id="gerr" role="alert"></p>
   <button class="btn pri xl full" id="gsave" onclick="gateSave()">Guardar y continuar</button></div>`)}
@@ -1176,7 +1205,7 @@ function lucia(mood='hi',head=false){const k='lu'+(++LUN),C='#5ee4f5',st=`stroke
     focus:`<g class="scan" ${st} stroke-width="2.5"><path d="M42 38 h-4 v6M78 38 h4 v6M42 62 h-4 v-6M78 62 h4 v-6"/></g><rect class="eye" x="46" y="46" width="9" height="4" rx="2" fill="${C}"/><rect class="eye" x="65" y="46" width="9" height="4" rx="2" fill="${C}"/><circle cx="60" cy="56" r="2" fill="${C}"/>`,
     q:`<text x="60" y="60" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="28" fill="${C}">?</text>`,
     sad:`<path class="eye" d="M44 47 Q49 52 54 48" ${st}/><path class="eye" d="M66 48 Q71 52 76 47" ${st}/><path d="M53 61 Q60 56 67 61" ${st} stroke-width="3"/><path d="M78 53 q3 5 0 7 q-3-2 0-7Z" fill="${C}"/>`};
-  const headSvg=`<g class="head"><ellipse cx="60" cy="44" rx="40" ry="34" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M33 47 Q33 28 60 28 Q87 28 87 47 Q87 66 60 67 Q33 66 33 47Z" fill="#0f1424"/><path d="M38 40 Q44 31 56 30" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none" stroke-linecap="round"/>${E[mood]||E.hi}</g>`;
+  const headSvg=`<g class="head"><ellipse cx="60" cy="44" rx="40" ry="34" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M33 47 Q33 28 60 28 Q87 28 87 47 Q87 66 60 67 Q33 66 33 47Z" fill="#0f1424"/><path d="M38 40 Q44 31 56 30" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none" stroke-linecap="round"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
   const defs=`<defs><linearGradient id="${k}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ecf5"/></linearGradient><linearGradient id="${k}i" x1="0" x2="1"><stop offset="0" stop-color="#8a6cff"/><stop offset=".5" stop-color="#d45aa6"/><stop offset="1" stop-color="#2f9fd6"/></linearGradient><radialGradient id="${k}j"><stop offset="0" stop-color="#bff6ff"/><stop offset=".5" stop-color="${C}" stop-opacity=".8"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></radialGradient></defs>`;
   if(head)return`<svg class="lu-head" viewBox="16 6 88 56" role="img" aria-hidden="true">${defs}${headSvg}</svg>`;
   return`<svg class="lu ${mood}" viewBox="0 0 120 160" role="img" aria-label="LucIA, la tutora de Portfolia">${defs}
@@ -1184,9 +1213,15 @@ function lucia(mood='hi',head=false){const k='lu'+(++LUN),C='#5ee4f5',st=`stroke
     <ellipse class="arm-l" cx="22" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
     <ellipse class="arm-r" cx="98" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
     <path d="M34 80 Q60 72 86 80 L81 124 Q60 134 39 124Z" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M48 126 h24 l-3 8 h-18Z" fill="#cfd8e6" stroke="#1b1725" stroke-width="2"/>
-    <circle cx="60" cy="100" r="13" fill="#fff" stroke="url(#${k}i)" stroke-width="2.5"/><text x="60" y="105" text-anchor="middle" font-family="Bricolage Grotesque,system-ui,sans-serif" font-weight="800" font-size="13" fill="url(#${k}i)">IA</text>
+    <circle cx="60" cy="100" r="11" fill="#0f1424" stroke="url(#${k}i)" stroke-width="2.5"/><circle class="core" cx="60" cy="100" r="5" fill="${C}"/>
     ${headSvg}</svg>`}
 const luName='<span class="lu-name">Luc<b>IA</b></span>';
+function luMount(id,mood,track){const e=$(id);if(e)e.innerHTML=lucia(mood).replace('class="lu ',`class="lu ${track?'track ':''}`)}
+/* LucIA de la portada: sigue el cursor con los ojos y la cabeza; al tocarla da una voltereta y cambia de gesto */
+const LUP=[['hi','¡Hola! Soy '+luName],['happy','¡Te acompaño en cada nivel!'],['wow','¡Vamos a Wall Street!'],['focus','Te enseño a leer el mercado'],['q','¿Empezamos el nivel 1?']];let LUI=0;
+function luPoke(b){LUI=(LUI+1)%LUP.length;const [m,t]=LUP[LUI];luMount('hero-lu',m,1);const s=$('hero-say');s.innerHTML=t;s.classList.remove('bump');void s.offsetWidth;s.classList.add('bump');if(!RM){const l=b.querySelector('.lu');l.classList.add('spin');setTimeout(()=>l.classList.remove('spin'),950)}}
+let LUraf=0,LUx=0,LUy=0;
+addEventListener('mousemove',e=>{LUx=e.clientX;LUy=e.clientY;if(LUraf||RM)return;LUraf=requestAnimationFrame(()=>{LUraf=0;document.querySelectorAll('.lu.track').forEach(l=>{const r=l.getBoundingClientRect();if(!r.width)return;const dx=LUx-(r.left+r.width/2),dy=LUy-(r.top+r.height*.3),c=(v,m)=>Math.max(-m,Math.min(m,v));l.style.setProperty('--ex',c(dx/50,5)+'px');l.style.setProperty('--ey',c(dy/60,3)+'px');l.style.setProperty('--tilt',c(dx/70,10)+'deg')})})},{passive:true});
 const starStr=(n,t=3)=>`<span>${'★'.repeat(n)}</span><span class="off">${'★'.repeat(Math.max(0,t-n))}</span>`;
 
 /* ---------- Modal del juego ---------- */
@@ -1290,6 +1325,10 @@ const IO='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEac
 function reveal(els){els.forEach(e=>IO?IO.observe(e):e.classList.add('in'))}
 function cnt(b){const n=+b.dataset.cnt,p=b.dataset.pre||'',s=b.dataset.suf||'';if(RM)return;const t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/1400),v=Math.round(n*(1-Math.pow(1-k,4)));b.textContent=p+v+s;if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function homeFx(){
+  // LucIA en toda la portada y como logo
+  document.querySelectorAll('.logo i').forEach(i=>{i.classList.add('luh');i.innerHTML=lucia('hi',true)});
+  luMount('hero-lu','hi',1);luMount('lv-lu','focus',1);luMount('faq-lu','q',1);luMount('mega-lu','wow');
+  document.querySelectorAll('.qa details').forEach(d=>d.ontoggle=()=>{if(!d.open)return;luMount('faq-lu','happy',1);clearTimeout(d._t);d._t=setTimeout(()=>luMount('faq-lu','q',1),1600)});
   // cinta: dos copias para que el desplazamiento sea continuo
   const it=M.slice(0,28).map(o=>{const p=px(o.s)||o.p,d=dc(o.s);return`<span class="tape-i">${logo(o.s,22)}<b>${o.s}</b>${usd(p)}<span class="${cl(d)}">${pc(d)}</span></span>`}).join('');$('tape').innerHTML=it+it;
   const mg=$('mega');mg.innerHTML=[...mg.textContent].map((c,i)=>`<span style="--i:${i}">${c}</span>`).join('');
@@ -1306,7 +1345,7 @@ function homeFx(){
       if(!pv.classList.contains('on')){x=tx;y=ty;pv.classList.add('on')}if(!raf)raf=requestAnimationFrame(loop)});
     L.addEventListener('mouseleave',()=>{pv.classList.remove('on');cur=''})}
 }
-function intro(){const el=$('intro');if(document.documentElement.classList.contains('no-intro')){el.remove();return}
+function intro(){const el=$('intro');if(document.documentElement.classList.contains('no-intro')){el.remove();return}luMount('in-lu','wow');
   try{sessionStorage.setItem('pf-intro',1)}catch(e){}const n=$('in-n'),b=$('in-bar'),t0=performance.now();
   const f=t=>{const k=Math.min(1,(t-t0)/1300),e=1-Math.pow(1-k,3);n.textContent=Math.round(e*100);b.style.transform=`scaleX(${e})`;if(k<1)requestAnimationFrame(f);else{el.classList.add('out');setTimeout(()=>el.remove(),950)}};requestAnimationFrame(f)}
 function lvClick(i){const s=lvState(i);if(s==='lock')return toast('Termina el nivel anterior para abrir este.');if(s==='done'){go('sim');openBrief(true,i);return}play()}
