@@ -459,8 +459,8 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .tcard .lu-t{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;align-items:start}.tcard .lu-t .lu{width:52px;height:70px}
 .win .lu{width:110px;height:146px;margin:0 auto -6px}
 /* Botón de LucIA en la Bolsa real: media cabeza asomando con globito */
-.bb.lu-bb{background:none;border:0;padding:0;min-height:0;width:84px;height:58px;align-items:flex-end;justify-content:center;overflow:visible;color:var(--ink)}
-.bb.lu-bb .lu-head{width:84px;height:58px;display:block;filter:drop-shadow(0 6px 14px rgba(40,30,80,.25));transition:transform 300ms var(--ease-enter)}
+.bb.lu-bb{background:none;border:0;padding:0;min-height:0;width:70px;height:64px;align-items:flex-end;justify-content:center;overflow:visible;color:var(--ink)}
+.bb.lu-bb .lu-head{width:70px;height:64px;display:block;filter:drop-shadow(0 6px 14px rgba(40,30,80,.25));transition:transform 300ms var(--ease-enter)}
 .bb.lu-bb:hover .lu-head{transform:translateY(-4px) rotate(-4deg)}
 .lu-bubble{position:absolute;right:6px;bottom:calc(100% + 8px);white-space:nowrap;background:var(--surface);color:var(--ink);border:1px solid var(--line-2);border-radius:14px 14px 4px 14px;padding:8px 12px;font:600 13.5px/1 var(--font);box-shadow:var(--sh);animation:luPop 600ms 300ms var(--ease-enter) both,luF 3s 1s ease-in-out infinite}
 .bb.lu-bb.open .lu-bubble{display:none}
@@ -486,7 +486,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .mega-lu{position:absolute;right:5%;top:-18px;width:120px;height:160px;pointer-events:none}.mega-lu .lu{width:100%;height:100%}
 @media (max-width:900px){.art-w{margin-top:96px}.hero-lu{left:-4px;top:-114px;width:84px;height:112px}.hero-say{left:86px;top:-84px;font-size:13px}}
 @media (max-width:700px){.lv-lu{position:relative;top:auto;right:auto;margin:-24px 0 4px auto;width:78px;height:104px}.faq-lu{width:96px;height:128px;margin-top:16px}.mega-lu{width:64px;height:86px;top:-26px;right:2%}}
-@media (max-width:360px){.bb.lu-bb,.bb.lu-bb .lu-head{width:64px;height:44px}}
+@media (max-width:360px){.bb.lu-bb,.bb.lu-bb .lu-head{width:56px;height:52px}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 @media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
@@ -1203,7 +1203,7 @@ function lucia(mood='hi',head=false){const C='#5ee4f5',O='stroke="#1b1725" strok
     q:`<text x="85" y="66" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="24" fill="${C}">?</text>`,
     sad:`<path class="eye" d="M70 56 Q75 62 80 56" ${st}/><path class="eye" d="M90 56 Q95 62 100 56" ${st}/><path d="M104 62 q2.6 4.4 0 6.2 q-2.6-1.8 0-6.2Z" fill="${C}"/>`};
   const headSvg=`<g class="head"><ellipse cx="85" cy="54" rx="35" ry="32" fill="#fff" ${O}/><ellipse cx="85" cy="57" rx="25" ry="18" fill="#0f1424"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
-  if(head)return`<svg class="lu-head" viewBox="48 20 74 52" role="img" aria-hidden="true">${headSvg}</svg>`;
+  if(head)return`<svg class="lu-head" viewBox="48 20 74 68" role="img" aria-hidden="true">${headSvg}</svg>`;
   return`<svg class="lu ${mood}" viewBox="0 0 170 190" role="img" aria-label="LucIA, la tutora de Portfolia">
     <ellipse class="jet" cx="85" cy="176" rx="10" ry="6" fill="${C}" opacity=".35"/><ellipse cx="85" cy="174" rx="5" ry="3.5" fill="#bff6ff"/>
     <g transform="rotate(9 40 126)"><ellipse class="arm-l" cx="40" cy="126" rx="8" ry="27" fill="#fff" ${O}/></g>
