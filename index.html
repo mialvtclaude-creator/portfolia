@@ -430,17 +430,15 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 /* ===== LucIA, la mascota: robot blanco con visor oscuro y ojos cian; el "IA" siempre resaltado ===== */
 .lu-name{font-weight:700;letter-spacing:-.01em}.lu-name b{background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
 .lu{display:block;overflow:visible;animation:luF 2.8s ease-in-out infinite}
-.lu .eyes{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform 120ms linear}
+.lu .eyes,.lu-head .eyes{transform:translate(var(--ex,0px),var(--ey,0px));transition:transform 120ms linear;filter:drop-shadow(0 0 2.5px #5ee4f5)}
 .lu .head{transform:rotate(var(--tilt,0deg));transform-origin:60px 72px;transition:transform 200ms ease-out}
-.lu .core{transform-box:fill-box;transform-origin:center;animation:luCore 1.6s ease-in-out infinite}
-@keyframes luCore{50%{transform:scale(1.6);opacity:.55}}
 .lu.spin{animation:luSpin 900ms cubic-bezier(.5,-.4,.3,1.4)}
 @keyframes luSpin{0%{transform:none}35%{transform:translateY(-40px) scale(1.1)}100%{transform:translateY(0) rotate(360deg)}}
 .lu .eye{transform-box:fill-box;transform-origin:center;animation:luBlink 4.5s infinite}
 .lu .jet{transform-box:fill-box;transform-origin:50% 0;animation:luJet .55s ease-in-out infinite alternate}
 .lu .arm-r,.lu .arm-l{transform-box:fill-box;transform-origin:50% 12%}
 .lu.hi .arm-r{animation:luWave 2.4s ease-in-out infinite}
-.lu.focus .arm-r{transform:rotate(-38deg)}.lu.focus .scan{animation:luScan 1.4s ease-in-out infinite}
+.lu.focus .arm-r{transform:rotate(-38deg)}
 .lu.happy,.lu.wow{animation:luHop 1s ease-in-out infinite}.lu.wow .arm-l{transform:rotate(32deg)}.lu.wow .arm-r{transform:rotate(-32deg)}
 .lu.sad .head{transform:rotate(-7deg);transform-origin:60px 70px}.lu.sad{animation-duration:4.5s}
 .lu.q .head{animation:luTilt 2.6s ease-in-out infinite;transform-origin:60px 70px}
@@ -1199,21 +1197,20 @@ function rMis(){
    head=true devuelve solo la media cabeza para el botón de la Bolsa real. */
 let LUN=0;
 function lucia(mood='hi',head=false){const k='lu'+(++LUN),C='#5ee4f5',st=`stroke="${C}" stroke-width="4" stroke-linecap="round" fill="none"`;
-  const E={hi:`<path class="eye" d="M44 50 Q49 43 54 50" ${st}/><path class="eye" d="M66 50 Q71 43 76 50" ${st}/><path d="M53 57 Q60 62 67 57" ${st} stroke-width="3"/>`,
-    happy:`<path class="eye" d="M44 50 Q49 42 54 50" ${st}/><path class="eye" d="M66 50 Q71 42 76 50" ${st}/><path d="M50 55 Q60 66 70 55 Z" fill="${C}"/>`,
-    wow:`<path class="eye" d="M43 49 Q49 39 55 49" ${st}/><path class="eye" d="M65 49 Q71 39 77 49" ${st}/><ellipse cx="60" cy="58" rx="6" ry="5" fill="${C}"/>`,
-    focus:`<g class="scan" ${st} stroke-width="2.5"><path d="M42 38 h-4 v6M78 38 h4 v6M42 62 h-4 v-6M78 62 h4 v-6"/></g><rect class="eye" x="46" y="46" width="9" height="4" rx="2" fill="${C}"/><rect class="eye" x="65" y="46" width="9" height="4" rx="2" fill="${C}"/><circle cx="60" cy="56" r="2" fill="${C}"/>`,
-    q:`<text x="60" y="60" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="800" font-size="28" fill="${C}">?</text>`,
-    sad:`<path class="eye" d="M44 47 Q49 52 54 48" ${st}/><path class="eye" d="M66 48 Q71 52 76 47" ${st}/><path d="M53 61 Q60 56 67 61" ${st} stroke-width="3"/><path d="M78 53 q3 5 0 7 q-3-2 0-7Z" fill="${C}"/>`};
-  const headSvg=`<g class="head"><ellipse cx="60" cy="44" rx="40" ry="34" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M33 47 Q33 28 60 28 Q87 28 87 47 Q87 66 60 67 Q33 66 33 47Z" fill="#0f1424"/><path d="M38 40 Q44 31 56 30" stroke="#fff" stroke-opacity=".18" stroke-width="3" fill="none" stroke-linecap="round"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
-  const defs=`<defs><linearGradient id="${k}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ecf5"/></linearGradient><linearGradient id="${k}i" x1="0" x2="1"><stop offset="0" stop-color="#8a6cff"/><stop offset=".5" stop-color="#d45aa6"/><stop offset="1" stop-color="#2f9fd6"/></linearGradient><radialGradient id="${k}j"><stop offset="0" stop-color="#bff6ff"/><stop offset=".5" stop-color="${C}" stop-opacity=".8"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></radialGradient></defs>`;
+  // solo ojos, sin boca: achinados en arco cuando sonríe, abiertos cuando mira o pregunta, caídos cuando se equivoca
+  const smile=`<path class="eye" d="M44 50 Q50 42 56 50" ${st}/><path class="eye" d="M64 50 Q70 42 76 50" ${st}/>`,
+    open=`<ellipse class="eye" cx="50" cy="47" rx="4.2" ry="5.4" fill="${C}"/><ellipse class="eye" cx="70" cy="47" rx="4.2" ry="5.4" fill="${C}"/>`,
+    down=`<path class="eye" d="M44 45 Q50 51 56 45" ${st}/><path class="eye" d="M64 45 Q70 51 76 45" ${st}/>`;
+  const E={hi:smile,happy:smile,wow:smile,focus:open,q:open,sad:down};
+  const headSvg=`<g class="head"><ellipse cx="60" cy="42" rx="39" ry="31" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M29 47 Q29 27 60 27 Q91 27 91 47 Q91 65 60 65 Q29 65 29 47Z" fill="#0f1424"/><path d="M35 40 Q41 31 54 29" stroke="#fff" stroke-opacity=".16" stroke-width="3" fill="none" stroke-linecap="round"/><g class="eyes">${E[mood]||E.hi}</g></g>`;
+  const defs=`<defs><linearGradient id="${k}h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e6ecf5"/></linearGradient><linearGradient id="${k}i" x1="0" x2="1"><stop offset="0" stop-color="#8a6cff"/><stop offset=".5" stop-color="#d45aa6"/><stop offset="1" stop-color="#2f9fd6"/></linearGradient><linearGradient id="${k}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${C}" stop-opacity=".55"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></linearGradient><radialGradient id="${k}j"><stop offset="0" stop-color="#bff6ff"/><stop offset=".5" stop-color="${C}" stop-opacity=".8"/><stop offset="1" stop-color="${C}" stop-opacity="0"/></radialGradient></defs>`;
   if(head)return`<svg class="lu-head" viewBox="16 6 88 56" role="img" aria-hidden="true">${defs}${headSvg}</svg>`;
   return`<svg class="lu ${mood}" viewBox="0 0 120 160" role="img" aria-label="LucIA, la tutora de Portfolia">${defs}
-    <ellipse class="jet" cx="60" cy="140" rx="11" ry="10" fill="url(#${k}j)"/>
-    <ellipse class="arm-l" cx="22" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
-    <ellipse class="arm-r" cx="98" cy="98" rx="7" ry="19" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/>
-    <path d="M34 80 Q60 72 86 80 L81 124 Q60 134 39 124Z" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M48 126 h24 l-3 8 h-18Z" fill="#cfd8e6" stroke="#1b1725" stroke-width="2"/>
-    <circle cx="60" cy="100" r="11" fill="#0f1424" stroke="url(#${k}i)" stroke-width="2.5"/><circle class="core" cx="60" cy="100" r="5" fill="${C}"/>
+    <path d="M51 128 L69 128 L80 158 L40 158Z" fill="url(#${k}c)"/><ellipse class="jet" cx="60" cy="133" rx="9" ry="7" fill="url(#${k}j)"/>
+    <g transform="rotate(10 23 97)"><ellipse class="arm-l" cx="23" cy="97" rx="6.5" ry="20" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/></g>
+    <g transform="rotate(-10 97 97)"><ellipse class="arm-r" cx="97" cy="97" rx="6.5" ry="20" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/></g>
+    <path d="M37 79 Q60 72 83 79 Q89 84 87 97 Q83 117 69 126 L51 126 Q37 117 33 97 Q31 84 37 79Z" fill="url(#${k}h)" stroke="#1b1725" stroke-width="2.5"/><path d="M41 88 Q60 95 79 88" stroke="#c9d2e0" stroke-width="1.5" fill="none"/>
+    <ellipse cx="60" cy="127" rx="10" ry="3" fill="#cfd8e6" stroke="#1b1725" stroke-width="2"/>
     ${headSvg}</svg>`}
 const luName='<span class="lu-name">Luc<b>IA</b></span>';
 function luMount(id,mood,track){const e=$(id);if(e)e.innerHTML=lucia(mood).replace('class="lu ',`class="lu ${track?'track ':''}`)}
