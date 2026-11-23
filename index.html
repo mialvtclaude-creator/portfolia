@@ -22,7 +22,7 @@
   --up:#0f7a4f;--dn:#c23a4f;--up-soft:rgba(15,122,79,.10);--dn-soft:rgba(194,58,79,.10);
   --shade:rgba(27,23,37,.45);--sh:0 24px 48px -30px rgba(60,40,90,.35);
   --iris:linear-gradient(110deg,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8);
-  --iris-on:#1b1725;--on-up:#ffffff;--on-dn:#ffffff;
+  --iris-on:#1b1725;--on-up:#ffffff;--on-dn:#ffffff;--buy:#16a34a;--on-buy:#ffffff;
   --iris-ink:linear-gradient(110deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a,#8a6cff);
   --b1:rgba(216,204,255,.55);--b2:rgba(255,209,232,.45);--b3:rgba(191,233,255,.45);--b4:rgba(201,247,223,.4);
   --pearl:linear-gradient(120deg,rgba(255,209,232,.45),rgba(216,204,255,.35) 30%,rgba(191,233,255,.35) 60%,rgba(201,247,223,.4));
@@ -36,7 +36,7 @@
   --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
   --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
   --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
-  --on-up:#06170f;--on-dn:#1f070b;
+  --on-up:#06170f;--on-dn:#1f070b;--buy:#34d07f;--on-buy:#05140c;
   --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
   --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
   --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
@@ -47,7 +47,7 @@
   --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
   --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
   --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
-  --on-up:#06170f;--on-dn:#1f070b;
+  --on-up:#06170f;--on-dn:#1f070b;--buy:#34d07f;--on-buy:#05140c;
   --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
   --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
   --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
@@ -350,7 +350,13 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .foot .link,.ft .link{min-height:44px;display:inline-flex;align-items:center}
 .gtop .logo{min-width:44px;flex:none}
 #v-mk{overflow-x:clip}
-.fab{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;min-height:48px;padding:0 20px;font-size:15px;box-shadow:var(--sh)}
+.fabs{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;gap:8px}
+.fabs .btn{min-height:52px;padding:0 22px;font-size:19px;font-weight:700;letter-spacing:.01em;box-shadow:var(--sh)}
+/* verde vivo solo en el botón fijo: con 19px en negrita es texto grande y basta contraste 3:1 */
+.fabs .btn.buy{background:var(--buy);border-color:var(--buy);color:var(--on-buy)}
+@media (hover:hover) and (pointer:fine){.fabs .btn.buy:not(:disabled):hover{background:color-mix(in srgb,var(--buy) 88%,#000)}}
+.show-s{display:none}@media (max-width:700px){.show-s{display:inline}.fabs .btn{padding:0 18px}}
+@media (max-width:360px){.fabs{gap:6px}.fabs .btn{padding:0 12px}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 @media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
@@ -500,7 +506,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <div class="spot" id="spot" hidden></div><div class="tcard" id="tcard" hidden role="dialog" aria-live="polite"></div>
 <canvas id="fx" hidden></canvas>
 <button class="bb" id="bb" onclick="botT()" aria-label="Abrir el tutor" hidden>Tutor</button>
-<button class="btn pri fab" id="fab" onclick="buyNow()" hidden>Comprar acciones</button>
+<div class="fabs" id="fab" hidden><button class="btn buy" onclick="buyNow()"><span class="hide-s">Comprar acciones</span><span class="show-s">Comprar</span></button><button class="btn sell" onclick="sellNow()"><span class="hide-s">Vender acciones</span><span class="show-s">Vender</span></button></div>
 <div class="bp" id="bp" hidden><div class="row"><b>Tutor de inversión</b><button class="x" onclick="botT()" aria-label="Cerrar el tutor">✕</button></div><div class="bl" id="bl" aria-live="polite"></div><div class="bc" id="bc"></div><input id="bi" placeholder="Pregúntame algo…" aria-label="Escribe tu pregunta"></div>
 <div class="ov" id="gate" hidden><div class="box gbox" role="dialog" aria-modal="true" aria-labelledby="gt-h"><div class="gb" id="gate-b"></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -856,6 +862,7 @@ function go(s){$('home').hidden=s!=='home';$('sim').hidden=s!=='sim';$('bb').hid
 function play(){go('sim')}
 function openReal(){if(S.prac)return endPractice();if(!S.real)return askSkip();go('sim')}
 function buyNow(){openM(cur||'KO','B')}
+function sellNow(){const own=Object.keys(S.pos);if(!own.length)return toast('Todavía no tienes acciones para vender. Primero compra alguna.');openM(S.pos[cur]?cur:own[0],'S')}
 /* Tutorial de práctica desde la Bolsa real: simulado temporal con $10,000 que no se guarda; al salir vuelve la partida real intacta. */
 let REAL=null;
 function startPractice(){if(!S.real)return go('sim');save();wsClose();REAL=S;fresh(false);S.prac=1;paused=true;uiSrc();go('sim');toast('Tutorial de práctica: $10,000 aparte. Tu saldo real no cambia.')}
