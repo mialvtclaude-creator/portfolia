@@ -381,8 +381,8 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
   <div>
     <p class="eyebrow" data-up>Juego educativo · Bolsa de Nueva York</p>
     <h1 id="hero-h">Aprende a invertir en <em>Wall Street</em> jugando</h1>
-    <p class="lead" data-up>Dos modos con $10,000 virtuales: siete niveles de práctica en un mercado simulado, y la bolsa real con precios y noticias de Nueva York en vivo mientras la NYSE está abierta. Sin arriesgar dinero real.</p>
-    <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" onclick="openReal()">Abrir la bolsa real</button></div>
+    <p class="lead" data-up>Empiezas con $10,000 virtuales y un tutorial de cinco niveles en un mercado simulado. Después pasas, con el mismo saldo, a la bolsa real: precios y noticias de Nueva York en vivo mientras la NYSE está abierta. Sin arriesgar dinero real.</p>
+    <div class="acts" data-up><button class="btn pri xl" id="cta" onclick="play()">Empezar el nivel 1</button><button class="btn xl" id="cta-real" onclick="openReal()">Saltar a la bolsa real</button></div>
     <div class="facts" data-up><div><b>$10k</b><span>virtuales para invertir</span></div><div><b>112</b><span>empresas de EE. UU.</span></div><div><b>7</b><span>niveles con quiz</span></div><div><b>9:30</b><span>abre la NYSE (hora de NY)</span></div></div>
   </div>
   <div class="hero__art frame" aria-label="Vista del juego: gráfico de Coca-Cola y la misión del nivel 1">
@@ -410,7 +410,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
   <button class="logo" onclick="go('home')" aria-label="Volver a la portada"><i>PF</i><span class="hide-s">Portfolia</span></button>
   <span class="mstat" id="mst"><i></i><span id="day"></span></span>
   <span class="sp"></span>
-  <div class="seg modes" role="group" aria-label="Modo de bolsa"><button id="m-sim" onclick="setSrc('sim')">Práctica</button><button id="m-real" onclick="setSrc('real')">Bolsa real</button></div>
+  <div class="seg modes" role="group" aria-label="Modo de bolsa"><button id="m-sim">Práctica</button><button id="m-real" onclick="openReal()">Bolsa real</button></div>
   <button class="btn" id="pp" onclick="pause()" aria-label="Pausar o reanudar el mercado">▶</button>
   <select class="btn hide-s" id="spd" onchange="setSpd(this.value)" aria-label="Velocidad del mercado"><option value="2600">Lento</option><option value="1500" selected>Normal</option><option value="500">Rápido</option></select>
   <button class="xp" id="xpb" onclick="openBadges()" aria-label="Ver tu nivel, XP e insignias"><span class="lv" id="xpl">1</span><span><b id="xpr">Novato</b><small id="xpt">0 XP</small><span class="bar"><i id="xpi" style="transform:scaleX(0)"></i></span></span></button>
@@ -463,7 +463,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <div id="v-hs" hidden><div class="card"><h3>Historial de operaciones</h3><div class="sc"><table><thead><tr><th>Cuándo</th><th>Tipo</th><th>Empresa</th><th>Acciones</th><th>Precio</th><th>Comisión</th><th>Importe</th><th>Resultado</th></tr></thead><tbody id="ht"></tbody></table></div></div></div>
 
 <div id="v-ap" hidden>
-<div class="card"><h3>Tutorial guiado</h3><p class="mut">Te lleva paso a paso por el efectivo, el Mercado, tu primera compra y el gráfico frente al índice.</p><div class="bar" style="margin:12px 0 0"><button class="btn pri" onclick="tourStart()">Empezar el tutorial</button></div></div>
+<div class="card" id="tour-card"><h3>Guía paso a paso</h3><p class="mut">Te lleva por el efectivo, el Mercado, tu primera compra y el gráfico frente al índice.</p><div class="bar" style="margin:12px 0 0"><button class="btn pri" onclick="tourStart()">Empezar la guía</button></div></div>
 <div class="card"><h3>Tus lecciones</h3><div class="lesson-list" id="lsl"></div></div>
 <div class="card"><h3>Tus insignias</h3><div class="bdgs" id="bdl"></div></div>
 <div class="card"><h3>Cómo leer una vela</h3><div class="cd"><svg viewBox="0 0 340 185" role="img" aria-label="Una vela verde y una roja con apertura, cierre, máximo y mínimo"><line x1="80" x2="80" y1="14" y2="156" stroke="var(--up)" stroke-width="3"/><rect x="62" y="48" width="36" height="66" rx="2" fill="var(--up)"/><line x1="250" x2="250" y1="14" y2="156" stroke="var(--dn)" stroke-width="3"/><rect x="232" y="48" width="36" height="66" rx="2" fill="var(--dn)"/><g fill="var(--ink)" font-size="12" font-family="Geist Mono, monospace"><text x="104" y="20">Máximo</text><text x="104" y="118">Apertura</text><text x="104" y="52">Cierre</text><text x="104" y="160">Mínimo</text><text x="274" y="52">Apertura</text><text x="274" y="118">Cierre</text></g><text x="80" y="179" text-anchor="middle" fill="var(--up)" font-size="12" font-weight="600">Vela verde (sube)</text><text x="250" y="179" text-anchor="middle" fill="var(--dn)" font-size="12" font-weight="600">Vela roja (baja)</text></svg>
@@ -496,6 +496,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <canvas id="fx" hidden></canvas>
 <button class="bb" id="bb" onclick="botT()" aria-label="Abrir el tutor" hidden>Tutor</button>
 <div class="bp" id="bp" hidden><div class="row"><b>Tutor de inversión</b><button class="x" onclick="botT()" aria-label="Cerrar el tutor">✕</button></div><div class="bl" id="bl" aria-live="polite"></div><div class="bc" id="bc"></div><input id="bi" placeholder="Pregúntame algo…" aria-label="Escribe tu pregunta"></div>
+<div class="ov" id="gate" hidden><div class="box gbox" role="dialog" aria-modal="true" aria-labelledby="gt-h"><div class="gb" id="gate-b"></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <datalist id="dl"></datalist>
 
@@ -845,23 +846,63 @@ function run(){clearInterval(timer);const gm=!$('gm').hidden,vis=!document.hidde
   $('pp').textContent=paused?'▶':'❚❚';$('pp').setAttribute('aria-label',paused?'Reanudar la simulación':'Pausar la simulación');if(!S.real)$('mst').className='mstat sim'+(!paused&&!gm?' on':'')}
 function pause(){paused=!paused;run();render()}
 function setSpd(v){dly=+v;run()}
-function go(s){$('home').hidden=s!=='home';$('sim').hidden=s!=='sim';$('bb').hidden=s!=='sim';if(s!=='sim')$('bp').hidden=true;if(s==='home'){rHome();heroLoop()}else{render();if(!S.real&&!S.g.fin&&S.g.ph==='brief')openBrief()}run();scrollTo(0,0)}
-function play(){if(S.real)setSrc('sim');go('sim')}
-function openReal(){if(!S.real)setSrc('real');go('sim');if(!KEY){$('rk').hidden=false;$('rk').scrollIntoView({block:'start'})}}
+function go(s){$('home').hidden=s!=='home';$('sim').hidden=s!=='sim';$('bb').hidden=s!=='sim';if(s!=='sim')$('bp').hidden=true;if(s==='home'){rHome();heroLoop()}else{render();if(!S.g.fin&&S.g.ph==='brief')openBrief()}run();scrollTo(0,0)}
+function play(){go('sim')}
+function openReal(){if(!S.real)return askSkip();go('sim')}
+/* ---------- Un solo saldo: el tutorial (niveles 1 a UNLOCK) usa el mercado simulado; al terminarlo o saltarlo,
+   las acciones se venden a su último precio simulado y ese efectivo pasa a la Bolsa real. No hay vuelta atrás. ---------- */
+const UNLOCK=5;
+function toReal(skip){
+  if(S.real)return;const cash=Math.round(equity()*100)/100,g=S.g;
+  wsClose();tourHide();try{localStorage.removeItem(K);localStorage.setItem('pf-src','real');localStorage.setItem('pf-start','real')}catch(e){}
+  fresh(true);S.cash=cash;S.eq=[cash];
+  S.g=Object.assign(g,{tour:-1,cr:null,ob:{},bo:null,seen:{},unread:0});if(skip){S.g.fin=true;S.g.pro=true;S.g.skip=1}
+  NWID.clear();RI=0;lastNews=0;paused=true;save();uiSrc();run()}
+function askSkip(){
+  openG(`<div class="gh"><b id="gmt">¿Saltar a la Bolsa real?</b><span class="sp"></span><button class="x" onclick="closeG()" aria-label="Cerrar">✕</button></div><div class="gb"><p>La Bolsa real se desbloquea al terminar el nivel ${UNLOCK}. Si la abres ahora, el tutorial termina y el mercado simulado se cierra para siempre.</p><p class="fact">Tienes un solo saldo: tus acciones de práctica se venden a su último precio y tus ${usd(equity())} pasan a la Bolsa real.</p></div><div class="gf"><button class="btn" onclick="closeG()">Seguir el tutorial</button><button class="btn pri" onclick="skipNow()">Saltar a la Bolsa real</button></div>`,'Saltar el tutorial')}
+function skipNow(){toReal(true);closeG();go('sim');toast('Bolsa real desbloqueada. Tu saldo es el mismo de antes.')}
+/* ---------- Primer arranque: la clave de Finnhub es obligatoria y luego se elige tutorial o Bolsa real ---------- */
+const started=()=>{try{return /^(tut|real)$/.test(localStorage.getItem('pf-start')||'')}catch(e){return true}};
+function gateOpen(html){$('gate-b').innerHTML=html;$('gate').hidden=false;setTimeout(()=>{const i=$('gate').querySelector('input,.btn.pri');i&&i.focus()},60)}
+function gateKey(){
+  gateOpen(`<div class="slide">${started()?'':'<p class="eyebrow">Paso 1 de 2</p>'}<h2 id="gt-h">Conecta tu clave de Finnhub</h2><p>Portfolia usa Finnhub para traer precios y noticias reales de la Bolsa de Nueva York. La clave es gratis y se guarda solo en este navegador.</p>
+  <ol class="steps"><li>Crea una cuenta en <a href="https://finnhub.io/register" target="_blank" rel="noopener">finnhub.io/register</a>.</li><li>En el Dashboard, copia tu API key.</li><li>Pégala aquí abajo.</li></ol>
+  <label for="gkey" style="display:grid;gap:6px;margin-top:14px;color:var(--mut);font-size:13px">API key de Finnhub<input id="gkey" type="password" autocomplete="off" onkeydown="if(event.key==='Enter')gateSave()"></label><p class="err" id="gerr" role="alert"></p>
+  <button class="btn pri xl full" id="gsave" onclick="gateSave()">Guardar y continuar</button></div>`)}
+async function gateSave(){
+  const v=$('gkey').value.trim(),e=$('gerr'),b=$('gsave');if(!v){e.textContent='Pega tu API key de Finnhub para continuar.';return}
+  b.disabled=true;b.textContent='Comprobando la clave…';e.textContent='';let net=false;
+  try{const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=SPY&token=${encodeURIComponent(v)}`);if(r.status===401||r.status===403){e.textContent='Finnhub rechazó esa clave. Revisa que la copiaste completa.';b.disabled=false;b.textContent='Guardar y continuar';return}}catch(_){net=true}
+  const o=ks();o.fh=v;try{localStorage.setItem('pf-keys',JSON.stringify(o))}catch(_){}loadKeys();uiSrc();
+  if(net)toast('Guardé la clave, pero no pude comprobarla: '+NETERR);
+  if(started()){$('gate').hidden=true;if(S.real){rinit(true);run()}}else gateChoice()}
+function gateChoice(){
+  try{localStorage.setItem('pf-start','ask')}catch(e){}
+  gateOpen(`<div class="slide"><p class="eyebrow">Paso 2 de 2</p><h2 id="gt-h">¿Quieres hacer el tutorial?</h2><p>Son ${UNLOCK} niveles cortos en un mercado simulado: comprar, vender, diversificar, usar un índice y aguantar una caída. Al terminar el nivel ${UNLOCK} se abre la Bolsa real y ahí juegas los niveles 6 y 7.</p>
+  <p class="fact" style="margin-top:14px">Empiezas con $10,000 virtuales y es un solo saldo: lo que ganes o pierdas en el tutorial pasa a la Bolsa real.</p>
+  <div style="display:grid;gap:10px;margin-top:16px"><button class="btn pri xl full" onclick="gateTut()">Sí, hacer el tutorial</button><button class="btn xl full" onclick="gateSkip()">Saltar el tutorial e ir a la Bolsa real</button></div></div>`)}
+function gateTut(){try{localStorage.setItem('pf-start','tut')}catch(e){}$('gate').hidden=true;play()}
+function gateSkip(){$('gate').hidden=true;toReal(true);go('sim');rinit(true);toast('Bolsa real desbloqueada con $10,000 virtuales.')}
+function onb(){if(!KEY)gateKey();else if(!started())gateChoice()}
 function reset(b){
   if(!rc){rc=1;b.textContent='¿Seguro? Pulsa otra vez para borrar todo';setTimeout(()=>{rc=0;b.textContent='Empezar una partida nueva'},4000);return}
-  rc=0;b.textContent='Empezar una partida nueva';fresh(S.real);paused=true;save();closeG();tourEnd(true);if(!$('sim').hidden){render();if(!S.real)openBrief()}else rHome();run();toast('Partida nueva con $10,000.');
+  rc=0;b.textContent='Empezar una partida nueva';wsClose();try{[K,KR,'pf-start'].forEach(k=>localStorage.removeItem(k));localStorage.setItem('pf-src','sim')}catch(e){}
+  fresh(false);paused=true;closeG();closeM();tourEnd(true);uiSrc();go('home');gateChoice();
 }
 
 /* ======================= CAPA DE JUEGO ======================= */
 const ck='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.2 5 8.6l4.6-5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function gx(){
-  const t0=S.g.t0,since=S.day-t0,tr=S.tr.filter(t=>t.lv===S.g.L),eq=equity(),
+  const t0=S.g.t0,since=S.real?ses(S.g.ts):S.day-t0,tr=S.tr.filter(t=>t.lv===S.g.L),eq=equity(),
     P=Object.entries(S.pos).map(([s,p])=>({s,v:p.q*(px(s)||0),x:G[s].x,e:G[s].e})),inv=P.reduce((a,b)=>a+b.v,0),
     secs=new Set(P.filter(p=>p.x!=='ETF').map(p=>p.x)),mw=P.length?Math.max(...P.map(p=>p.v))/eq:0,
     e0=S.eq[t0]||CAP,b0=S.bm[t0]||100,myR=eq/e0-1,ixR=S.bm[S.bm.length-1]/b0-1,spy=S.pos.SPY?S.pos.SPY.q*px('SPY'):0;
   return{since,tr,eq,P,inv,secs,mw,myR,ixR,spy,ind:P.filter(p=>p.s!=='SPY').length}
 }
+/* Sesiones de bolsa (lunes a viernes, hora de NY) transcurridas desde ts, sin contar el día de inicio.
+   shortcut: no descuenta feriados de la NYSE; si hiciera falta, usar /stock/market-holiday de Finnhub. */
+const nyD=t=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(t);
+function ses(ts){if(!ts)return 0;let n=0;const b=Date.parse(nyD(Date.now())+'T12:00:00Z');for(let d=Date.parse(nyD(ts)+'T12:00:00Z')+864e5;d<=b;d+=864e5){const w=new Date(d).getUTCDay();if(w&&w<6)n++}return n}
 const LVIZ=['M0 44 L20 44 L20 34 L44 34 L44 24 L70 24 L70 12 L100 12','M0 40 L18 34 L30 38 L50 20 L66 24 L84 10 L100 14','PIE','M0 36 C15 30 25 34 40 26 S70 20 100 10','M0 14 L22 16 L30 40 L38 46 L48 36 L64 26 L80 18 L100 14','STOP','DUO'];
 function lviz(i){const st='fill="none" stroke="var(--acc)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"',v=LVIZ[i];let s='<line x1="0" x2="100" y1="50" y2="50" stroke="var(--line-2)"/>';
  if(v==='PIE')s='<g transform="translate(50 27)"><circle r="22" fill="var(--surface-2)"/><path d="M0 0 L0 -22 A22 22 0 0 1 21 7Z" fill="var(--gold)"/><path d="M0 0 L21 7 A22 22 0 0 1 -12 18Z" fill="var(--acc)"/><path d="M0 0 L-12 18 A22 22 0 0 1 -21 -6Z" fill="var(--line-2)"/></g>';
@@ -918,18 +959,19 @@ const LV=[
 {t:'Controla el riesgo',k:'Órdenes límite, stop-loss y tamaño de posición',sum:'Decidir cuánto puedes perder antes de comprar.',
  sl:[{kv:'3 órdenes',h:'A mercado, límite y stop-loss',p:'A mercado: compras ya, al precio de ahora. Límite: eliges el precio máximo; si la acción no baja hasta ahí, no se compra. Stop-loss: eliges un precio de salida; si la acción cae hasta ahí, se vende sola.',f:'Desde este nivel, la ventana de compra tiene orden límite y stop-loss.'},
      {kv:'2 %',h:'Decide cuánto puedes perder antes de comprar',p:'Regla del 1 al 2 %: no arriesgues más del 1 o 2 % de tu patrimonio en una sola operación. Acciones = pérdida máxima ÷ (precio de entrada − stop).',f:'Patrimonio $10,000, riesgo 2 % = $200. Compras a $50 con stop en $46: 200 ÷ 4 = 50 acciones.'},
-     {kv:'¡Salto!',h:'El stop-loss no es perfecto',p:'Si el precio salta de golpe por debajo de tu stop, se vende al siguiente precio disponible, que puede ser peor. Aun así te protege de lo peor.',f:'La calculadora de riesgo de la Academia hace la cuenta por ti.'}],
+     {kv:'¡Salto!',h:'El stop-loss no es perfecto',p:'Si el precio salta de golpe por debajo de tu stop, se vende al siguiente precio disponible, que puede ser peor. Aun así te protege de lo peor.',f:'La calculadora de riesgo de la Academia hace la cuenta por ti.'},
+     {kv:'NYSE',h:'Este nivel ya es en la Bolsa real',p:'Desde aquí operas con precios reales de Nueva York y tu mismo saldo. Si la NYSE está cerrada, tu orden queda programada y se ejecuta cuando abra.',f:'La bolsa abre de lunes a viernes de 9:30 a 16:00, hora de Nueva York.'}],
  ob:[{t:'Compra con un stop-loss',ok:x=>x.tr.some(t=>t.t==='B'&&t.sl)},{t:'Que el riesgo de esa compra no pase del 2 % de tu patrimonio',ok:x=>x.tr.some(t=>t.t==='B'&&t.sl&&t.rk!=null&&t.rk<=.02)}],
  bo:{t:'Que se ejecute una orden límite',ok:x=>x.tr.some(t=>t.auto==='LIM')||null},
  q:[['Pones una orden límite de compra a $48 y la acción está en $50. ¿Qué pasa?',['Se compra ya a $50','Se compra solo si baja a $48 o menos','Se cancela'],1,'La orden límite espera a que el precio llegue a tu límite o mejore.'],
     ['Patrimonio $10,000, riesgo 1 %, entrada $20 y stop $18. ¿Cuántas acciones?',['50','100','500'],0,'Pérdida máxima $100. Entre $2 de distancia al stop: 50 acciones.'],
     ['¿Para qué sirve un stop-loss?',['Para asegurar ganancias sin límite','Para limitar cuánto puedes perder','Para pagar menos comisión'],1,'Fija de antemano el precio al que sales si la operación sale mal.']]},
-{t:'Gánale al mercado',k:'Rendimiento frente al índice',sum:'Tu examen final: 30 días con todo lo aprendido.',
+{t:'Gánale al mercado',k:'Rendimiento frente al índice',sum:'Tu examen final: 5 sesiones de la bolsa real con todo lo aprendido.',
  sl:[{kv:'vs. SPY',h:'El rival es el índice',p:'Ganar 8 % suena bien, pero si el S&P 500 ganó 15 %, te habría ido mejor comprando SPY y sin hacer nada. Por eso los profesionales se miden contra un índice.',f:'En tu gráfico, la línea dorada eres tú y la gris es el índice.'},
      {kv:'Sharpe',h:'Ganar con menos sustos',p:'El ratio de Sharpe divide lo que ganaste por encima de una inversión sin riesgo entre lo que se movió tu portafolio. Más de 1 suele considerarse bueno.',f:'Dos portafolios que ganan lo mismo no son iguales: el que se mueve menos es mejor.'},
-     {kv:'30 días',h:'Tu examen final',p:'Tienes 30 días de mercado. Arma tu portafolio con todo lo aprendido: diversifica, usa stop-loss, lee las noticias y no vendas en pánico.',f:'Apruebas si al día 30 tienes al menos 60 % invertido y diversificado. Ganarle al índice te da la estrella extra.'}],
- ob:[{t:'Juega 30 días en este nivel',ok:x=>x.since>=30,pr:x=>`${Math.min(30,x.since)}/30`},{t:'Al día 30: al menos 60 % invertido y diversificado (SPY 20 % o 3 sectores)',ok:x=>x.since>=30&&x.inv/x.eq>=.6&&(x.spy/x.eq>=.2||x.secs.size>=3),pr:x=>`${fm(x.inv/x.eq*100,0)} % invertido`}],
- bo:{t:'Gánale al índice en estos 30 días',ok:x=>(x.since>=30&&x.myR>x.ixR)||null,pr:1},
+     {kv:'5 sesiones',h:'Tu examen final, en la bolsa real',p:'Tienes una semana de bolsa: 5 sesiones de lunes a viernes. Arma tu portafolio con todo lo aprendido: diversifica, usa stop-loss, lee las noticias y no vendas en pánico.',f:'Apruebas si al cumplir las 5 sesiones tienes al menos 60 % invertido y diversificado. Ganarle al índice te da la estrella extra.'}],
+ ob:[{t:'Deja pasar 5 sesiones de bolsa en este nivel',ok:x=>x.since>=5,pr:x=>`${Math.min(5,x.since)}/5`},{t:'Al cumplir las 5 sesiones: al menos 60 % invertido y diversificado (SPY 20 % o 3 sectores)',ok:x=>x.since>=5&&x.inv/x.eq>=.6&&(x.spy/x.eq>=.2||x.secs.size>=3),pr:x=>`${fm(x.inv/x.eq*100,0)} % invertido`}],
+ bo:{t:'Gánale al índice en estas 5 sesiones',ok:x=>(x.since>=5&&x.myR>x.ixR)||null,pr:1},
  q:[['Ganaste 8 % y el índice 15 %. ¿Le ganaste al mercado?',['Sí','No, quedaste 7 puntos por debajo','Empate'],1,'Lo que cuenta es la diferencia con el índice: −7 puntos.'],
     ['Dos portafolios ganan 10 %. Uno se movió mucho más. ¿Cuál tiene mejor Sharpe?',['El que se movió más','El que se movió menos','Igual'],1,'Mismo retorno con menos volatilidad da un Sharpe más alto.'],
     ['Para un principiante, ¿qué suele ser más sensato a largo plazo?',['Comprar y vender todos los días','Un ETF del índice como base y diversificar','Todo en una sola acción'],1,'Las comisiones y los errores se acumulan al operar mucho. Una base indexada y diversificada es lo más recomendado para empezar.']]}];
@@ -942,7 +984,7 @@ const BD=[
  {id:'diamond',i:'◆',t:'Manos de diamante',d:'Aguanta el crash sin vender',ok:()=>!!S.g.dm},
  {id:'chute',i:'SL',t:'Paracaídas',d:'Que un stop-loss te saque a tiempo',ok:()=>S.tr.some(t=>t.auto==='SL')},
  {id:'patient',i:'LIM',t:'Paciencia',d:'Que se ejecute una orden límite',ok:()=>S.tr.some(t=>t.auto==='LIM')},
- {id:'beat',i:'>',t:'Por encima del índice',d:'Supera al índice tras 30 días o más',ok:()=>S.day>=30&&equity()/CAP*100>S.bm[S.bm.length-1]},
+ {id:'beat',i:'>',t:'Por encima del índice',d:'Supera al índice tras 30 días o más',ok:()=>!S.real&&S.day>=30&&equity()/CAP*100>S.bm[S.bm.length-1]},
  {id:'brain',i:'3/3',t:'Cerebrito',d:'Responde un quiz perfecto',ok:()=>!!S.g.qp},
  {id:'grad',i:'NY',t:'Graduado de Wall Street',d:'Completa los 7 niveles',ok:()=>!!S.g.fin}];
 const RK=[[0,'Novato'],[150,'Aprendiz'],[400,'Operador'],[800,'Analista'],[1300,'Gestor de portafolios'],[2000,'Leyenda de Wall Street']];
@@ -951,7 +993,7 @@ function addXP(n){S.g.xp+=n;const b=$('xpb');if(b&&!$('sim').hidden){const r=b.g
 function rXP(){const xp=S.g.xp,i=rank(xp),a=RK[i][0],b=RK[i+1]?RK[i+1][0]:a+1000;$('xpl').textContent=i+1;$('xpr').textContent=RK[i][1];$('xpt').textContent=`${xp} XP${RK[i+1]?` · ${b-xp} para ${RK[i+1][1]}`:''}`;$('xpi').style.transform=`scaleX(${Math.min(1,(xp-a)/(b-a))})`}
 
 function chk(){
-  if(!S||S.real)return;
+  if(!S)return;
   BD.forEach(b=>{if(!S.g.bd.includes(b.id)&&b.ok()){S.g.bd.push(b.id);addXP(30);toast(`Insignia nueva: ${b.t}. ${b.d}.`)}});
   if(S.g.fin||(S.g.ph!=='play'&&S.g.ph!=='ready'))return;
   const L=LV[S.g.L],x=gx();let ch=false;
@@ -962,12 +1004,12 @@ function chk(){
 }
 function rMis(){
   const el=$('mis');
-  if(S.real){const m=mkt(),live=WSst==='on';el.classList.remove('ready');el.innerHTML=`<div class="big">NY</div><div><h2>${m.open?'Bolsa de Nueva York abierta':'Bolsa de Nueva York cerrada'}</h2><p class="k">Bolsa real · precios de Finnhub · ${m.half?'hoy cierra temprano, a las 13:00 ET · ':''}horario de 9:30 a 16:00, hora de Nueva York</p><div class="clock" id="rclk">${rClock(m,1)}</div><ul class="obs stt" style="margin-top:10px"><li class="${KEY?'ok':''}"><span class="ck">${KEY?ck:''}</span><span>${KEY?'Clave de Finnhub conectada: puedes operar':'Para comprar y vender falta tu clave de Finnhub (⚙)'}</span></li><li class="${m.open&&live?'ok':''}"><span class="ck">${m.open&&live?ck:''}</span><span>${m.open?(live?'Precios en vivo, operación por operación':'Conectando con la transmisión en vivo…'):'Precios congelados en el último cierre'}</span></li><li class="${TVST==='ok'?'ok':TVST==='err'?'fail':''}"><span class="ck">${TVST==='ok'?ck:''}</span><span>${TVST==='ok'?'Precios y noticias en vivo de TradingView en pantalla':TVST==='err'?'TradingView no cargó aquí (ver el aviso)':'Cargando TradingView…'}</span></li><li class="${S.rn.length?'ok':''}"><span class="ck">${S.rn.length?ck:''}</span><span>Noticias de Finnhub: ${S.rn.length} recibidas, se revisan cada minuto</span></li></ul></div><div class="side">${KEY?'':`<button class="btn pri" onclick="$('rk').hidden=false">Conectar la clave</button>`}<button class="btn" onclick="setSrc('sim')">Ir al modo Práctica</button></div>`;return}
-  if(S.g.fin){el.innerHTML=`<div class="big">7/7</div><div><h2>Campaña completada: modo libre</h2><p class="k">Ya tienes todo desbloqueado: órdenes avanzadas, herramientas profesionales de la Academia y datos reales en ⚙. Sigue jugando o empieza de cero para mejorar tus estrellas.</p><div class="stars">${starStr(S.g.stars.reduce((a,b)=>a+(b||0),0),21)}</div></div><div class="side"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn" onclick="openBadges()">Ver tus insignias</button></div>`;return}
+  if(S.real&&S.g.fin){const m=mkt(),live=WSst==='on';el.classList.remove('ready');el.innerHTML=`<div class="big">NY</div><div><h2>${m.open?'Bolsa de Nueva York abierta':'Bolsa de Nueva York cerrada'}</h2><p class="k">Bolsa real · precios de Finnhub · ${m.half?'hoy cierra temprano, a las 13:00 ET · ':''}horario de 9:30 a 16:00, hora de Nueva York</p><div class="clock" id="rclk">${rClock(m,1)}</div><ul class="obs stt" style="margin-top:10px"><li class="${KEY?'ok':''}"><span class="ck">${KEY?ck:''}</span><span>${KEY?'Clave de Finnhub conectada: puedes operar':'Para comprar y vender falta tu clave de Finnhub (⚙)'}</span></li><li class="${m.open&&live?'ok':''}"><span class="ck">${m.open&&live?ck:''}</span><span>${m.open?(live?'Precios en vivo, operación por operación':'Conectando con la transmisión en vivo…'):'Precios congelados en el último cierre'}</span></li><li class="${TVST==='ok'?'ok':TVST==='err'?'fail':''}"><span class="ck">${TVST==='ok'?ck:''}</span><span>${TVST==='ok'?'Precios y noticias en vivo de TradingView en pantalla':TVST==='err'?'TradingView no cargó aquí (ver el aviso)':'Cargando TradingView…'}</span></li><li class="${S.rn.length?'ok':''}"><span class="ck">${S.rn.length?ck:''}</span><span>Noticias de Finnhub: ${S.rn.length} recibidas, se revisan cada minuto</span></li></ul></div><div class="side">${KEY?'':`<button class="btn pri" onclick="$('rk').hidden=false">Conectar la clave</button>`}<button class="btn" onclick="openMap()">Repasar las lecciones</button></div>`;return}
+  if(S.g.fin){el.innerHTML=`<div class="big">7/7</div><div><h2>Campaña completada</h2><p class="k">Ya tienes todo desbloqueado: órdenes avanzadas y herramientas profesionales de la Academia.</p><div class="stars">${starStr(S.g.stars.reduce((a,b)=>a+(b||0),0),21)}</div></div><div class="side"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn" onclick="openBadges()">Ver tus insignias</button></div>`;return}
   const L=LV[S.g.L],x=gx(),n=L.ob.length,d=L.ob.filter((_,i)=>S.g.ob[i]).length,rd=S.g.ph==='ready',bo=S.g.bo;
   el.classList.toggle('ready',rd);
   el.innerHTML=`<div class="big">${String(S.g.L+1).padStart(2,'0')}</div><div><h2>${L.t}</h2><p class="k">${L.k} · Misión del nivel ${S.g.L+1} de 7</p><ul class="obs">${L.ob.map((o,i)=>`<li class="${S.g.ob[i]?'ok':''}"><span class="ck">${ck}</span><span>${o.t}${!S.g.ob[i]&&o.pr&&S.g.ph==='play'?`<em>${o.pr(x)}</em>`:''}</span></li>`).join('')}<li class="bonus ${bo===true?'ok':bo===false?'fail':''}"><span class="ck">${bo===true?ck:''}</span><span><b style="color:var(--acc)">Reto extra:</b> ${L.bo.t}${bo===false?' <em>perdido</em>':''}${bo==null&&L.bo.pr&&S.g.ph!=='brief'?`<em>tú ${pc(x.myR*100)} · índice ${pc(x.ixR*100)}</em>`:''}</span></li></ul><div class="prog"><i style="transform:scaleX(${d/n})"></i></div></div>
-  <div class="side">${rd?`<button class="btn pri pulse" onclick="openQuiz()">Hacer el quiz del nivel</button>`:''}${S.g.ph==='brief'?`<button class="btn pri pulse" onclick="openBrief()">Empezar el nivel ${S.g.L+1}</button>`:''}<button class="btn ex" onclick="openBrief(true)">Repasar la lección</button><button class="btn ex" onclick="tourStart()">Ver el tutorial</button><button class="btn ex" onclick="openMap()">Ver el mapa</button></div><button class="btn ghost s tog" onclick="$('mis').classList.toggle('min')" aria-label="Mostrar u ocultar la misión">▾</button>`;
+  <div class="side">${rd?`<button class="btn pri pulse" onclick="openQuiz()">Hacer el quiz del nivel</button>`:''}${S.g.ph==='brief'?`<button class="btn pri pulse" onclick="openBrief()">Empezar el nivel ${S.g.L+1}</button>`:''}<button class="btn ex" onclick="openBrief(true)">Repasar la lección</button>${S.real?'':`<button class="btn ex" onclick="tourStart()">Ver la guía</button>`}<button class="btn ex" onclick="openMap()">Ver el mapa</button></div><button class="btn ghost s tog" onclick="$('mis').classList.toggle('min')" aria-label="Mostrar u ocultar la misión">▾</button>`;
 }
 const starStr=(n,t=3)=>`<span>${'★'.repeat(n)}</span><span class="off">${'★'.repeat(Math.max(0,t-n))}</span>`;
 
@@ -983,7 +1025,7 @@ function drawBrief(){
     :`<div class="slide"><div class="kv">${s.kv}</div><h2 id="gmt">${s.h}</h2><p>${s.p}</p>${s.f?`<p class="fact" style="margin-top:14px">${s.f}</p>`:''}</div>`;
   openG(`<div class="gh"><span class="lvnum">${String(BL+1).padStart(2,'0')}</span><b>${L.t}</b><span class="sp"></span><span class="dots2">${Array.from({length:n+1},(_,i)=>`<i class="${i<=BS?'on':''}"></i>`).join('')}</span>${BR?`<button class="x" onclick="closeG()" aria-label="Cerrar la lección">✕</button>`:''}</div><div class="gb">${BR&&last?body.replace('Tu misión','Misión del nivel'):body}</div><div class="gf">${BS?`<button class="btn" onclick="BS--;drawBrief()">Atrás</button>`:'<span></span>'}${last?(BR?`<button class="btn pri" onclick="closeG()">Volver al juego</button>`:`<button class="btn pri" onclick="startLevel()">Empezar la misión</button>`):`<button class="btn pri" onclick="BS++;drawBrief()">Siguiente</button>`}</div>`,'Lección del nivel');
 }
-function startLevel(){S.g.ph='play';S.g.t0=S.day;S.g.ob={};S.g.bo=null;S.g.seen={};if(S.g.L===0&&S.g.tour<0&&!S.g.tourDone)S.g.tour=0;save();closeG();if(S.g.L>0)toast(`Nivel ${S.g.L+1} en marcha. Pulsa ▶ cuando estés listo.`)}
+function startLevel(){S.g.ph='play';S.g.t0=S.day;S.g.ts=Date.now();S.g.ob={};S.g.bo=null;S.g.seen={};if(S.g.L===0&&S.g.tour<0&&!S.g.tourDone)S.g.tour=0;save();closeG();if(S.g.L>0)toast(S.real?`Nivel ${S.g.L+1} en marcha en la Bolsa real.`:`Nivel ${S.g.L+1} en marcha. Pulsa ▶ cuando estés listo.`)}
 let QS=null;
 function openQuiz(){const L=LV[S.g.L];QS={i:0,sc:0,qs:L.q.map(q=>{const o=q[1].map((t,i)=>[t,i]).sort(()=>Math.random()-.5);return{q:q[0],o,a:q[2],w:q[3]}})};drawQuiz()}
 function drawQuiz(ans){
@@ -996,8 +1038,9 @@ function finishLevel(sc){
   const L=S.g.L,bo=S.g.bo===true,st=1+(bo?1:0)+(sc===3?1:0),xp=100+25*sc+(bo?50:0);
   S.g.stars[L]=Math.max(S.g.stars[L]||0,st);if(sc===3)S.g.qp=1;addXP(xp);
   const last=L===LV.length-1;if(last){S.g.fin=true;S.g.pro=true}else{S.g.L++;S.g.ph='brief';S.g.ob={};S.g.bo=null}
+  const grad=L===UNLOCK-1&&!S.real,gv=equity();if(grad)toReal(false);
   save();chk();rMis();
-  openG(`<div class="gb win"><p class="eyebrow">Nivel ${L+1} completado</p><h2 id="gmt" style="font-size:clamp(26px,4vw,38px)">${LV[L].t}</h2><div class="bigstars">${[0,1,2].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<st?'var(--gold)':'none'}" stroke="${i<st?'var(--gold)':'var(--line-2)'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div><p class="mut">${st} de 3 estrellas · misión ✓ · reto extra ${bo?'✓':'✗'} · quiz ${sc}/3</p><div class="kv" id="xpc">+0</div><p class="mut">XP ganada en este nivel</p>${last?`<p class="fact" style="text-align:left">Terminaste la campaña. Desbloqueaste el modo libre: órdenes avanzadas, análisis con datos históricos reales, el informe en Excel y datos de mercado en vivo (⚙).</p>`:`<p class="fact" style="text-align:left">Siguiente: <b>${LV[L+1].t}</b>. ${LV[L+1].sum}</p>`}</div><div class="gf"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn pri" onclick="${last?'closeG()':'openBrief()'}">${last?'Seguir en modo libre':`Empezar el nivel ${L+2}`}</button></div>`,'Nivel completado');
+  openG(`<div class="gb win"><p class="eyebrow">Nivel ${L+1} completado</p><h2 id="gmt" style="font-size:clamp(26px,4vw,38px)">${LV[L].t}</h2><div class="bigstars">${[0,1,2].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="${i<st?'var(--gold)':'none'}" stroke="${i<st?'var(--gold)':'var(--line-2)'}" stroke-width="1.4" stroke-linejoin="round"/></svg>`).join('')}</div><p class="mut">${st} de 3 estrellas · misión ✓ · reto extra ${bo?'✓':'✗'} · quiz ${sc}/3</p><div class="kv" id="xpc">+0</div><p class="mut">XP ganada en este nivel</p>${last?`<p class="fact" style="text-align:left">Terminaste la campaña. Desbloqueaste las herramientas profesionales de la Academia: análisis con datos históricos reales y el informe en Excel.</p>`:grad?`<p class="fact" style="text-align:left"><b>Desbloqueaste la Bolsa real.</b> El mercado simulado se cierra: tus acciones de práctica se vendieron a su último precio y tus ${usd(gv)} pasan a la Bolsa real. Ahí juegas los niveles 6 y 7, con precios de verdad.</p>`:`<p class="fact" style="text-align:left">Siguiente: <b>${LV[L+1].t}</b>. ${LV[L+1].sum}</p>`}</div><div class="gf"><button class="btn" onclick="openMap()">Ver el mapa</button><button class="btn pri" onclick="${last?'closeG()':'openBrief()'}">${last?'Seguir en modo libre':`Empezar el nivel ${L+2}`}</button></div>`,'Nivel completado');
   const svgs=$('gmb').querySelectorAll('.bigstars svg');svgs.forEach((s,i)=>setTimeout(()=>s.classList.add('in'),RM?0:250+i*220));
   countUp($('xpc'),xp);confetti();
 }
@@ -1041,25 +1084,26 @@ function tourPos(){
   if(S.g.tour<0)return;const st=TOUR[S.g.tour];if(!st)return;const el=tEl(st.sel),sp=$('spot'),tc=$('tcard');
   const r=el?el.getBoundingClientRect():{left:innerWidth/2,right:innerWidth/2,top:innerHeight-40,bottom:innerHeight-40,width:0,height:0},p=6;sp.hidden=!el;tc.hidden=false;
   if(el)Object.assign(sp.style,{left:r.left-p+'px',top:r.top-p+'px',width:r.width+p*2+'px',height:r.height+p*2+'px'});
-  tc.innerHTML=`<div class="row"><small>Tutorial · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Saltar el tutorial</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>${!el&&st.go?`<button class="btn pri" onclick="tourGo()">Llévame ahí</button>`:''}`}`;
+  tc.innerHTML=`<div class="row"><small>Guía · paso ${S.g.tour+1} de ${TOUR.length}</small><button class="link" onclick="tourEnd()">Cerrar la guía</button></div><p>${st.t}</p>${st.next?`<button class="btn pri" onclick="tourNext()">${st.end?'Entendido':'Siguiente'}</button>`:`<span class="wait">→ ${st.wt}</span>${!el&&st.go?`<button class="btn pri" onclick="tourGo()">Llévame ahí</button>`:''}`}`;
   const w=tc.offsetWidth,h=tc.offsetHeight,vw=innerWidth,vh=innerHeight;let x,y;
   if(st.side&&vw>900){x=r.right+16;y=r.top;if(x+w>vw-12)x=r.left-w-16}else{x=r.left;y=r.bottom+14;if(y+h>vh-12)y=r.top-h-14}
   x=Math.max(12,Math.min(x,vw-w-12));y=Math.max(12,Math.min(y,vh-h-12));
   tc.style.left=x+'px';tc.style.top=y+'px';
 }
 const tEl=sel=>sel.split(',').map(x=>document.querySelector(x.trim())).find(e=>e&&e.getClientRects().length);
-function tourStart(){if(S.real)setSrc('sim');S.g.tour=0;S.g.tourDone=0;TI=-1;mkv='grid';save();if($('sim').hidden)go('sim');if(!$('gm').hidden&&S.g.ph!=='brief')closeG();tab('pf');scrollTo(0,0);if(S.g.ph==='brief'){openBrief();toast('El tutorial empieza al terminar la lección del nivel.')}}
+function tourStart(){if(S.real)return;S.g.tour=0;S.g.tourDone=0;TI=-1;mkv='grid';save();if($('sim').hidden)go('sim');if(!$('gm').hidden&&S.g.ph!=='brief')closeG();tab('pf');scrollTo(0,0);if(S.g.ph==='brief'){openBrief();toast('La guía empieza al terminar la lección del nivel.')}}
 function tourGo(){const st=TOUR[S.g.tour];if(st&&st.go){st.go();TI=-1;tourTick()}}
 function tourNext(){const st=TOUR[S.g.tour];if(st&&st.end)return tourEnd();S.g.tour++;save();tourTick()}
-function tourEnd(silent){if(S){S.g.tour=-1;S.g.tourDone=1;save()}tourHide();TI=-1;if(!silent&&S&&S.g.L===0)toast('Tutorial terminado. Tu misión sigue arriba.')}
+function tourEnd(silent){if(S){S.g.tour=-1;S.g.tourDone=1;save()}tourHide();TI=-1;if(!silent&&S&&S.g.L===0)toast('Guía terminada. Tu misión sigue arriba.')}
 function tourHide(){$('spot').hidden=true;$('tcard').hidden=true}
 addEventListener('scroll',()=>{if(S&&S.g.tour>=0)tourPos()},{passive:true});
 
 /* ---------- Portada: mapa de niveles y gráfico vivo ---------- */
 function rHome(){
   const st=S.g,started=S.day>0||S.tr.length||st.L>0||st.ph!=='brief';
-  const lbl=st.fin?'Seguir en modo libre':started?`Continuar el nivel ${st.L+1}`:'Empezar el nivel 1';$('cta').textContent=lbl;$('cta2').textContent=lbl;$('cta3').textContent=lbl;
-  $('lmap').innerHTML=LV.map((l,i)=>{const s=lvState(i);return`<button class="lcard ${s==='lock'?'lock':s==='cur'?'cur':''}" onclick="lvClick(${i})"><span class="n">${String(i+1).padStart(2,'0')}</span>${lviz(i)}<h3>${l.t}</h3><p>${l.sum}</p><span class="st">${s==='done'?`<span class="stars">${starStr(st.stars[i]||0)}</span><span>Repasar la lección</span>`:s==='cur'?'<span class="tag nyse">Te toca</span><span>3 preguntas</span>':'<span>Bloqueado</span><span>Termina el anterior</span>'}</span></button>`}).join('')+`<button class="lcard fin" onclick="openReal()"><span class="n">NY</span><h3>Bolsa real</h3><p>Precios y noticias reales de Nueva York, en vivo mientras la NYSE está abierta. Disponible siempre, con tu clave de Finnhub.</p><span class="st"><span id="lmk">${mkt().open?'NYSE abierta':'NYSE cerrada'}</span><span>${st.bd.length}/${BD.length} insignias</span></span></button>`;
+  const lbl=st.fin?'Ir a la Bolsa real':started?`Continuar el nivel ${st.L+1}`:'Empezar el nivel 1';$('cta').textContent=lbl;$('cta2').textContent=lbl;$('cta3').textContent=lbl;
+  $('cta-real').hidden=S.real;
+  $('lmap').innerHTML=LV.map((l,i)=>{const s=lvState(i);return`<button class="lcard ${s==='lock'?'lock':s==='cur'?'cur':''}" onclick="lvClick(${i})"><span class="n">${String(i+1).padStart(2,'0')}</span>${lviz(i)}<h3>${l.t}</h3><p>${l.sum}</p><span class="st">${s==='done'?`<span class="stars">${starStr(st.stars[i]||0)}</span><span>Repasar la lección</span>`:s==='cur'?'<span class="tag nyse">Te toca</span><span>3 preguntas</span>':'<span>Bloqueado</span><span>Termina el anterior</span>'}</span></button>`}).join('')+`<button class="lcard fin" onclick="openReal()"><span class="n">NY</span><h3>Bolsa real</h3><p>${S.real?'Precios y noticias reales de Nueva York, en vivo mientras la NYSE está abierta.':`Se desbloquea al terminar el nivel ${UNLOCK}. Ahí juegas los niveles 6 y 7 con precios de verdad.`}</p><span class="st"><span id="lmk">${mkt().open?'NYSE abierta':'NYSE cerrada'}</span><span>${st.bd.length}/${BD.length} insignias</span></span></button>`;
 }
 function lvClick(i){const s=lvState(i);if(s==='lock')return toast('Termina el nivel anterior para abrir este.');if(s==='done'){go('sim');openBrief(true,i);return}play()}
 let HC={a:[],on:!RM,t:null,p:62,d:1};
@@ -1170,7 +1214,7 @@ function rCalc(){
 }
 function rAP(){
   rCalc();if(!$('ai').value)$('ai').value=cur;if(!$('ce').value&&px(cur))$('ce').value=px(cur).toFixed(2);
-  const pro=S.g.pro||S.g.fin;$('pro').hidden=!pro;$('pro-lock').hidden=pro;
+  const pro=S.g.pro||S.g.fin;$('pro').hidden=!pro;$('pro-lock').hidden=pro;$('tour-card').hidden=S.real;
   const n=S.g.fin?LV.length:S.g.L+1;
   $('lsl').innerHTML=LV.slice(0,n).map((l,i)=>`<button class="lcard" style="min-height:0" onclick="openBrief(true,${i})"><span class="n" style="font-size:22px">${String(i+1).padStart(2,'0')}</span><h3 style="font-size:16px">${l.t}</h3><p>${l.k}</p></button>`).join('');
   $('bdl').innerHTML=bdgHTML();
@@ -1404,6 +1448,7 @@ function tv(){const k=cur;if(k===tvKey)return;tvKey=k;$('tv').innerHTML='';
 }
 function uiSrc(){
   $('m-sim').classList.toggle('on',!S.real);$('m-real').classList.toggle('on',S.real);$('pp').hidden=S.real;$('spd').hidden=S.real;
+  $('m-sim').parentElement.hidden=S.real;$('m-real').textContent=S.real?'Bolsa real':'Bolsa real 🔒';$('m-real').title=S.real?'':`Se desbloquea al terminar el nivel ${UNLOCK}`;
   if(S.real&&!KEY)$('rk').hidden=false;ALLC=null;stub();fillSf();
   $('key').placeholder=KEY?'API key guardada · pega otra para cambiarla':'API key de Finnhub';
   if(S.real&&!KEY)$('rs').textContent='Pega tu API key de Finnhub para recibir precios y noticias reales.';
@@ -1418,8 +1463,10 @@ function conn(){
 
 /* ---------- Arranque ---------- */
 (function(){
-  let r0=false;try{r0=localStorage.getItem('pf-src')==='real'}catch(e){}loadKeys();
-  uniLoad();S=load(r0);if(!S){fresh(r0);if(r0)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};if(S.g.tour>=3&&S.g.tour<=5)S.g.tour=2;uiSrc();
+  // Un solo saldo: si existe la partida de la Bolsa real, manda; la del simulado solo vive mientras dura el tutorial.
+  let r0=false,had=false;try{r0=!!localStorage.getItem(KR);had=r0||!!localStorage.getItem(K);if(r0)localStorage.removeItem(K);if(had&&localStorage.getItem('pf-start')===null)localStorage.setItem('pf-start',r0?'real':'tut')}catch(e){}loadKeys();
+  uniLoad();S=load(r0);if(!S){fresh(r0);if(r0)S.g.fin=S.g.pro=true}S.rn=S.rn||[];S.pc=S.pc||{};S.hm=S.hm||{};if(S.g.tour>=3&&S.g.tour<=5)S.g.tour=2;
+  if(!S.real&&(S.g.L>=UNLOCK||S.g.fin))toReal(false);uiSrc();
   $('dl').innerHTML=M.map(o=>`<option value="${o.s}">${o.n}</option>`).join('');
   ac('si',pick);ac('wi',addWl);ac('ai',x=>{$('ai').value=x;anl()});
   $('uf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const a=uniParse(await f.text());e.target.value='';if(!a.length)return toast('No encontré acciones en ese archivo. Necesita columnas symbol, name, sector y exchange.');setUni(a);toast(`${UNI.length} acciones importadas.`)};
@@ -1440,7 +1487,8 @@ function conn(){
   document.onvisibilitychange=run;
   onpagehide=save;
   heroSeed();heroDraw();rHome();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
-  if(location.hash==='#jugar')play();
+  if(location.hash==='#jugar'&&KEY&&started())play();
+  onb();
 })();
 thmUI();
 </script>
