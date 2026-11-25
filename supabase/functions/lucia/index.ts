@@ -4,7 +4,7 @@
 import Anthropic from "npm:@anthropic-ai/sdk";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const MODEL = "claude-opus-5-5"; // para gastar menos: "claude-haiku-5-5"
+const MODEL = "claude-haiku-5-5"; // barato y suficiente para un tutor; más capaz: "claude-opus-5-5"
 
 const SYSTEM = `Eres LucIA, la tutora de Portfolia, un juego educativo en español sobre la bolsa de Nueva York (NYSE) con dinero virtual.
 - Explica con palabras sencillas, para alguien que está empezando. Respuestas cortas: de 2 a 5 frases, sin tablas ni encabezados.
@@ -42,12 +42,10 @@ Deno.serve(async (req) => {
   if (!question) return json({ error: "Escribe una pregunta" }, 400);
 
   try {
-    const r = await anthropic.beta.messages.create({
+    const r = await anthropic.messages.create({
       model: MODEL,
       max_tokens: 4000,
       output_config: { effort: "low" },
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default", // si el modelo declina por seguridad, otro modelo intenta responder
       system: SYSTEM,
       messages: [{ role: "user", content: `<portafolio>${context}</portafolio>\n\n${question}` }],
     });
