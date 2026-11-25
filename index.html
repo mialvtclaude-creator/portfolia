@@ -1592,7 +1592,19 @@ function ans(i){if(!QZ)return;addm(QZ[1][i],'u');addm((i===QZ[2]?'Correcto. ':'N
 function mine(){const x=pfx();addm(x.n?`Tu patrimonio: ${usd(x.e)}. Efectivo ${fm(x.cash*100,0)} %. Posiciones: ${x.V.map(([q,v])=>`${q} ${fm(v/x.e*100,0)} %`).join(', ')}. Es una descripción educativa, no una recomendación.`:'Todavía no tienes posiciones. Compra alguna en el Mercado y la describo con tus números.');chips(DEF)}
 const ctxText=()=>{const x=pfx();return JSON.stringify({patrimonio:Math.round(x.e),efectivoPct:+(x.cash*100).toFixed(1),posiciones:x.V.map(([q,v])=>({s:q,pesoPct:+(v/x.e*100).toFixed(1)}))})};
 // con sesión, LucIA responde con IA desde la función de Supabase (la clave de Claude vive allá); sin sesión, el proxy propio de ⚙ si lo hay
-async function llm(t){const body=JSON.stringify({question:t,context:ctxText(),history:HIST.slice(-11,-1)});try{
+/* Datos en vivo para LucIA: precio y titulares de Finnhub de las empresas que nombras (o de tu portafolio si preguntas por él), hasta 3 */
+// palabras en mayúsculas que también son símbolos de bolsa pero casi siempre son español
+const TKSTOP=new Set('ES EL LA LO LOS LAS UN UNA DE DEL SI NO MI MIS TU SE AL IA YA HOY QUE CON POR MAS PERO SON HAY VA ME TE LE OK'.split(' ')),NMS=M.map(o=>[o.s,' '+norm(o.n)+' ']);
+async function liveFor(t){if(!KEY)return null;const n=' '+norm(t).replace(/[^a-z0-9&]+/g,' ')+' ',L=[];
+  for(const w of t.match(/\b[A-Z]{2,5}\b/g)||[])if(MS.has(w)&&!TKSTOP.has(w))L.push(w);
+  for(const[q,nm]of NMS)if(n.includes(nm))L.push(q);
+  if(/portafolio|cartera|mis acciones|mis posiciones/.test(n))L.push(...Object.keys(S.pos));
+  if(/mercado|bolsa|hoy|wall street|s&p/.test(n)&&!L.length)L.push('SPY');
+  const out=[],to=new Date().toISOString().slice(0,10),from=new Date(Date.now()-5*864e5).toISOString().slice(0,10);
+  for(const q of [...new Set(L)].slice(0,3)){try{const p=await fh(`/quote?symbol=${encodeURIComponent(q)}`),a=await fh(`/company-news?symbol=${encodeURIComponent(q)}&from=${from}&to=${to}`);
+    out.push({s:q,precio:p&&p.c,cambioDiaPct:p&&+(+p.dp||0).toFixed(2),noticias:(Array.isArray(a)?a:[]).slice(0,3).map(x=>({titular:String(x.headline||'').slice(0,160),fuente:String(x.source||'').slice(0,40),fecha:new Date(x.datetime*1000).toISOString().slice(0,10)}))})}catch(e){break}}
+  return out.length?{fecha:new Date().toISOString().slice(0,16).replace('T',' ')+' UTC',bolsaAbierta:mkt().open,empresas:out}:null}
+async function llm(t){const x=JSON.parse(ctxText()),v=await liveFor(t);if(v)x.mercado=v;const body=JSON.stringify({question:t,context:JSON.stringify(x),history:HIST.slice(-11,-1)});try{
   if(SB&&USER){const k=(await SB.auth.getSession()).data.session?.access_token;if(k){const r=await fetch(SB_URL+'/functions/v1/lucia',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+k},body}),j=await r.json();return j.reply||j.error||null}}
   const u=ks().px;if(!u)return null;const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body}),j=await r.json();return j.reply||null}catch(e){return null}}
 async function say(t){

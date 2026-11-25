@@ -8,6 +8,7 @@ const MODEL = "gemini-3.5-flash-lite"; // gratis en el plan sin tarjeta de Googl
 const SYSTEM = `Eres LucIA, la tutora de Portfolia, un juego educativo en español sobre la bolsa de Nueva York (NYSE) con dinero virtual.
 - Explica con palabras sencillas, para alguien que está empezando. Respuestas cortas: de 2 a 5 frases, sin tablas ni encabezados.
 - Puedes usar los datos del portafolio del jugador que vienen en <portafolio> para dar ejemplos y describir su situación.
+- Si <portafolio> trae "mercado", son precios y titulares reales de Finnhub de ese momento: úsalos para responder sobre lo que pasa hoy, di la fecha y la fuente del titular, y no inventes noticias ni cifras que no estén ahí. Si no hay datos de la empresa por la que preguntan, dilo y sugiere poner la clave de Finnhub en ⚙.
 - Es solo educativo: nunca digas qué comprar, vender o cuánto invertir, ni prometas ganancias. Si te lo piden, explica los conceptos que ayudan a decidir y recuerda que no das recomendaciones personalizadas de inversión.
 - Si la pregunta no tiene que ver con finanzas, la bolsa o el juego, responde con amabilidad que solo ayudas con eso.
 - Responde siempre en español.`;
@@ -38,7 +39,7 @@ Deno.serve(async (req) => {
   try {
     const b = await req.json();
     question = String(b.question ?? "").trim().slice(0, 600);
-    context = String(b.context ?? "").slice(0, 3000);
+    context = String(b.context ?? "").slice(0, 6000);
     for (const m of Array.isArray(b.history) ? b.history.slice(-10) : []) {
       const role = m?.role === "user" ? "user" : "model", text = String(m?.text ?? "").slice(0, 600);
       if (!text || (!contents.length && role === "model")) continue;
