@@ -1501,7 +1501,7 @@ function ac(id,fn,raw){
   el.onkeydown=e=>{if(e.key!=='Enter')return;const f=box.querySelector('button'),o=find(el.value)||(f&&G[f.dataset.s]);if(o){el.value='';close();fn(o.s)}else toast('No encontré esa empresa. Prueba con otro símbolo o nombre.')};
 }
 /* Carga diferida de librerías externas */
-const LIBS={xlsx:'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',tv:'https://s3.tradingview.com/tv.js',sb:'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js'},LP={};
+const LIBS={xlsx:'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',tv:'https://s3.tradingview.com/tv.js',sb:'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js'},LP={};
 const need=k=>LP[k]||(LP[k]=new Promise((ok,ko)=>{if(k==='xlsx'&&window.XLSX)return ok();if(k==='tv'&&window.TradingView)return ok();const s=document.createElement('script');s.src=LIBS[k];s.onload=ok;s.onerror=()=>{LP[k]=null;ko()};document.head.appendChild(s)}));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function xport(){
@@ -1701,11 +1701,15 @@ function setSrc(v){const r=v==='real';if(!!S.real===r)return;save();wsClose();S=
 /* ---------- Cuenta con Supabase (opcional): correo y contraseña o Google; el progreso se guarda en la nube ----------
    SB_URL y SB_KEY son la Project URL y la anon key de Supabase: son públicas por diseño, la seguridad la ponen las
    políticas RLS de la tabla "progreso" (ver supabase.sql). Vacías = sin cuenta, la app funciona igual que antes. */
-const SB_URL='',SB_KEY='';
+const SB_URL='https://wiozdymslywmqaoootku.supabase.co',SB_KEY='sb_publishable_RH4_xtF33XZq6f2-_Zbxrw_-oqv9A4E';
+let GOOGLE=false;
 const SYNC=[K,KR,'portfolia-practica-v1','pf-start','pf-keys'];
 let SB=null,USER=null,PULLED='',PT=0,AUM='in';
 const lsg=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
-function sbInit(){if(!SB_URL||!SB_KEY)return;need('sb').then(()=>{SB=supabase.createClient(SB_URL,SB_KEY);
+function sbInit(){if(!SB_URL||!SB_KEY)return;
+  // el botón de Google solo aparece si el proveedor está activado en Supabase
+  fetch(SB_URL+'/auth/v1/settings',{headers:{apikey:SB_KEY}}).then(r=>r.json()).then(j=>{GOOGLE=!!(j.external&&j.external.google)}).catch(()=>{});
+  need('sb').then(()=>{SB=supabase.createClient(SB_URL,SB_KEY);
   SB.auth.onAuthStateChange((ev,ses)=>{USER=ses?.user||null;authUI();if(ev==='PASSWORD_RECOVERY')authOpen('reset');else if(USER)cloudPull()});
   authUI()}).catch(()=>{})}
 function authUI(){document.querySelectorAll('.auth-b').forEach(b=>{b.hidden=!SB;b.textContent=USER?'Mi cuenta':'Entrar'});document.querySelectorAll('.auth-l').forEach(b=>b.hidden=!SB||!!USER)}
@@ -1715,8 +1719,8 @@ function authOpen(mode){if(!SB)return;AUM=mode||(USER?'me':'in');const b=$('auth
   if(AUM==='me')b.innerHTML=head('Tu cuenta')+`<p>Entraste como <b>${esc(USER.email||'')}</b>.</p><p class="note">Tu progreso, tu saldo, el tutorial y tu clave de Finnhub se guardan en la nube y los recuperas al entrar desde otro dispositivo.</p><button class="btn full" onclick="authOut()">Cerrar sesión</button>`;
   else if(AUM==='reset')b.innerHTML=head('Nueva contraseña')+`<label>Contraseña nueva<input id="au-p" type="password" autocomplete="new-password" minlength="8"></label><p class="err" id="au-e" role="alert"></p><button class="btn pri full" id="au-go" onclick="authReset()">Guardar contraseña</button>`;
   else{const up=AUM==='up';b.innerHTML=head(up?'Crea tu cuenta':'Entra a Portfolia')+`<p class="mut">Es opcional: con una cuenta tu progreso se guarda en la nube.</p>
-    <button class="btn full" onclick="authGoogle()"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.7V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>Continuar con Google</button>
-    <p class="mut" style="text-align:center">o con tu correo</p>
+    ${GOOGLE?'':'<!--'}<button class="btn full" onclick="authGoogle()"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.7V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>Continuar con Google</button>
+    <p class="mut" style="text-align:center">o con tu correo</p>${GOOGLE?'':'-->'}
     <label>Correo<input id="au-m" type="email" autocomplete="email" placeholder="tu@correo.com"></label>
     <label>Contraseña<input id="au-p" type="password" autocomplete="${up?'new-password':'current-password'}" minlength="8"></label>
     <p class="err" id="au-e" role="alert"></p>
