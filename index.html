@@ -1725,13 +1725,14 @@ function sbInit(){if(!SB_URL||!SB_KEY)return;
   // el botón de Google solo aparece si el proveedor está activado en Supabase
   fetch(SB_URL+'/auth/v1/settings',{headers:{apikey:SB_KEY}}).then(r=>r.json()).then(j=>{GOOGLE=!!(j.external&&j.external.google)}).catch(()=>{});
   need('sb').then(()=>{SB=supabase.createClient(SB_URL,SB_KEY);
-  SB.auth.onAuthStateChange((ev,ses)=>{USER=ses?.user||null;authUI();PERF=undefined;if(view==='sl'&&!$('sim').hidden){SLR=false;rSL()}if(ev==='PASSWORD_RECOVERY')authOpen('reset');else if(USER)cloudPull()});
+  SB.auth.onAuthStateChange((ev,ses)=>{USER=ses?.user||null;authUI();PERF=undefined;if(view==='sl'&&!$('sim').hidden){SLR=false;rSL()}if(ev==='PASSWORD_RECOVERY')authOpen('reset');else if(USER){cloudPull();ensurePerf().then(p=>{if(p===null&&$('auth').hidden)authOpen('user')})}});
   authUI()}).catch(()=>{})}
-function authUI(){document.querySelectorAll('.auth-b').forEach(b=>{b.hidden=!SB;b.textContent=USER?'Mi cuenta':'Entrar'});document.querySelectorAll('.auth-l').forEach(b=>b.hidden=!SB||!!USER)}
+function authUI(){document.querySelectorAll('.auth-b').forEach(b=>{b.hidden=!SB;b.textContent=USER?'Mi perfil':'Entrar'});document.querySelectorAll('.auth-l').forEach(b=>b.hidden=!SB||!!USER)}
 function aerr(e){const m=(e&&e.message)||'';if(/invalid login/i.test(m))return'Correo o contraseña incorrectos.';if(/already registered/i.test(m))return'Ese correo ya tiene cuenta. Entra con él.';if(/not confirmed/i.test(m))return'Primero confirma tu correo con el enlace que te enviamos.';if(/rate limit|too many/i.test(m))return'Demasiados intentos. Espera un minuto y vuelve a probar.';if(/fetch|network/i.test(m))return NETERR;return'No se pudo completar. '+m}
-function authOpen(mode){if(!SB)return;AUM=mode||(USER?'me':'in');const b=$('auth-x');
+function authOpen(mode){if(!SB)return;if(USER&&!mode){ensurePerf().then(p=>p?openProfile(USER.id):authOpen('user'));return}AUM=mode||'in';const b=$('auth-x');
   const head=t=>`<div class="row"><h3 id="au-h">${t}</h3><button class="x" onclick="$('auth').hidden=true" aria-label="Cerrar">✕</button></div>`;
-  if(AUM==='me')b.innerHTML=head('Tu cuenta')+`<p>Entraste como <b>${esc(USER.email||'')}</b>.</p><p class="note">Tu progreso, tu saldo, el tutorial y tu clave de Finnhub se guardan en la nube y los recuperas al entrar desde otro dispositivo.</p><button class="btn full" onclick="authOut()">Cerrar sesión</button>`;
+  if(AUM==='user')b.innerHTML=`<div class="row"><h3 id="au-h">Elige tu nombre de usuario</h3></div><p class="mut">Así te verán en el ranking, en tus salas y tus amigos para agregarte. De 3 a 20 letras minúsculas, números o guion bajo.</p><label>Nombre de usuario<input id="au-u" maxlength="20" autocomplete="username" placeholder="ana_inversora" oninput="this.value=this.value.toLowerCase()"></label><p class="err" id="au-e" role="alert"></p><button class="btn pri full" id="au-go" onclick="authUser()">Guardar y continuar</button>`;
+  else if(AUM==='me')b.innerHTML=head('Tu cuenta')+`<p>Entraste como <b>${esc(USER.email||'')}</b>.</p><p class="note">Tu progreso, tu saldo, el tutorial y tu clave de Finnhub se guardan en la nube y los recuperas al entrar desde otro dispositivo.</p><button class="btn full" onclick="authOut()">Cerrar sesión</button>`;
   else if(AUM==='reset')b.innerHTML=head('Nueva contraseña')+`<label>Contraseña nueva<input id="au-p" type="password" autocomplete="new-password" minlength="8"></label><p class="err" id="au-e" role="alert"></p><button class="btn pri full" id="au-go" onclick="authReset()">Guardar contraseña</button>`;
   else{const up=AUM==='up';b.innerHTML=head(up?'Crea tu cuenta':'Entra a Portfolia')+`<p class="mut">Es opcional: con una cuenta tu progreso se guarda en la nube.</p>
     ${GOOGLE?'':'<!--'}<button class="btn full" onclick="authGoogle()"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.7V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>Continuar con Google</button>
@@ -1742,7 +1743,11 @@ function authOpen(mode){if(!SB)return;AUM=mode||(USER?'me':'in');const b=$('auth
     <button class="btn pri full" id="au-go" onclick="authSubmit()">${up?'Crear cuenta':'Entrar'}</button>
     <div class="row">${up?'<span></span>':`<button class="link" onclick="authForgot()">Olvidé mi contraseña</button>`}<button class="link" onclick="authOpen('${up?'in':'up'}')">${up?'Ya tengo cuenta':'Crear una cuenta'}</button></div>`}
   $('auth').hidden=false;setTimeout(()=>{const i=$('auth').querySelector('input');i&&i.focus()},60);
-  $('auth').querySelectorAll('input').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')(AUM==='reset'?authReset:authSubmit)()})}
+  $('auth').querySelectorAll('input').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter')(AUM==='reset'?authReset:AUM==='user'?authUser:authSubmit)()})}
+async function authUser(){const u=$('au-u').value.trim().toLowerCase(),e=$('au-e');if(!/^[a-z0-9_]{3,20}$/.test(u)){e.textContent='Usa de 3 a 20 letras minúsculas, números o guion bajo, sin espacios.';return}
+  authBusy(true,'Guardando…');const r=await SB.from('perfiles').insert({user_id:USER.id,usuario:u});authBusy(false,'Guardar y continuar');
+  if(r.error){e.textContent=r.error.code==='23505'?'Ese usuario ya existe. Prueba con otro.':slErr(r.error);return}
+  PERF={usuario:u};$('auth').hidden=true;toast(`Listo, eres @${u}.`);statsPush();if(view==='sl'){SLR=false;rSL()}}
 const back=()=>location.href.split('#')[0];
 function authBusy(on,txt){const g=$('au-go');if(g){g.disabled=on;if(txt)g.textContent=txt}}
 async function authGoogle(){const{error}=await SB.auth.signInWithOAuth({provider:'google',options:{redirectTo:back()}});if(error)$('au-e').textContent=aerr(error)}
@@ -1854,13 +1859,14 @@ async function cmSearch(){const q=$('cm-q').value.trim().replace(/^@/,'').toLowe
   R.innerHTML=r.error?`<p class="err">${esc(slErr(r.error))}</p>`:r.data.map(x=>`<button class="pki" onclick="openProfile('${x.user_id}')">${av(null,x.usuario,32)}<span class="pkn"><b>@${esc(x.usuario)}</b><small>Ver perfil</small></span><span class="r">→</span></button>`).join('')||`<p class="emp">No hay jugadores que empiecen con @${esc(q)}.</p>`}
 async function openProfile(uid){if(!SB||!uid)return;openG('<div class="gb"><p class="mut">Cargando el perfil…</p></div>','Perfil');
   const [p,s]=await Promise.all([SB.from('perfiles').select('usuario').eq('user_id',uid).maybeSingle(),SB.from('estadisticas').select('*').eq('user_id',uid).maybeSingle()]);
-  const u=p.data?.usuario,me=!!USER&&USER.id===uid,x=s.data;
+  const u=p.data?.usuario,me=!!USER&&USER.id===uid;let x=s.data;
+  if(me&&!x&&u){await statsPush();x=(await SB.from('estadisticas').select('*').eq('user_id',uid).maybeSingle()).data}
   const head=`<div class="gh"><b id="gmt">${u?'@'+esc(u):'Perfil'}</b><span class="sp"></span><button class="x" onclick="closeG()" aria-label="Cerrar">✕</button></div>`;
   if(!u){openG(head+'<div class="gb"><p class="emp">No encontramos este jugador.</p></div>','Perfil');return}
   if(!x){openG(head+`<div class="gb"><div class="pf-h">${av(null,u,72)}<div><h2>@${esc(u)}</h2><p class="mut">${me?'Juega un poco con tu sesión iniciada y aquí aparecerán tu nivel, tus insignias y tu portafolio.':'Este perfil es privado o todavía no tiene estadísticas.'}</p></div></div></div>`,'Perfil');return}
   const k=Math.max(0,(x.nivel||1)-1),a=RK[k][0],b=RK[k+1]?RK[k+1][0]:a+1000,pr=Math.min(1,Math.max(0,(x.xp-a)/(b-a)));
   const has=new Set(x.insignias||[]),cart=(x.cartera||[]).filter(c=>c&&c.s&&c.q>0),inv=cart.reduce((t,c)=>t+c.q*c.p,0),tot=inv+(+x.efectivo||0);
-  const own=me?`<div class="bar" style="margin:12px 0 0"><label class="btn">Cambiar foto<input type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="avUpload(this.files[0])"></label><label style="display:flex;gap:8px;align-items:center;color:var(--mut);cursor:pointer"><input type="checkbox" ${x.publico?'checked':''} onchange="pfPublic(this.checked)"> Perfil público y en el ranking</label></div>`
+  const own=me?`<p class="mut" style="margin-top:8px">Cuenta: ${esc(USER.email||'')} · tu progreso se guarda en la nube</p><div class="bar" style="margin:12px 0 0"><button class="btn ghost" onclick="closeG();authOut()">Cerrar sesión</button><label class="btn">Cambiar foto<input type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="avUpload(this.files[0])"></label><label style="display:flex;gap:8px;align-items:center;color:var(--mut);cursor:pointer"><input type="checkbox" ${x.publico?'checked':''} onchange="pfPublic(this.checked)"> Perfil público y en el ranking</label></div>`
     :USER?`<div class="bar" style="margin:12px 0 0"><button class="btn" onclick="pfFriend('${esc(u)}')">${SLF.has(uid)?'Ya son amigos':'Agregar como amigo'}</button></div>`:'';
   openG(head+`<div class="gb">
     <div class="pf-h">${av(x.avatar_url,u,72)}<div style="flex:1;min-width:0"><h2>@${esc(u)}</h2><span class="pf-lv">Nivel ${x.nivel} · ${esc(x.rango||RK[k][1])} · ${x.xp} XP</span><div class="pf-xp" aria-hidden="true"><i style="width:${Math.round(pr*100)}%"></i></div></div></div>${own}
