@@ -366,6 +366,13 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .pki:hover,.pki:focus-visible{border-color:var(--gold);background:var(--soft)}
 .pkn b{display:block;font-size:15px}.pkn small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pkq{font-size:16px;min-height:48px}
+.av{flex:none;width:var(--z);height:var(--z);border-radius:50%;object-fit:cover;display:inline-grid;place-items:center;background:var(--soft);color:var(--acc);font:600 calc(var(--z)*.42)/1 var(--display);border:1px solid var(--line-2)}
+.gbox .gb>*{min-width:0}
+.pf-h{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.pf-h h2{font-size:26px;margin:0}.pf-lv{display:inline-flex;gap:6px;align-items:center;font:500 12.5px var(--mono);color:var(--acc)}
+.pf-xp{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-top:6px;max-width:260px}.pf-xp i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--violet-2))}
+.pf-st{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.pf-st div{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:10px}.pf-st span{display:block;font-size:12px;color:var(--mut)}.pf-st b{font:500 17px var(--mono)}
+@media (max-width:560px){.pf-st{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cm-row{display:grid;grid-template-columns:34px auto minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:10px 4px;min-height:56px;cursor:pointer;color:var(--ink)}.cm-row:hover{background:var(--soft)}.cm-row .n{font:600 18px var(--display);color:var(--acc);text-align:center}.cm-row small{display:block}
 .sl-f{display:grid;gap:8px;margin:16px 0}.sl-list{display:grid;gap:6px;margin-bottom:6px}.pki.on{border-color:var(--gold);background:var(--soft)}tr.me td{background:var(--soft)}
 
 /* ===== Portada animada (inspirada en webs de estudio: telón de carga, cinta, lista con vista previa, pie gigante) ===== */
@@ -588,7 +595,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <div class="tradingview-widget-container tvbox tvtape" id="tvtape" hidden></div>
 <button class="headline" id="hl" onclick="tab('nw')" hidden></button>
 
-<nav class="tabs" id="gtabs" aria-label="Secciones del juego"><button id="t-pf" class="on" onclick="tab('pf')">Portafolio</button><button id="t-mk" onclick="goMk()">Mercado</button><button id="t-nw" onclick="tab('nw')">Noticias<span class="cnt" id="nwc" hidden></span></button><button id="t-hs" onclick="tab('hs')">Historial</button><button id="t-ap" onclick="tab('ap')">Academia</button><button id="t-sl" onclick="tab('sl')">Salas</button></nav>
+<nav class="tabs" id="gtabs" aria-label="Secciones del juego"><button id="t-pf" class="on" onclick="tab('pf')">Portafolio</button><button id="t-mk" onclick="goMk()">Mercado</button><button id="t-nw" onclick="tab('nw')">Noticias<span class="cnt" id="nwc" hidden></span></button><button id="t-hs" onclick="tab('hs')">Historial</button><button id="t-ap" onclick="tab('ap')">Academia</button><button id="t-sl" onclick="tab('sl')">Salas</button><button id="t-cm" onclick="tab('cm')">Comunidad</button></nav>
 
 <div id="v-pf"><div class="cols"><div>
 <div class="grid m" id="mx"></div>
@@ -621,6 +628,8 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 
 <div id="v-hs" hidden><div class="card"><h3>Historial de operaciones</h3><div class="sc"><table><thead><tr><th>Cuándo</th><th>Tipo</th><th>Empresa</th><th>Acciones</th><th>Precio</th><th>Comisión</th><th>Importe</th><th>Resultado</th></tr></thead><tbody id="ht"></tbody></table></div></div></div>
 
+<div id="v-cm" hidden><div class="card"><div class="hd"><div><h3 style="margin:0 0 4px">Ranking global</h3><p class="mut">Los mejores retornos en la Bolsa real. Toca a un jugador para ver su perfil y su portafolio.</p></div><button class="btn" id="cm-me" onclick="openProfile(USER.id)" hidden>Mi perfil</button></div>
+<div class="rk" style="margin:12px 0 6px"><input id="cm-q" type="search" maxlength="20" autocomplete="off" placeholder="Busca a un jugador por su usuario" aria-label="Buscar jugador por usuario"></div><div id="cm-res" class="sl-list"></div><div id="cm-top" aria-live="polite"></div></div></div>
 <div id="v-sl" hidden><div class="cols"><div class="card" id="sl-main" aria-live="polite"></div><aside class="card side" id="sl-side"></aside></div></div>
 <div id="v-ap" hidden>
 <div class="card" id="tour-card"><h3>Guía paso a paso</h3><p class="mut">Te lleva por el efectivo, el Mercado, tu primera compra y el gráfico frente al índice.</p><div class="bar" style="margin:12px 0 0"><button class="btn pri" onclick="tourStart()">Empezar la guía</button></div></div>
@@ -951,10 +960,10 @@ function rHL(){
 function render(){
   const wd=WD[(S.day+0)%5];
   if(S.real)rClock();else{$('day').textContent=`Simulación · Día ${S.day} · ${wd}`;$('mst').className='mstat sim'+(paused?'':' on')}$('cp').textContent=usd(S.cash);
-  if(view==='pf')rPF();else if(view==='mk')rMK();else if(view==='ap')rAP();else if(view==='nw')rNW();else if(view==='sl'){if(!SLR)rSL()}else rHS();
+  if(view==='pf')rPF();else if(view==='mk')rMK();else if(view==='ap')rAP();else if(view==='nw')rNW();else if(view==='sl'){if(!SLR)rSL()}else if(view==='cm'){if(!CMR)rCM()}else rHS();
   rM();rHL();tvSync();chk();rMis();rXP();tourTick();
 }
-function tab(v){view=v;if(v==='sl')SLR=false;['pf','mk','hs','ap','nw','sl'].forEach(k=>{$('v-'+k).hidden=k!==v;$('t-'+k).classList.toggle('on',k===v)});if(v==='nw')S.g.unread=0;if(v==='mk')S.g.seen.mk=1;if(v==='hs')S.g.seen.hs=1;render()}
+function tab(v){view=v;if(v==='sl')SLR=false;if(v==='cm')CMR=false;['pf','mk','hs','ap','nw','sl','cm'].forEach(k=>{$('v-'+k).hidden=k!==v;$('t-'+k).classList.toggle('on',k===v)});if(v==='nw')S.g.unread=0;if(v==='mk')S.g.seen.mk=1;if(v==='hs')S.g.seen.hs=1;render()}
 function pick(s){if(view==='mk'&&mkv==='grid')gridY=scrollY;cur=s;S.h[s]=S.h[s]||[];$('si').value='';S.g.pk=(S.g.pk||0)+1;sec(s);mkv='det';tab('mk');vanim('mk-det');const t=$('gtabs');scrollTo(0,Math.max(0,t.getBoundingClientRect().top+scrollY-80))}
 function find(q){q=q.trim().toUpperCase();return G[q]||M.find(x=>x.n.toUpperCase()===q)}
 function unwatch(s){S.wl=S.wl.filter(x=>x!==s);save();render()}
@@ -1759,7 +1768,7 @@ async function cloudPull(){if(!SB||!USER||PULLED===USER.id)return;PULLED=USER.id
   if(data&&data.data&&(!own||Date.parse(data.updated_at)>lts)){try{for(const k of SYNC){const v=data.data[k];v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}localStorage.setItem('pf-owner',USER.id);localStorage.setItem('pf-ts',Date.parse(data.updated_at))}catch(e){toast('No cupo tu progreso en este navegador.');return}
     onpagehide=null;sessionStorage.setItem('pf-intro',1);location.reload();return}
   try{localStorage.setItem('pf-owner',USER.id)}catch(e){}cloudPush(true)}
-function cloudPush(now){if(!SB||!USER||lsg('pf-owner')!==USER.id)return;if(PT&&!now)return;clearTimeout(PT);PT=setTimeout(async()=>{PT=0;roomPush();const d={};for(const k of SYNC)d[k]=lsg(k);
+function cloudPush(now){if(!SB||!USER||lsg('pf-owner')!==USER.id)return;if(PT&&!now)return;clearTimeout(PT);PT=setTimeout(async()=>{PT=0;roomPush();statsPush();const d={};for(const k of SYNC)d[k]=lsg(k);
   const{error}=await SB.from('progreso').upsert({user_id:USER.id,data:d,updated_at:new Date(+lsg('pf-ts')||Date.now()).toISOString()});if(error)console.warn('Portfolia: no se pudo guardar en la nube',error.message)},now?0:60000)}
 /* ---------- Amigos y salas de competencia (Supabase; ver supabase-salas.sql) ----------
    Se compite con el patrimonio de la Bolsa real: gana quien más lo hace crecer desde que entra a la sala.
@@ -1799,7 +1808,7 @@ async function slOpen(id){SLS=id;SLX='';document.querySelectorAll('.sl-list .pki
   const p=await SB.from('perfiles').select('user_id,usuario').in('user_id',m.data.map(x=>x.user_id)),N=Object.fromEntries((p.data||[]).map(x=>[x.user_id,x.usuario]));
   const rows=m.data.map(x=>({...x,u:N[x.user_id]||'sin usuario',r:+x.inicio>0&&x.actual!=null?(x.actual/x.inicio-1)*100:null})).sort((a,c)=>(c.r??-1e9)-(a.r??-1e9));
   b.innerHTML=`<div class="sech" style="margin-top:18px">${esc(s.data.nombre)} <span>Código ${s.data.codigo} · ${rows.length} ${rows.length===1?'jugador':'jugadores'}</span></div>
-    <div class="sc"><table><thead><tr><th>#</th><th>Jugador</th><th>Rendimiento</th><th>Patrimonio</th><th>Actualizado</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.user_id===USER.id?'me':''}"><td class="num">${x.r==null?'—':i+1}</td><td>@${esc(x.u)}${x.user_id===USER.id?' <span class="tag nyse">tú</span>':SLF.has(x.user_id)?' <span class="tag">amigo</span>':''}</td><td class="num ${x.r==null?'':cl(x.r)}">${x.r==null?'En el tutorial':pc(x.r)}</td><td class="num">${x.actual!=null?usd(+x.actual):'—'}</td><td><small>${ago(x.actualizado)}</small></td></tr>`).join('')}</tbody></table></div>
+    <div class="sc"><table><thead><tr><th>#</th><th>Jugador</th><th>Rendimiento</th><th>Patrimonio</th><th>Actualizado</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.user_id===USER.id?'me':''}"><td class="num">${x.r==null?'—':i+1}</td><td><button class="link" onclick="openProfile('${x.user_id}')">@${esc(x.u)}</button>${x.user_id===USER.id?' <span class="tag nyse">tú</span>':SLF.has(x.user_id)?' <span class="tag">amigo</span>':''}</td><td class="num ${x.r==null?'':cl(x.r)}">${x.r==null?'En el tutorial':pc(x.r)}</td><td class="num">${x.actual!=null?usd(+x.actual):'—'}</td><td><small>${ago(x.actualizado)}</small></td></tr>`).join('')}</tbody></table></div>
     <p class="mut" style="margin-top:8px">El rendimiento cuenta desde que cada jugador entró a la sala con su cuenta de la Bolsa real. Quien sigue en el tutorial aparece al final hasta desbloquearla.</p>
     <div class="bar" style="margin-top:10px"><button class="btn" onclick="slInvite('${s.data.codigo}')">Copiar invitación</button><button class="btn ghost" onclick="slOpen('${id}')">Actualizar</button><button class="btn ghost" id="sl-out" onclick="slLeave('${id}')">Salir de la sala</button></div>`}
 function slShowInvite(txt){$('sl-inv').innerHTML=`<div class="note" style="margin:10px 0"><b>Invitación para tus amigos</b><textarea id="sl-t" readonly rows="3" style="width:100%;margin:8px 0;padding:10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);color:var(--ink);font:inherit;resize:vertical">${esc(txt)}</textarea><button class="btn pri" onclick="slCopy()">Copiar invitación</button></div>`}
@@ -1813,12 +1822,60 @@ async function slJoin(){const c=$('sl-c').value.trim().toUpperCase(),k=$('sl-k')
   JOINC='';if(/^#sala-/i.test(location.hash))history.replaceState(null,'',location.pathname+location.search);SLS=r.data.id;await rSL();toast(`Entraste a la sala ${r.data.nombre}.`)}
 async function slLeave(id){if(SLX!==id){SLX=id;$('sl-out').textContent='¿Seguro? Toca otra vez para salir';return}SLX='';const r=await SB.from('sala_miembros').delete().eq('sala',id).eq('user_id',USER.id);if(r.error){toast(slErr(r.error));return}SLS='';await rSL();toast('Saliste de la sala.')}
 async function slUser(){const u=$('sl-u').value.trim().toLowerCase(),e=$('sl-e');if(!/^[a-z0-9_]{3,20}$/.test(u)){e.textContent='Usa de 3 a 20 letras minúsculas, números o guion bajo, sin espacios.';return}
-  const r=await SB.from('perfiles').insert({user_id:USER.id,usuario:u});if(r.error){e.textContent=r.error.code==='23505'?'Ese usuario ya existe. Prueba con otro.':slErr(r.error);return}PERF={usuario:u};rSL()}
+  const r=await SB.from('perfiles').insert({user_id:USER.id,usuario:u});if(r.error){e.textContent=r.error.code==='23505'?'Ese usuario ya existe. Prueba con otro.':slErr(r.error);return}PERF={usuario:u};rSL();statsPush()}
 async function slAdd(){const u=$('sl-f').value.trim().replace(/^@/,'').toLowerCase(),e=$('sl-fe');if(!u){e.textContent='Escribe el usuario de tu amigo.';return}if(u===PERF.usuario){e.textContent='Ese es tu propio usuario.';return}
   const p=await SB.from('perfiles').select('user_id').eq('usuario',u).maybeSingle();if(!p.data){e.textContent=`No encontramos a @${u}. Revisa que esté bien escrito.`;return}
   const back=await SB.from('amistades').select('estado').eq('de',p.data.user_id).eq('para',USER.id).maybeSingle();if(back.data){await slAccept(p.data.user_id);return}
   const r=await SB.from('amistades').insert({de:USER.id,para:p.data.user_id});if(r.error){e.textContent=r.error.code==='23505'?`Ya le enviaste una solicitud a @${u}.`:slErr(r.error);return}toast(`Solicitud enviada a @${u}.`);rSL()}
 async function slAccept(de){const r=await SB.from('amistades').update({estado:'aceptada'}).eq('de',de).eq('para',USER.id);if(r.error){toast(slErr(r.error));return}toast('Ahora son amigos.');rSL()}
+/* ---------- Comunidad: ranking global, buscador y perfiles públicos (ver supabase-perfiles.sql) ---------- */
+let CMR=false,CMT=0;
+const r2=x=>Math.round(x*100)/100;
+const AVP=SB_URL+'/storage/v1/object/public/avatares/';
+const av=(url,name,z=40)=>url&&String(url).startsWith(AVP)?`<img class="av" style="--z:${z}px" src="${esc(url)}" alt="" width="${z}" height="${z}" loading="lazy">`:`<span class="av" style="--z:${z}px" aria-hidden="true">${esc((name||'?').slice(0,1).toUpperCase())}</span>`;
+async function ensurePerf(){if(PERF===undefined&&SB&&USER){const r=await SB.from('perfiles').select('usuario').eq('user_id',USER.id).maybeSingle();if(!r.error)PERF=r.data||null}return PERF}
+/* sube nivel, insignias y portafolio de la Bolsa real (como mucho cada minuto, junto con la nube) */
+async function statsPush(){if(!SB||!USER||!await ensurePerf())return;
+  const st=S&&S.real?S:(REAL||S),real=!!(st&&st.real),g=st.g,e=myEq(),k=rank(g.xp||0);
+  const row={nivel:k+1,rango:RK[k][1],xp:g.xp||0,insignias:g.bd||[],estrellas:(g.stars||[]).reduce((a,b)=>a+(b||0),0),operaciones:(st.tr||[]).filter(t=>t.t==='B'||t.t==='S').length,inicio:e,patrimonio:e,efectivo:real?r2(st.cash):null,
+    cartera:real?Object.entries(st.pos).map(([s,p])=>{const a=st.h[s]||[];return{s,q:p.q,a:r2(p.avg),p:r2(a[a.length-1]||p.avg)}}):[]};
+  const u=await SB.from('estadisticas').update(row).eq('user_id',USER.id).select('user_id');
+  if(!u.error&&!u.data.length)await SB.from('estadisticas').insert({user_id:USER.id,...row})}
+async function rCM(){CMR=true;const T=$('cm-top'),q=$('cm-q');$('cm-me').hidden=!(SB&&USER);
+  q.oninput=()=>{clearTimeout(CMT);CMT=setTimeout(cmSearch,300)};
+  if(!SB){T.innerHTML='<p class="emp">El ranking necesita la conexión con las cuentas, que no está disponible ahora.</p>';return}
+  T.innerHTML='<p class="mut">Cargando el ranking…</p>';
+  const r=await SB.from('estadisticas').select('user_id,retorno,patrimonio,nivel,rango,avatar_url,perfiles(usuario)').not('retorno','is',null).order('retorno',{ascending:false}).limit(50);
+  if(r.error){T.innerHTML=`<p class="err">No pude cargar el ranking. ${esc(slErr(r.error))}</p>`;return}
+  T.innerHTML=r.data.length?r.data.map((x,i)=>{const u=x.perfiles?.usuario||'jugador';return`<button class="cm-row" onclick="openProfile('${x.user_id}')"><span class="n">${i+1}</span>${av(x.avatar_url,u,40)}<span><b>@${esc(u)}</b>${USER&&x.user_id===USER.id?' <span class="tag nyse">tú</span>':''}<small>Nivel ${x.nivel} · ${esc(x.rango||'')}</small></span><span class="r"><b class="${cl(+x.retorno)}">${pc(+x.retorno)}</b><small>${usd(+x.patrimonio)}</small></span></button>`}).join('')
+    :'<p class="emp">Todavía nadie tiene retorno en la Bolsa real. ¡Sé el primero!</p>'}
+async function cmSearch(){const q=$('cm-q').value.trim().replace(/^@/,'').toLowerCase().replace(/[^a-z0-9_]/g,''),R=$('cm-res');if(!q||!SB){R.innerHTML='';return}
+  const r=await SB.from('perfiles').select('user_id,usuario').ilike('usuario',q.replace(/_/g,'\\_')+'%').order('usuario').limit(8);
+  R.innerHTML=r.error?`<p class="err">${esc(slErr(r.error))}</p>`:r.data.map(x=>`<button class="pki" onclick="openProfile('${x.user_id}')">${av(null,x.usuario,32)}<span class="pkn"><b>@${esc(x.usuario)}</b><small>Ver perfil</small></span><span class="r">→</span></button>`).join('')||`<p class="emp">No hay jugadores que empiecen con @${esc(q)}.</p>`}
+async function openProfile(uid){if(!SB||!uid)return;openG('<div class="gb"><p class="mut">Cargando el perfil…</p></div>','Perfil');
+  const [p,s]=await Promise.all([SB.from('perfiles').select('usuario').eq('user_id',uid).maybeSingle(),SB.from('estadisticas').select('*').eq('user_id',uid).maybeSingle()]);
+  const u=p.data?.usuario,me=!!USER&&USER.id===uid,x=s.data;
+  const head=`<div class="gh"><b id="gmt">${u?'@'+esc(u):'Perfil'}</b><span class="sp"></span><button class="x" onclick="closeG()" aria-label="Cerrar">✕</button></div>`;
+  if(!u){openG(head+'<div class="gb"><p class="emp">No encontramos este jugador.</p></div>','Perfil');return}
+  if(!x){openG(head+`<div class="gb"><div class="pf-h">${av(null,u,72)}<div><h2>@${esc(u)}</h2><p class="mut">${me?'Juega un poco con tu sesión iniciada y aquí aparecerán tu nivel, tus insignias y tu portafolio.':'Este perfil es privado o todavía no tiene estadísticas.'}</p></div></div></div>`,'Perfil');return}
+  const k=Math.max(0,(x.nivel||1)-1),a=RK[k][0],b=RK[k+1]?RK[k+1][0]:a+1000,pr=Math.min(1,Math.max(0,(x.xp-a)/(b-a)));
+  const has=new Set(x.insignias||[]),cart=(x.cartera||[]).filter(c=>c&&c.s&&c.q>0),inv=cart.reduce((t,c)=>t+c.q*c.p,0),tot=inv+(+x.efectivo||0);
+  const own=me?`<div class="bar" style="margin:12px 0 0"><label class="btn">Cambiar foto<input type="file" accept="image/jpeg,image/png,image/webp" hidden onchange="avUpload(this.files[0])"></label><label style="display:flex;gap:8px;align-items:center;color:var(--mut);cursor:pointer"><input type="checkbox" ${x.publico?'checked':''} onchange="pfPublic(this.checked)"> Perfil público y en el ranking</label></div>`
+    :USER?`<div class="bar" style="margin:12px 0 0"><button class="btn" onclick="pfFriend('${esc(u)}')">${SLF.has(uid)?'Ya son amigos':'Agregar como amigo'}</button></div>`:'';
+  openG(head+`<div class="gb">
+    <div class="pf-h">${av(x.avatar_url,u,72)}<div style="flex:1;min-width:0"><h2>@${esc(u)}</h2><span class="pf-lv">Nivel ${x.nivel} · ${esc(x.rango||RK[k][1])} · ${x.xp} XP</span><div class="pf-xp" aria-hidden="true"><i style="width:${Math.round(pr*100)}%"></i></div></div></div>${own}
+    <div class="pf-st"><div><span>Retorno</span><b class="${x.retorno==null?'':cl(+x.retorno)}">${x.retorno==null?'—':pc(+x.retorno)}</b></div><div><span>Patrimonio</span><b>${x.patrimonio==null?'—':usd(+x.patrimonio)}</b></div><div><span>Operaciones</span><b>${x.operaciones}</b></div><div><span>Estrellas</span><b>${x.estrellas}/21</b></div></div>
+    <div><div class="sech">Insignias <span>${has.size}/${BD.length}</span></div><div class="bdgs">${BD.map(d=>`<div class="bdg ${has.has(d.id)?'':'off'}"><span class="ic">${d.i}</span><div><b>${d.t}</b><small>${d.d}</small></div></div>`).join('')}</div></div>
+    <div><div class="sech">Portafolio en la Bolsa real <span>${x.retorno==null?'todavía en el tutorial':'actualizado '+ago(x.actualizado)}</span></div>${cart.length?`<div class="sc"><table><thead><tr><th>Empresa</th><th>Acciones</th><th>Costo medio</th><th>Precio</th><th>Resultado</th><th>Peso</th></tr></thead><tbody>${cart.map(c=>{const g=G[c.s],rs=c.a>0?(c.p/c.a-1)*100:0;return`<tr><td><span class="lg1">${logo(c.s,26)}<span><b>${esc(c.s)}</b><small>${esc(g?g.n:'')}</small></span></span></td><td class="num">${fm(+c.q,0)}</td><td class="num">${usd(+c.a)}</td><td class="num">${usd(+c.p)}</td><td class="num ${cl(rs)}">${pc(rs)}</td><td class="num">${tot>0?fm(c.q*c.p/tot*100,1)+' %':'—'}</td></tr>`}).join('')}</tbody></table></div><p class="mut" style="margin-top:6px">Efectivo: ${usd(+x.efectivo||0)}</p>`:`<p class="emp">${x.retorno==null?'Aparecerá cuando desbloquee la Bolsa real.':'No tiene acciones en este momento.'}</p>`}</div></div>`,'Perfil de @'+u)}
+async function avUpload(f){if(!f||!USER)return;if(!/^image\/(jpeg|png|webp)$/.test(f.type)){toast('Usa una imagen JPG, PNG o WebP.');return}
+  const img=await createImageBitmap(f).catch(()=>null);if(!img){toast('No pude leer esa imagen.');return}
+  const c=document.createElement('canvas'),z=256,s=Math.min(img.width,img.height);c.width=c.height=z;c.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,z,z);
+  const blob=await new Promise(r=>c.toBlob(r,'image/webp',.85)),path=USER.id+'/avatar.webp';
+  const up=await SB.storage.from('avatares').upload(path,blob,{upsert:true,contentType:'image/webp',cacheControl:'3600'});if(up.error){toast('No pude subir la foto. '+slErr(up.error));return}
+  await statsPush();const r=await SB.from('estadisticas').update({avatar_url:AVP+path+'?v='+Date.now()}).eq('user_id',USER.id);if(r.error){toast(slErr(r.error));return}
+  toast('Foto de perfil actualizada.');openProfile(USER.id);CMR=false}
+async function pfPublic(on){const r=await SB.from('estadisticas').update({publico:on}).eq('user_id',USER.id);toast(r.error?slErr(r.error):on?'Tu perfil es público y aparece en el ranking.':'Tu perfil ahora es privado y no aparece en el ranking.');CMR=false}
+async function pfFriend(u){if(!await ensurePerf()){closeG();tab('sl');return}tab('sl');await rSL();$('sl-f').value=u;slAdd();closeG()}
 async function slDrop(de,para){const r=await SB.from('amistades').delete().eq('de',de).eq('para',para);if(r.error){toast(slErr(r.error));return}rSL()}
 function conn(){
   const o=ks(),k={fh:$('key').value.trim()||o.fh||'',av:$('avk').value.trim()||o.av||'',px:$('pxu').value.trim()||o.px||''};
