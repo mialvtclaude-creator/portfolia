@@ -13,6 +13,18 @@ const SYSTEM = `Eres LucIA, la tutora de Portfolia, un juego educativo en españ
 - Si la pregunta no tiene que ver con finanzas, la bolsa o el juego, responde con amabilidad que solo ayudas con eso.
 - Responde siempre en español.`;
 
+// modo informe: el jugador pidió un informe, un análisis de errores o una proyección; los datos vienen en "informe"
+const INFORME = `
+
+MODO INFORME (reemplaza la regla de respuestas cortas):
+- Usa solo los números de "informe" (y "mercado" si viene); no inventes cifras. Redondea y escribe montos como $12,345.
+- Sin markdown: nada de asteriscos ni #. Cada sección empieza con su título en MAYÚSCULAS en su propia línea, y los puntos con "• ".
+- Si piden un informe completo, haz tres secciones: RENDIMIENTO, ERRORES Y APRENDIZAJES, PROYECCIÓN. Si piden solo una cosa, haz solo esa sección, más completa.
+- RENDIMIENTO: patrimonio inicial y actual, retorno frente al S&P 500, ganancia realizada, comisiones, aciertos en ventas, caída máxima y qué posiciones aportan más y menos.
+- ERRORES Y APRENDIZAJES: parte de "alertas" y de las "operaciones" (cita la empresa y la fecha o día). Explica por qué cada patrón es un error común y qué hábito general lo evita (diversificar, stop-loss, no perseguir subidas, no vender en pánico, operar menos). Menciona también algo que hizo bien. Si no hay errores claros, dilo.
+- PROYECCIÓN: da el rango pesimista, medio y optimista a 1 y 5 años de "proyeccion", explica qué significa ese rango y aclara que sale de supuestos del juego, que no es una predicción y que el futuro puede quedar fuera de él.
+- Máximo unas 350 palabras en total. Termina con una línea recordando que es educativo y no una recomendación de inversión.`;
+
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
@@ -33,13 +45,14 @@ Deno.serve(async (req) => {
   const { data, error } = await sb.auth.getUser(token);
   if (error || !data?.user) return json({ error: "Inicia sesión para hablar con LucIA" }, 401);
 
-  let question = "", context = "";
+  let question = "", context = "", informe = false;
   // conversación previa: Gemini pide turnos que alternan y empiezan por el usuario, así que se juntan los seguidos
   const contents: { role: string; parts: { text: string }[] }[] = [];
   try {
     const b = await req.json();
     question = String(b.question ?? "").trim().slice(0, 600);
-    context = String(b.context ?? "").slice(0, 6000);
+    informe = b.modo === "informe";
+    context = String(b.context ?? "").slice(0, informe ? 14000 : 6000);
     for (const m of Array.isArray(b.history) ? b.history.slice(-10) : []) {
       const role = m?.role === "user" ? "user" : "model", text = String(m?.text ?? "").slice(0, 600);
       if (!text || (!contents.length && role === "model")) continue;
@@ -58,9 +71,9 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-goog-api-key": Deno.env.get("GEMINI_API_KEY")! },
       body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM }] },
+        systemInstruction: { parts: [{ text: informe ? SYSTEM + INFORME : SYSTEM }] },
         contents,
-        generationConfig: { maxOutputTokens: 2000 },
+        generationConfig: { maxOutputTokens: informe ? 4000 : 2000 },
       }),
     });
     if (r.status === 429) return json({ error: "LucIA está ocupada, intenta en un momento" }, 429);

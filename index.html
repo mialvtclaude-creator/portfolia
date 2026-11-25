@@ -266,7 +266,7 @@ progress{accent-color:var(--gold);height:8px}
 /* Tutor */
 .bb{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));min-height:48px;padding:0 16px;border-radius:var(--r);border:1px solid var(--line-2);background:var(--ink);color:var(--bg);font-weight:500;cursor:pointer;z-index:40;display:flex;align-items:center;gap:8px}
 .bp{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom,0px));width:360px;max-width:calc(100% - 32px);background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:14px;z-index:40;display:grid;gap:8px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4);animation:drop 200ms var(--ease-enter)}
-.bl{max-height:280px;overflow:auto;display:grid;gap:8px}.bl p{background:var(--bg);border-radius:var(--r);padding:8px 12px;font-size:14px;white-space:pre-line}.bl p.u{background:var(--soft);justify-self:end}
+.bl{max-height:280px;overflow:auto;display:grid;gap:8px}.bl p.wait{opacity:.65;font-style:italic}.bl p{background:var(--bg);border-radius:var(--r);padding:8px 12px;font-size:14px;white-space:pre-line}.bl p.u{background:var(--soft);justify-self:end}
 .bc{display:flex;gap:6px;flex-wrap:wrap}.bc button{border:1px solid var(--line-2);background:var(--surface);border-radius:var(--r);padding:6px 10px;font-size:12.5px;cursor:pointer;min-height:32px}
 .bc button:hover{background:var(--surface-2)}
 .ac{position:absolute;left:0;right:0;top:100%;z-index:25;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r);max-height:280px;overflow:auto}.ac button{display:flex;gap:8px;width:100%;text-align:left;border:0;background:none;padding:9px 12px;cursor:pointer;align-items:baseline}.ac button:hover{background:var(--soft)}.ac small{margin-left:auto}
@@ -1575,7 +1575,7 @@ function book(r,sy,D,cut){
 }
 
 /* ---------- Tutor ---------- */
-const norm=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''),DEF=['¿Qué es la NYSE?','Mi portafolio','Empezar el curso','Quiz'];
+const norm=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''),DEF=['Informe de mi portafolio','Mis errores','Proyección de mi portafolio','Empezar el curso','Quiz','¿Qué es la NYSE?'];
 const need2='Genera el informe de portafolio en la Academia (modo libre) para ver este dato con datos históricos reales.';
 const pfx=()=>{const V=Object.entries(S.pos).map(([q,p])=>[q,p.q*(px(q)||0)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),t=V.reduce((a,b)=>a+b[1],0),e=equity();return{V,t,e,n:V.length,top:V[0],h:t?V.reduce((a,b)=>a+(b[1]/t)**2,0):0,cash:S.cash/e,L:LAST&&LAST.pf}};
 const LS=[
@@ -1604,7 +1604,35 @@ async function liveFor(t){if(!KEY)return null;const n=' '+norm(t).replace(/[^a-z
   for(const q of [...new Set(L)].slice(0,3)){try{const p=await fh(`/quote?symbol=${encodeURIComponent(q)}`),a=await fh(`/company-news?symbol=${encodeURIComponent(q)}&from=${from}&to=${to}`);
     out.push({s:q,precio:p&&p.c,cambioDiaPct:p&&+(+p.dp||0).toFixed(2),noticias:(Array.isArray(a)?a:[]).slice(0,3).map(x=>({titular:String(x.headline||'').slice(0,160),fuente:String(x.source||'').slice(0,40),fecha:new Date(x.datetime*1000).toISOString().slice(0,10)}))})}catch(e){break}}
   return out.length?{fecha:new Date().toISOString().slice(0,16).replace('T',' ')+' UTC',bolsaAbierta:mkt().open,empresas:out}:null}
-async function llm(t){const x=JSON.parse(ctxText()),v=await liveFor(t);if(v)x.mercado=v;const body=JSON.stringify({question:t,context:JSON.stringify(x),history:HIST.slice(-11,-1)});try{
+/* Informe para LucIA: rendimiento, operaciones, alertas de errores comunes y una proyección con los supuestos de retorno y volatilidad del juego */
+function report(){const e=equity(),e0=S.eq[0]||CAP,b=S.bm,st=stats(),r1=v=>Math.round(v*10)/10,r2=v=>Math.round(v*100)/100;
+  const P=Object.entries(S.pos).map(([q,p])=>{const c=px(q)||p.avg,g=G[q]||{};return{s:q,nombre:g.n||q,sector:g.x||'',acciones:p.q,costoProm:r2(p.avg),precio:r2(c),gananciaPct:r1((c/p.avg-1)*100),pesoPct:r1(p.q*c/e*100),stopLoss:!!p.sl}}).sort((a,b)=>b.pesoPct-a.pesoPct);
+  const sec={};P.forEach(p=>{sec[p.sector]=r1((sec[p.sector]||0)+p.pesoPct)});
+  const T=S.tr.filter(t=>t.t!=='D'),cl=T.filter(t=>t.t==='S'&&t.pl!=null),win=cl.filter(t=>t.pl>0),los=cl.filter(t=>t.pl<=0),avg=a=>a.length?a.reduce((x,t)=>x+t.pl,0)/a.length:0;
+  const cash=S.cash/e*100,A=[];
+  if(P[0]&&P[0].pesoPct>40)A.push(`Concentración alta: ${P[0].s} es el ${P[0].pesoPct} % del patrimonio`);
+  Object.entries(sec).forEach(([k,v])=>{if(v>50&&P.length>1)A.push(`Más de la mitad en un solo sector (${k}: ${v} %)`)});
+  if(P.length&&P.length<3)A.push(`Solo ${P.length} posición(es): poca diversificación`);
+  if(cash>60&&S.tr.length)A.push(`${r1(cash)} % en efectivo sin invertir`);
+  P.filter(p=>p.gananciaPct<-15&&!p.stopLoss).forEach(p=>A.push(`${p.s} pierde ${-p.gananciaPct} % y no tiene stop-loss`));
+  if(cl.length>=5&&win.length/cl.length<.4)A.push(`Solo ${win.length} de ${cl.length} ventas fueron con ganancia`);
+  if(win.length&&los.length&&-avg(los)>avg(win)*1.5)A.push('Las pérdidas promedio son mucho más grandes que las ganancias promedio');
+  if(cl.filter(t=>t.pp>0&&t.pp<.05).length>=3&&P.some(p=>p.gananciaPct<-10))A.push('Vende ganadoras con poca ganancia mientras mantiene perdedoras (efecto disposición)');
+  if((S.fees||0)>e0*.01)A.push(`Comisiones acumuladas de ${usd(S.fees)}: posible exceso de operaciones`);
+  // proyección: modelo de un factor con los supuestos de cada empresa (retorno m, volatilidad v, beta b); el efectivo no rinde
+  const sm=.16;let mu=0,be=0,id=0;P.forEach(p=>{const g=G[p.s]||{m:.08,v:.25,b:1},w=p.pesoPct/100;mu+=w*g.m;be+=w*g.b;id+=w*w*Math.max(0,g.v*g.v-g.b*g.b*sm*sm)});
+  const sg=Math.sqrt(be*be*sm*sm+id),pr=y=>Object.fromEntries([['pesimista',-1.2816],['medio',0],['optimista',1.2816]].map(([k,z])=>[k,Math.round(e*Math.exp((mu-sg*sg/2)*y+z*sg*Math.sqrt(y)))]));
+  return{modo:S.real?'Bolsa real':S.prac?'práctica':'tutorial con mercado simulado',periodo:S.real?'desde que entró a la Bolsa real':`${S.day} días simulados`,
+    patrimonioInicial:Math.round(e0),patrimonio:Math.round(e),retornoPct:r1((e/e0-1)*100),indiceSP500Pct:b.length>1?r1((b[b.length-1]/b[0]-1)*100):null,
+    gananciaRealizada:Math.round(S.re||0),comisiones:Math.round(S.fees||0),ventas:cl.length,ventasConGanancia:win.length,gananciaPromedio:Math.round(avg(win)),perdidaPromedio:Math.round(avg(los)),
+    caidaMaxPct:r1(st.dd),volatilidadAnualPct:st.vol!=null?r1(st.vol):null,sharpe:st.sh!=null?r2(st.sh):null,efectivoPct:r1(cash),
+    posiciones:P.slice(0,15),sectores:sec,
+    operaciones:T.slice(0,20).map(t=>({fecha:S.real?new Date(t.d).toISOString().slice(0,10):'día '+t.d,tipo:t.t==='B'?'compra':'venta',s:t.s,acciones:t.q,precio:r2(t.p),resultado:t.pl!=null?Math.round(t.pl):null,resultadoPct:t.pp!=null?r1(t.pp*100):null,stopLoss:!!t.sl})),
+    alertas:A,
+    proyeccion:{supuestos:'Modelo de un factor con el retorno y la volatilidad anuales que el juego asigna a cada empresa; el efectivo no rinde. Rango del 80 %: 1 de cada 10 escenarios queda por debajo del pesimista y 1 de cada 10 por encima del optimista.',
+      retornoEsperadoAnualPct:r1(mu*100),volatilidadAnualPct:r1(sg*100),beta:r2(be),en1Anio:pr(1),en5Anios:pr(5)}}}
+const wait=()=>{const L=$('bl');L.insertAdjacentHTML('beforeend','<p class="wait">LucIA está pensando…</p>');L.scrollTop=L.scrollHeight;return L.lastChild};
+async function llm(t,rep){const x=JSON.parse(ctxText()),v=await liveFor(t);if(v)x.mercado=v;if(rep)x.informe=report();const body=JSON.stringify({question:t,context:JSON.stringify(x),history:HIST.slice(-11,-1),modo:rep?'informe':'chat'});try{
   if(SB&&USER){const k=(await SB.auth.getSession()).data.session?.access_token;if(k){const r=await fetch(SB_URL+'/functions/v1/lucia',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+k},body}),j=await r.json();return j.reply||j.error||null}}
   const u=ks().px;if(!u)return null;const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body}),j=await r.json();return j.reply||null}catch(e){return null}}
 async function say(t){
@@ -1613,6 +1641,7 @@ async function say(t){
   if(/^empezar|curso/.test(n))return lesson(0);
   if(/siguiente/.test(n))return lesson(QL+1);
   if(/quiz|examen/.test(n))return quiz();
+  if(/informe|reporte|errores|equivoc|proyecc|futuro de mi|rendimiento de mi|como me ha ido/.test(n)){const w=wait(),r=await llm(t,true);w.remove();return addm(r||(USER?'No pude conectarme con la IA para preparar el informe. Intenta en un momento.':'Inicia sesión para que prepare tu informe con IA.'))}
   if(/mi portafolio|mi cartera|cuanto tengo/.test(n))return mine();
   if(/nyse|bolsa de nueva york|wall street/.test(n))return addm('La NYSE (New York Stock Exchange) está en el 11 de Wall Street, Manhattan. Nació en 1792 con el Acuerdo de Buttonwood y abre de lunes a viernes de 9:30 a 16:00, hora de Nueva York. Es la bolsa más grande del mundo por el valor de sus empresas.');
   if(/nasdaq/.test(n))return addm('NASDAQ es la otra gran bolsa de EE. UU. Nació en 1971 como mercado electrónico. Ahí cotizan muchas tecnológicas: Apple, Microsoft, NVIDIA, Amazon.');
@@ -1625,7 +1654,7 @@ async function say(t){
   if(/comisi|patrimonio|disminu/.test(n))return addm('Cada compra y venta cobra 0,1 % de comisión (mínimo $1). Por eso tu patrimonio baja un poco al comprar aunque el precio no se mueva.');
   if(/analiz|evalu|como va/.test(n)){const m=calc((await hist(cur)).c);return addm(m?`${cur}: tendencia ${m.s20>m.s50?'alcista':'bajista'}, RSI ${fm(m.rsi,0)}, volatilidad ${fm(m.vol,1)} % (riesgo ${m.risk.toLowerCase()}). Es educativo, no una recomendación.`:'Aún no tengo suficientes datos de esta acción.')}
   const i=[1,2,3,4,0].find(j=>LS[j].k.test(n));if(i!=null)return lesson(i);
-  const r=await llm(t);addm(r||(USER?'No pude conectarme con la IA. ':'Inicia sesión para que te responda con IA. ')+'Mientras, sé responder sobre: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
+  const w=wait(),r=await llm(t);w.remove();addm(r||(USER?'No pude conectarme con la IA. ':'Inicia sesión para que te responda con IA. ')+'Mientras, sé responder sobre: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
 }
 function botT(){
   const p=$('bp');p.hidden=!p.hidden;$('bb').classList.toggle('open',!p.hidden);
