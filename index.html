@@ -1590,7 +1590,10 @@ function quiz(){const q=LS[QL].q;QZ=q;addm(`Quiz: ${q[0]}`);$('bc').innerHTML=q[
 function ans(i){if(!QZ)return;addm(QZ[1][i],'u');addm((i===QZ[2]?'Correcto. ':'No exactamente. ')+QZ[3]);QZ=null;chips(['Siguiente lección','Repetir lección','Mi portafolio'])}
 function mine(){const x=pfx();addm(x.n?`Tu patrimonio: ${usd(x.e)}. Efectivo ${fm(x.cash*100,0)} %. Posiciones: ${x.V.map(([q,v])=>`${q} ${fm(v/x.e*100,0)} %`).join(', ')}. Es una descripción educativa, no una recomendación.`:'Todavía no tienes posiciones. Compra alguna en el Mercado y la describo con tus números.');chips(DEF)}
 const ctxText=()=>{const x=pfx();return JSON.stringify({patrimonio:Math.round(x.e),efectivoPct:+(x.cash*100).toFixed(1),posiciones:x.V.map(([q,v])=>({s:q,pesoPct:+(v/x.e*100).toFixed(1)}))})};
-async function llm(t){const u=ks().px;if(!u)return null;try{const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:t,context:ctxText()})}),j=await r.json();return j.reply||null}catch(e){return null}}
+// con sesión, LucIA responde con IA desde la función de Supabase (la clave de Claude vive allá); sin sesión, el proxy propio de ⚙ si lo hay
+async function llm(t){const body=JSON.stringify({question:t,context:ctxText()});try{
+  if(SB&&USER){const k=(await SB.auth.getSession()).data.session?.access_token;if(k){const r=await fetch(SB_URL+'/functions/v1/lucia',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+k},body}),j=await r.json();return j.reply||j.error||null}}
+  const u=ks().px;if(!u)return null;const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body}),j=await r.json();return j.reply||null}catch(e){return null}}
 async function say(t){
   t=t.trim();if(!t)return;addm(t,'u');const n=norm(t);
   if(/^repetir/.test(n))return lesson(QL);
@@ -1609,7 +1612,7 @@ async function say(t){
   if(/comisi|patrimonio|disminu/.test(n))return addm('Cada compra y venta cobra 0,1 % de comisión (mínimo $1). Por eso tu patrimonio baja un poco al comprar aunque el precio no se mueva.');
   if(/analiz|evalu|como va/.test(n)){const m=calc((await hist(cur)).c);return addm(m?`${cur}: tendencia ${m.s20>m.s50?'alcista':'bajista'}, RSI ${fm(m.rsi,0)}, volatilidad ${fm(m.vol,1)} % (riesgo ${m.risk.toLowerCase()}). Es educativo, no una recomendación.`:'Aún no tengo suficientes datos de esta acción.')}
   const i=[1,2,3,4,0].find(j=>LS[j].k.test(n));if(i!=null)return lesson(i);
-  const r=await llm(t);addm(r||'Sin conexión al tutor con IA no sé responder eso. Prueba con: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
+  const r=await llm(t);addm(r||(USER?'No pude conectarme con la IA. ':'Inicia sesión para que te responda con IA. ')+'Mientras, sé responder sobre: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
 }
 function botT(){
   const p=$('bp');p.hidden=!p.hidden;$('bb').classList.toggle('open',!p.hidden);
