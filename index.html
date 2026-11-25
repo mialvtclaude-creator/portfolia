@@ -601,6 +601,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <div class="grid m" id="mx"></div>
 <div class="card"><h3>Tu rendimiento frente al índice</h3><div class="lg"><span><i style="background:var(--gold)"></i>Tu portafolio</span><span><i style="background:var(--violet-2)"></i>Índice</span></div><div id="ec" class="ch"></div></div>
 <div class="card"><h3>Tus posiciones</h3><div class="sc"><table><thead><tr><th>Empresa</th><th>Acciones</th><th>Costo medio</th><th>Precio</th><th>Resultado</th><th>Valor</th><th></th></tr></thead><tbody id="pt"></tbody></table></div><div id="ordw"></div></div>
+<div class="card lu-pf"><h3>Análisis con <span class="lu-name">Luc<b>IA</b></span></h3><p class="mut" style="margin:-6px 0 12px">Pídele un informe de tu rendimiento, que revise tus errores o que proyecte tu portafolio. Responde en el chat con IA; necesitas iniciar sesión.</p><div class="bar"><button class="btn pri" onclick="luAsk('Informe de mi portafolio')">Informe de mi portafolio</button><button class="btn" onclick="luAsk('Mis errores')">Mis errores</button><button class="btn" onclick="luAsk('Proyección de mi portafolio')">Proyección</button></div></div>
 
 <div class="card"><h3>Noticias de tu portafolio</h3><p class="mut" style="margin:-6px 0 10px">Solo noticias de las empresas que tienes o de su sector.</p><div class="chips" id="pfc"></div><div class="tradingview-widget-container tvbox" id="tvpf" hidden style="height:420px"></div><div class="news" id="pfn"></div></div>
 </div>
@@ -1656,6 +1657,8 @@ async function say(t){
   const i=[1,2,3,4,0].find(j=>LS[j].k.test(n));if(i!=null)return lesson(i);
   const w=wait(),r=await llm(t);w.remove();addm(r||(USER?'No pude conectarme con la IA. ':'Inicia sesión para que te responda con IA. ')+'Mientras, sé responder sobre: NYSE, horario, dividendos, índice, stop-loss, crash, riesgo, diversificación, Sharpe, mi portafolio o quiz.');
 }
+// abre el chat de LucIA (si está cerrado) y le hace la pregunta
+function luAsk(t){if($('bp').hidden)botT();say(t)}
 function botT(){
   const p=$('bp');p.hidden=!p.hidden;$('bb').classList.toggle('open',!p.hidden);
   if(!p.hidden&&!$('bl').children.length){addm('Hola, soy LucIA, tu tutora con IA. Pregúntame por la NYSE, los índices, los dividendos o tu portafolio. Solo educativo: no doy recomendaciones personalizadas de inversión. Lo que no sé de memoria lo respondo con Google Gemini.');$('bi').focus()}
