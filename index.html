@@ -366,6 +366,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .pki:hover,.pki:focus-visible{border-color:var(--gold);background:var(--soft)}
 .pkn b{display:block;font-size:15px}.pkn small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #pkq{font-size:16px;min-height:48px}
+.sl-f{display:grid;gap:8px;margin:16px 0}.sl-list{display:grid;gap:6px;margin-bottom:6px}.pki.on{border-color:var(--gold);background:var(--soft)}tr.me td{background:var(--soft)}
 
 /* ===== Portada animada (inspirada en webs de estudio: telón de carga, cinta, lista con vista previa, pie gigante) ===== */
 /* Telón de carga: una vez por sesión */
@@ -587,7 +588,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 <div class="tradingview-widget-container tvbox tvtape" id="tvtape" hidden></div>
 <button class="headline" id="hl" onclick="tab('nw')" hidden></button>
 
-<nav class="tabs" id="gtabs" aria-label="Secciones del juego"><button id="t-pf" class="on" onclick="tab('pf')">Portafolio</button><button id="t-mk" onclick="goMk()">Mercado</button><button id="t-nw" onclick="tab('nw')">Noticias<span class="cnt" id="nwc" hidden></span></button><button id="t-hs" onclick="tab('hs')">Historial</button><button id="t-ap" onclick="tab('ap')">Academia</button></nav>
+<nav class="tabs" id="gtabs" aria-label="Secciones del juego"><button id="t-pf" class="on" onclick="tab('pf')">Portafolio</button><button id="t-mk" onclick="goMk()">Mercado</button><button id="t-nw" onclick="tab('nw')">Noticias<span class="cnt" id="nwc" hidden></span></button><button id="t-hs" onclick="tab('hs')">Historial</button><button id="t-ap" onclick="tab('ap')">Academia</button><button id="t-sl" onclick="tab('sl')">Salas</button></nav>
 
 <div id="v-pf"><div class="cols"><div>
 <div class="grid m" id="mx"></div>
@@ -620,6 +621,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 
 <div id="v-hs" hidden><div class="card"><h3>Historial de operaciones</h3><div class="sc"><table><thead><tr><th>Cuándo</th><th>Tipo</th><th>Empresa</th><th>Acciones</th><th>Precio</th><th>Comisión</th><th>Importe</th><th>Resultado</th></tr></thead><tbody id="ht"></tbody></table></div></div></div>
 
+<div id="v-sl" hidden><div class="cols"><div class="card" id="sl-main" aria-live="polite"></div><aside class="card side" id="sl-side"></aside></div></div>
 <div id="v-ap" hidden>
 <div class="card" id="tour-card"><h3>Guía paso a paso</h3><p class="mut">Te lleva por el efectivo, el Mercado, tu primera compra y el gráfico frente al índice.</p><div class="bar" style="margin:12px 0 0"><button class="btn pri" onclick="tourStart()">Empezar la guía</button></div></div>
 <div class="card"><h3>Tus lecciones</h3><div class="lesson-list" id="lsl"></div></div>
@@ -949,10 +951,10 @@ function rHL(){
 function render(){
   const wd=WD[(S.day+0)%5];
   if(S.real)rClock();else{$('day').textContent=`Simulación · Día ${S.day} · ${wd}`;$('mst').className='mstat sim'+(paused?'':' on')}$('cp').textContent=usd(S.cash);
-  if(view==='pf')rPF();else if(view==='mk')rMK();else if(view==='ap')rAP();else if(view==='nw')rNW();else rHS();
+  if(view==='pf')rPF();else if(view==='mk')rMK();else if(view==='ap')rAP();else if(view==='nw')rNW();else if(view==='sl'){if(!SLR)rSL()}else rHS();
   rM();rHL();tvSync();chk();rMis();rXP();tourTick();
 }
-function tab(v){view=v;['pf','mk','hs','ap','nw'].forEach(k=>{$('v-'+k).hidden=k!==v;$('t-'+k).classList.toggle('on',k===v)});if(v==='nw')S.g.unread=0;if(v==='mk')S.g.seen.mk=1;if(v==='hs')S.g.seen.hs=1;render()}
+function tab(v){view=v;if(v==='sl')SLR=false;['pf','mk','hs','ap','nw','sl'].forEach(k=>{$('v-'+k).hidden=k!==v;$('t-'+k).classList.toggle('on',k===v)});if(v==='nw')S.g.unread=0;if(v==='mk')S.g.seen.mk=1;if(v==='hs')S.g.seen.hs=1;render()}
 function pick(s){if(view==='mk'&&mkv==='grid')gridY=scrollY;cur=s;S.h[s]=S.h[s]||[];$('si').value='';S.g.pk=(S.g.pk||0)+1;sec(s);mkv='det';tab('mk');vanim('mk-det');const t=$('gtabs');scrollTo(0,Math.max(0,t.getBoundingClientRect().top+scrollY-80))}
 function find(q){q=q.trim().toUpperCase();return G[q]||M.find(x=>x.n.toUpperCase()===q)}
 function unwatch(s){S.wl=S.wl.filter(x=>x!==s);save();render()}
@@ -1714,7 +1716,7 @@ function sbInit(){if(!SB_URL||!SB_KEY)return;
   // el botón de Google solo aparece si el proveedor está activado en Supabase
   fetch(SB_URL+'/auth/v1/settings',{headers:{apikey:SB_KEY}}).then(r=>r.json()).then(j=>{GOOGLE=!!(j.external&&j.external.google)}).catch(()=>{});
   need('sb').then(()=>{SB=supabase.createClient(SB_URL,SB_KEY);
-  SB.auth.onAuthStateChange((ev,ses)=>{USER=ses?.user||null;authUI();if(ev==='PASSWORD_RECOVERY')authOpen('reset');else if(USER)cloudPull()});
+  SB.auth.onAuthStateChange((ev,ses)=>{USER=ses?.user||null;authUI();PERF=undefined;if(view==='sl'&&!$('sim').hidden){SLR=false;rSL()}if(ev==='PASSWORD_RECOVERY')authOpen('reset');else if(USER)cloudPull()});
   authUI()}).catch(()=>{})}
 function authUI(){document.querySelectorAll('.auth-b').forEach(b=>{b.hidden=!SB;b.textContent=USER?'Mi cuenta':'Entrar'});document.querySelectorAll('.auth-l').forEach(b=>b.hidden=!SB||!!USER)}
 function aerr(e){const m=(e&&e.message)||'';if(/invalid login/i.test(m))return'Correo o contraseña incorrectos.';if(/already registered/i.test(m))return'Ese correo ya tiene cuenta. Entra con él.';if(/not confirmed/i.test(m))return'Primero confirma tu correo con el enlace que te enviamos.';if(/rate limit|too many/i.test(m))return'Demasiados intentos. Espera un minuto y vuelve a probar.';if(/fetch|network/i.test(m))return NETERR;return'No se pudo completar. '+m}
@@ -1757,8 +1759,67 @@ async function cloudPull(){if(!SB||!USER||PULLED===USER.id)return;PULLED=USER.id
   if(data&&data.data&&(!own||Date.parse(data.updated_at)>lts)){try{for(const k of SYNC){const v=data.data[k];v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}localStorage.setItem('pf-owner',USER.id);localStorage.setItem('pf-ts',Date.parse(data.updated_at))}catch(e){toast('No cupo tu progreso en este navegador.');return}
     onpagehide=null;sessionStorage.setItem('pf-intro',1);location.reload();return}
   try{localStorage.setItem('pf-owner',USER.id)}catch(e){}cloudPush(true)}
-function cloudPush(now){if(!SB||!USER||lsg('pf-owner')!==USER.id)return;if(PT&&!now)return;clearTimeout(PT);PT=setTimeout(async()=>{PT=0;const d={};for(const k of SYNC)d[k]=lsg(k);
+function cloudPush(now){if(!SB||!USER||lsg('pf-owner')!==USER.id)return;if(PT&&!now)return;clearTimeout(PT);PT=setTimeout(async()=>{PT=0;roomPush();const d={};for(const k of SYNC)d[k]=lsg(k);
   const{error}=await SB.from('progreso').upsert({user_id:USER.id,data:d,updated_at:new Date(+lsg('pf-ts')||Date.now()).toISOString()});if(error)console.warn('Portfolia: no se pudo guardar en la nube',error.message)},now?0:60000)}
+/* ---------- Amigos y salas de competencia (Supabase; ver supabase-salas.sql) ----------
+   Se compite con el patrimonio de la Bolsa real: gana quien más lo hace crecer desde que entra a la sala.
+   shortcut: el patrimonio lo reporta el navegador, así que alguien que edite su partida podría inflarlo; para premios reales habría que calcularlo en el servidor. */
+let SLR=false,SLS='',PERF,JOINC='',SLF=new Set(),SLN={},SLX='';
+const eqOf=st=>st.cash+Object.entries(st.pos||{}).reduce((t,[s,p])=>{const a=(st.h||{})[s]||[];return t+p.q*(a[a.length-1]||0)},0);
+function myEq(){const st=S&&S.real?S:REAL;return st&&st.real?Math.round(eqOf(st)*100)/100:null}
+async function roomPush(){if(!SB||!USER)return;const e=myEq();if(e==null)return;await SB.from('sala_miembros').update({inicio:e,actual:e}).eq('user_id',USER.id)}
+const ago=t=>{const m=Math.round((Date.now()-Date.parse(t))/6e4);return m<1?'ahora':m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`};
+const slErr=e=>/incorrect|Inicia sesión|necesita/i.test(e&&e.message||'')?e.message+'.':aerr(e);
+const slLink=c=>location.origin+location.pathname+'#sala-'+c;
+async function rSL(){SLR=true;const A=$('sl-main'),B=$('sl-side');
+  if(!SB){A.innerHTML='<h3>Salas</h3><p class="mut">Las salas necesitan la conexión con tu cuenta, que no está disponible ahora.</p>';B.innerHTML='';return}
+  if(!USER){A.innerHTML=`<h3>Compite con tus amigos</h3><p style="margin-bottom:14px">Crea una sala con contraseña, compártela con tus amigos y vean quién hace crecer más su patrimonio en la Bolsa real.</p><button class="btn pri" onclick="authOpen()">Entrar o crear cuenta</button>`;B.innerHTML='<h3>Amigos</h3><p class="mut">Inicia sesión para agregar amigos.</p>';return}
+  if(PERF===undefined){const r=await SB.from('perfiles').select('usuario').eq('user_id',USER.id).maybeSingle();PERF=r.error?undefined:(r.data||null);if(r.error){A.innerHTML=`<h3>Salas</h3><p class="err">No pude cargar tu perfil. ${esc(slErr(r.error))}</p>`;return}}
+  if(!PERF){A.innerHTML=`<h3>Elige tu nombre de usuario</h3><p class="mut" style="margin-bottom:12px">Así te verán tus amigos en los rankings. De 3 a 20 letras minúsculas, números o guion bajo.</p><div class="rk"><input id="sl-u" maxlength="20" autocomplete="username" placeholder="ana_inversora" aria-label="Nombre de usuario" onkeydown="if(event.key==='Enter')slUser()"><button class="btn pri" onclick="slUser()">Guardar</button></div><p class="err" id="sl-e" role="alert"></p>`;B.innerHTML='';return}
+  A.innerHTML='<p class="mut">Cargando tus salas…</p>';
+  const [rooms,fr]=await Promise.all([SB.from('sala_miembros').select('sala,salas(id,nombre,codigo,creador)').eq('user_id',USER.id),slFriends()]);
+  const R=(rooms.data||[]).map(x=>x.salas).filter(Boolean);R.forEach(s=>SLN[s.codigo]=s.nombre);
+  A.innerHTML=`<h3>Salas de competencia</h3><p class="mut">Gana quien más hace crecer su patrimonio en la Bolsa real desde que entra a la sala.</p>
+    <div class="sl-f"><b>Crear una sala</b><div class="rk"><input id="sl-n" maxlength="40" placeholder="Nombre de la sala" aria-label="Nombre de la sala"><input id="sl-p" type="password" autocomplete="new-password" placeholder="Contraseña (mínimo 4)" aria-label="Contraseña de la sala"><button class="btn pri" onclick="slCreate()">Crear sala</button></div></div>
+    <div class="sl-f"><b>Unirme a una sala</b><div class="rk"><input id="sl-c" maxlength="6" placeholder="Código, por ejemplo 3FA9C2" aria-label="Código de la sala" value="${esc(JOINC)}" style="text-transform:uppercase"><input id="sl-k" type="password" autocomplete="off" placeholder="Contraseña" aria-label="Contraseña" onkeydown="if(event.key==='Enter')slJoin()"><button class="btn" onclick="slJoin()">Unirme</button></div></div>
+    <p class="err" id="sl-e" role="alert"></p><div id="sl-inv"></div>
+    <div class="sech">Tus salas <span>${R.length}</span></div><div class="sl-list">${R.map(s=>`<button class="pki${s.id===SLS?' on':''}" onclick="slOpen('${s.id}')"><span class="lgo mono" style="--s:32px" aria-hidden="true">${s.codigo.slice(0,3)}</span><span class="pkn"><b>${esc(s.nombre)}</b><small>Código ${s.codigo}${s.creador===USER.id?' · la creaste tú':''}</small></span><span class="r">Ver ranking →</span></button>`).join('')||'<p class="emp">Todavía no estás en ninguna sala. Crea una o únete con un código.</p>'}</div><div id="sl-board"></div>`;
+  B.innerHTML=`<h3>Amigos</h3><p class="mut" style="margin-bottom:10px">Tu usuario: <b>@${esc(PERF.usuario)}</b></p><div class="rk"><input id="sl-f" maxlength="20" placeholder="Usuario de tu amigo" aria-label="Usuario de tu amigo" onkeydown="if(event.key==='Enter')slAdd()"><button class="btn" onclick="slAdd()">Agregar</button></div><p class="err" id="sl-fe" role="alert"></p>
+    ${fr.inc.length?`<div class="sech">Solicitudes <span>${fr.inc.length}</span></div>${fr.inc.map(x=>`<div class="wi"><span style="flex:1">@${esc(x.u)}</span><button class="btn s pri" onclick="slAccept('${x.id}')">Aceptar</button><button class="btn s ghost" onclick="slDrop('${x.de}','${x.para}')">Rechazar</button></div>`).join('')}`:''}
+    <div class="sech">Tus amigos <span>${fr.acc.length}</span></div>${fr.acc.map(x=>`<div class="wi"><span style="flex:1">@${esc(x.u)}</span><button class="x" onclick="slDrop('${x.de}','${x.para}')" aria-label="Quitar a @${esc(x.u)}">✕</button></div>`).join('')||'<p class="emp">Aún no tienes amigos agregados.</p>'}
+    ${fr.out.length?`<div class="sech">Enviadas <span>esperando respuesta</span></div>${fr.out.map(x=>`<div class="wi"><span style="flex:1">@${esc(x.u)}</span><button class="x" onclick="slDrop('${x.de}','${x.para}')" aria-label="Cancelar la solicitud a @${esc(x.u)}">✕</button></div>`).join('')}`:''}`;
+  if(SLS&&R.some(s=>s.id===SLS))slOpen(SLS)}
+async function slFriends(){const o={acc:[],inc:[],out:[]},r=await SB.from('amistades').select('de,para,estado');if(r.error)return o;
+  const ids=[...new Set(r.data.flatMap(x=>[x.de,x.para]))].filter(x=>x!==USER.id),p=ids.length?await SB.from('perfiles').select('user_id,usuario').in('user_id',ids):{data:[]},N=Object.fromEntries((p.data||[]).map(x=>[x.user_id,x.usuario]));
+  for(const x of r.data){const id=x.de===USER.id?x.para:x.de,row={id,u:N[id]||'sin usuario',de:x.de,para:x.para};(x.estado==='aceptada'?o.acc:x.para===USER.id?o.inc:o.out).push(row)}
+  SLF=new Set(o.acc.map(x=>x.id));return o}
+async function slOpen(id){SLS=id;SLX='';document.querySelectorAll('.sl-list .pki').forEach(b=>b.classList.toggle('on',b.getAttribute('onclick').includes(id)));const b=$('sl-board');if(!b)return;b.innerHTML='<p class="mut">Cargando el ranking…</p>';
+  const [m,s]=await Promise.all([SB.from('sala_miembros').select('user_id,inicio,actual,actualizado').eq('sala',id),SB.from('salas').select('nombre,codigo').eq('id',id).maybeSingle()]);
+  if(m.error||!s.data){b.innerHTML='<p class="err">No pude cargar esta sala.</p>';return}
+  const p=await SB.from('perfiles').select('user_id,usuario').in('user_id',m.data.map(x=>x.user_id)),N=Object.fromEntries((p.data||[]).map(x=>[x.user_id,x.usuario]));
+  const rows=m.data.map(x=>({...x,u:N[x.user_id]||'sin usuario',r:+x.inicio>0&&x.actual!=null?(x.actual/x.inicio-1)*100:null})).sort((a,c)=>(c.r??-1e9)-(a.r??-1e9));
+  b.innerHTML=`<div class="sech" style="margin-top:18px">${esc(s.data.nombre)} <span>Código ${s.data.codigo} · ${rows.length} ${rows.length===1?'jugador':'jugadores'}</span></div>
+    <div class="sc"><table><thead><tr><th>#</th><th>Jugador</th><th>Rendimiento</th><th>Patrimonio</th><th>Actualizado</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.user_id===USER.id?'me':''}"><td class="num">${x.r==null?'—':i+1}</td><td>@${esc(x.u)}${x.user_id===USER.id?' <span class="tag nyse">tú</span>':SLF.has(x.user_id)?' <span class="tag">amigo</span>':''}</td><td class="num ${x.r==null?'':cl(x.r)}">${x.r==null?'En el tutorial':pc(x.r)}</td><td class="num">${x.actual!=null?usd(+x.actual):'—'}</td><td><small>${ago(x.actualizado)}</small></td></tr>`).join('')}</tbody></table></div>
+    <p class="mut" style="margin-top:8px">El rendimiento cuenta desde que cada jugador entró a la sala con su cuenta de la Bolsa real. Quien sigue en el tutorial aparece al final hasta desbloquearla.</p>
+    <div class="bar" style="margin-top:10px"><button class="btn" onclick="slInvite('${s.data.codigo}')">Copiar invitación</button><button class="btn ghost" onclick="slOpen('${id}')">Actualizar</button><button class="btn ghost" id="sl-out" onclick="slLeave('${id}')">Salir de la sala</button></div>`}
+function slShowInvite(txt){$('sl-inv').innerHTML=`<div class="note" style="margin:10px 0"><b>Invitación para tus amigos</b><textarea id="sl-t" readonly rows="3" style="width:100%;margin:8px 0;padding:10px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--bg);color:var(--ink);font:inherit;resize:vertical">${esc(txt)}</textarea><button class="btn pri" onclick="slCopy()">Copiar invitación</button></div>`}
+async function slCopy(){const t=$('sl-t');try{await navigator.clipboard.writeText(t.value);toast('Invitación copiada. Pégala en WhatsApp o donde quieras.')}catch(e){t.select();toast('Selecciona el texto y cópialo.')}}
+function slInvite(c){slShowInvite(`¡Te reto en Portfolia! Entra a mi sala "${SLN[c]||''}" en ${slLink(c)} con el código ${c}. Te paso la contraseña aparte.`);$('sl-inv').scrollIntoView({block:'nearest'});slCopy()}
+async function slCreate(){const n=$('sl-n').value.trim(),p=$('sl-p').value,e=$('sl-e');if(n.length<3){e.textContent='El nombre de la sala necesita al menos 3 letras.';return}if(p.length<4){e.textContent='La contraseña necesita al menos 4 caracteres.';return}e.textContent='';
+  const r=await SB.rpc('crear_sala',{p_nombre:n,p_clave:p,p_inicio:myEq()});if(r.error){e.textContent=slErr(r.error);return}
+  SLS=r.data.id;await rSL();slShowInvite(`¡Te reto en Portfolia! Entra a mi sala "${n}" en ${slLink(r.data.codigo)} con el código ${r.data.codigo} y la contraseña ${p}.`);toast(`Sala creada. Código ${r.data.codigo}.`)}
+async function slJoin(){const c=$('sl-c').value.trim().toUpperCase(),k=$('sl-k').value,e=$('sl-e');if(!/^[0-9A-F]{6}$/.test(c)){e.textContent='El código tiene 6 caracteres, por ejemplo 3FA9C2.';return}if(!k){e.textContent='Escribe la contraseña de la sala.';return}e.textContent='';
+  const r=await SB.rpc('unirse_sala',{p_codigo:c,p_clave:k,p_inicio:myEq()});if(r.error){e.textContent=slErr(r.error);return}
+  JOINC='';if(/^#sala-/i.test(location.hash))history.replaceState(null,'',location.pathname+location.search);SLS=r.data.id;await rSL();toast(`Entraste a la sala ${r.data.nombre}.`)}
+async function slLeave(id){if(SLX!==id){SLX=id;$('sl-out').textContent='¿Seguro? Toca otra vez para salir';return}SLX='';const r=await SB.from('sala_miembros').delete().eq('sala',id).eq('user_id',USER.id);if(r.error){toast(slErr(r.error));return}SLS='';await rSL();toast('Saliste de la sala.')}
+async function slUser(){const u=$('sl-u').value.trim().toLowerCase(),e=$('sl-e');if(!/^[a-z0-9_]{3,20}$/.test(u)){e.textContent='Usa de 3 a 20 letras minúsculas, números o guion bajo, sin espacios.';return}
+  const r=await SB.from('perfiles').insert({user_id:USER.id,usuario:u});if(r.error){e.textContent=r.error.code==='23505'?'Ese usuario ya existe. Prueba con otro.':slErr(r.error);return}PERF={usuario:u};rSL()}
+async function slAdd(){const u=$('sl-f').value.trim().replace(/^@/,'').toLowerCase(),e=$('sl-fe');if(!u){e.textContent='Escribe el usuario de tu amigo.';return}if(u===PERF.usuario){e.textContent='Ese es tu propio usuario.';return}
+  const p=await SB.from('perfiles').select('user_id').eq('usuario',u).maybeSingle();if(!p.data){e.textContent=`No encontramos a @${u}. Revisa que esté bien escrito.`;return}
+  const back=await SB.from('amistades').select('estado').eq('de',p.data.user_id).eq('para',USER.id).maybeSingle();if(back.data){await slAccept(p.data.user_id);return}
+  const r=await SB.from('amistades').insert({de:USER.id,para:p.data.user_id});if(r.error){e.textContent=r.error.code==='23505'?`Ya le enviaste una solicitud a @${u}.`:slErr(r.error);return}toast(`Solicitud enviada a @${u}.`);rSL()}
+async function slAccept(de){const r=await SB.from('amistades').update({estado:'aceptada'}).eq('de',de).eq('para',USER.id);if(r.error){toast(slErr(r.error));return}toast('Ahora son amigos.');rSL()}
+async function slDrop(de,para){const r=await SB.from('amistades').delete().eq('de',de).eq('para',para);if(r.error){toast(slErr(r.error));return}rSL()}
 function conn(){
   const o=ks(),k={fh:$('key').value.trim()||o.fh||'',av:$('avk').value.trim()||o.av||'',px:$('pxu').value.trim()||o.px||''};
   try{localStorage.setItem('pf-keys',JSON.stringify(k));localStorage.setItem('pf-ts',Date.now())}catch(e){}cloudPush();
@@ -1794,6 +1855,8 @@ function conn(){
   heroSeed();heroDraw();rHome();homeFx();intro();heroEnter();rClock();setInterval(()=>{if(!$('home').hidden)rClock()},1000);
   if(location.hash==='#jugar'&&KEY&&started())play();
   onb();sbInit();
+  // enlace de invitación: #sala-CODIGO abre la pestaña Salas con el código ya escrito
+  {const h=/^#sala-([0-9A-F]{6})$/i.exec(location.hash);if(h){JOINC=h[1].toUpperCase();if(KEY&&started()){go('sim');tab('sl')}}}
 })();
 thmUI();
 </script>
