@@ -33,12 +33,24 @@ Deno.serve(async (req) => {
   if (error || !data?.user) return json({ error: "Inicia sesión para hablar con LucIA" }, 401);
 
   let question = "", context = "";
+  // conversación previa: Gemini pide turnos que alternan y empiezan por el usuario, así que se juntan los seguidos
+  const contents: { role: string; parts: { text: string }[] }[] = [];
   try {
     const b = await req.json();
     question = String(b.question ?? "").trim().slice(0, 600);
     context = String(b.context ?? "").slice(0, 3000);
+    for (const m of Array.isArray(b.history) ? b.history.slice(-10) : []) {
+      const role = m?.role === "user" ? "user" : "model", text = String(m?.text ?? "").slice(0, 600);
+      if (!text || (!contents.length && role === "model")) continue;
+      const last = contents[contents.length - 1];
+      if (last?.role === role) last.parts[0].text += "\n" + text;
+      else contents.push({ role, parts: [{ text }] });
+    }
   } catch { return json({ error: "Pregunta inválida" }, 400); }
   if (!question) return json({ error: "Escribe una pregunta" }, 400);
+  const now = `<portafolio>${context}</portafolio>\n\n${question}`;
+  if (contents[contents.length - 1]?.role === "user") contents[contents.length - 1].parts[0].text += "\n" + now;
+  else contents.push({ role: "user", parts: [{ text: now }] });
 
   try {
     const r = await fetch(GEMINI, {
@@ -46,9 +58,7 @@ Deno.serve(async (req) => {
       headers: { "Content-Type": "application/json", "x-goog-api-key": Deno.env.get("GEMINI_API_KEY")! },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: SYSTEM }] },
-        contents: [{ role: "user", parts: [{ text: `<portafolio>${context}</portafolio>
-
-${question}` }] }],
+        contents,
         generationConfig: { maxOutputTokens: 2000 },
       }),
     });
