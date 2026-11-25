@@ -1,10 +1,9 @@
-// LucIA con IA: recibe una pregunta del juego y responde con Claude.
-// La clave ANTHROPIC_API_KEY vive solo en los Secrets de Supabase; nunca en la página.
+// LucIA con IA: recibe una pregunta del juego y responde con Google Gemini (plan gratis).
+// La clave GEMINI_API_KEY vive solo en los Secrets de Supabase; nunca en la página.
 // Solo responde a personas con sesión iniciada en Portfolia.
-import Anthropic from "npm:@anthropic-ai/sdk";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const MODEL = "claude-haiku-5-5"; // barato y suficiente para un tutor; más capaz: "claude-opus-5-5"
+const MODEL = "gemini-3.5-flash-lite"; // gratis en el plan sin tarjeta de Google AI Studio
 
 const SYSTEM = `Eres LucIA, la tutora de Portfolia, un juego educativo en español sobre la bolsa de Nueva York (NYSE) con dinero virtual.
 - Explica con palabras sencillas, para alguien que está empezando. Respuestas cortas: de 2 a 5 frases, sin tablas ni encabezados.
@@ -21,7 +20,7 @@ const CORS = {
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...CORS, "Content-Type": "application/json" } });
 
-const anthropic = new Anthropic(); // lee ANTHROPIC_API_KEY de los Secrets
+const GEMINI = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
@@ -42,19 +41,24 @@ Deno.serve(async (req) => {
   if (!question) return json({ error: "Escribe una pregunta" }, 400);
 
   try {
-    const r = await anthropic.messages.create({
-      model: MODEL,
-      max_tokens: 4000,
-      output_config: { effort: "low" },
-      system: SYSTEM,
-      messages: [{ role: "user", content: `<portafolio>${context}</portafolio>\n\n${question}` }],
+    const r = await fetch(GEMINI, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": Deno.env.get("GEMINI_API_KEY")! },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: SYSTEM }] },
+        contents: [{ role: "user", parts: [{ text: `<portafolio>${context}</portafolio>
+
+${question}` }] }],
+        generationConfig: { maxOutputTokens: 2000 },
+      }),
     });
-    if (r.stop_reason === "refusal") return json({ reply: "Esa pregunta no la puedo responder. Pregúntame sobre la bolsa, tu portafolio o el juego." });
-    const reply = r.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("").trim();
-    return json({ reply: reply || null });
+    if (r.status === 429) return json({ error: "LucIA está ocupada, intenta en un momento" }, 429);
+    if (!r.ok) { console.error(r.status, await r.text()); return json({ error: "Error de la IA" }, 502); }
+    const j = await r.json();
+    const parts = j.candidates?.[0]?.content?.parts ?? [];
+    const reply = parts.filter((p: { text?: string; thought?: boolean }) => p.text && !p.thought).map((p: { text: string }) => p.text).join("").trim();
+    return json({ reply: reply || "Esa pregunta no la puedo responder. Pregúntame sobre la bolsa, tu portafolio o el juego." });
   } catch (e) {
-    if (e instanceof Anthropic.RateLimitError) return json({ error: "LucIA está ocupada, intenta en un momento" }, 429);
-    if (e instanceof Anthropic.APIError) { console.error(e.status, e.message); return json({ error: "Error de la IA" }, 502); }
     console.error(e);
     return json({ error: "Error de la IA" }, 500);
   }
