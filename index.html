@@ -7,51 +7,53 @@
 <meta name="description" content="Juego educativo para aprender a invertir en la Bolsa de Nueva York: 7 niveles de práctica y un modo con precios y noticias reales en vivo.">
 <meta name="page-type" content="software">
 <meta name="site-kind" content="gaming">
-<meta name="theme-color" content="#f6f4f8">
+<meta name="theme-color" content="#fbf9f3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,500..900,100,1;1,9..144,500..900,100,1&family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Urbanist:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>try{const t=localStorage.getItem('pf-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
 {const R=document.documentElement.classList,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;let seen=true;try{seen=!!sessionStorage.getItem('pf-intro')}catch(e){}if(rm||seen)R.add('no-intro');if(!rm&&'IntersectionObserver' in window)R.add('rv')}document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-in'),1600)</script>
 <style>
-/* Estilo "Nácar": fondo perla, tornasol pastel de concha, muy redondeado. Claro por defecto, oscuro con el botón ☾ o según el sistema. Fraunces itálica + Bricolage Grotesque + DM Mono.
-   --gold/--acc quedan como nombres del acento sólido (lila nácar); --iris es el tornasol de botones y detalles. */
+/* Estilo 16 "Heráldico": papel marfil, morado real y oro antiguo; el tornasol queda solo en líneas finas.
+   De noche: morado casi negro con el oro más claro para que se lea. Fraunces (títulos rectos) + Urbanist + DM Mono.
+   --gold es el oro sólido (bordes, estrellas, foco), --acc el oro para texto, --pur el morado de los botones. */
 :root{
-  --bg:#f6f4f8;--surface:#ffffff;--surface-2:#efecf3;--ink:#1b1725;--ink-2:#3a3447;--mut:#6a6478;--line:#e6e2ec;--line-2:#d3cddc;
-  --acc:#6a4fe6;--gold:#6d4fe0;--gold-ink:#ffffff;--soft:rgba(123,97,255,.10);
-  --violet:#d45aa6;--violet-2:#2f9fd6;--vsoft:rgba(212,90,166,.12);
+  --bg:#fbf9f3;--surface:#ffffff;--surface-2:#f3efe4;--ink:#25093f;--ink-2:#3e2c55;--mut:#645a6e;--line:#ece5d3;--line-2:#dcd2bb;
+  --acc:#8a6610;--gold:#a67c14;--gold-ink:#ffffff;--soft:rgba(166,124,20,.10);--pur:#3b0764;--pur-ink:#fbf9f3;
+  --violet:#3b0764;--violet-2:#7c5cc4;--vsoft:rgba(59,7,100,.08);
   --up:#0f7a4f;--dn:#c23a4f;--up-soft:rgba(15,122,79,.10);--dn-soft:rgba(194,58,79,.10);
-  --shade:rgba(27,23,37,.45);--sh:0 24px 48px -30px rgba(60,40,90,.35);
-  --iris:linear-gradient(110deg,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8,#d8ccff,#bfe9ff,#c9f7df,#fff1bf,#ffd1e8);
-  --iris-on:#1b1725;--on-up:#ffffff;--on-dn:#ffffff;--buy:#16a34a;--on-buy:#ffffff;
-  --iris-ink:linear-gradient(110deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a,#8a6cff);
-  --b1:rgba(216,204,255,.55);--b2:rgba(255,209,232,.45);--b3:rgba(191,233,255,.45);--b4:rgba(201,247,223,.4);
-  --pearl:linear-gradient(120deg,rgba(255,209,232,.45),rgba(216,204,255,.35) 30%,rgba(191,233,255,.35) 60%,rgba(201,247,223,.4));
-  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;--display:"Fraunces",Georgia,serif;--mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --shade:rgba(37,9,63,.42);--sh:0 24px 48px -30px rgba(37,9,63,.35);
+  --iris:linear-gradient(90deg,rgba(166,124,20,.9),rgba(201,184,255,.85),rgba(243,196,221,.7),rgba(166,124,20,.9));
+  --iris-on:#25093f;--on-up:#ffffff;--on-dn:#ffffff;--buy:#16a34a;--on-buy:#ffffff;
+  --iris-ink:linear-gradient(110deg,#3b0764,#6b3fa0 45%,#a67c14 70%,#3b0764);
+  --b1:rgba(59,7,100,.05);--b2:rgba(166,124,20,.06);--b3:transparent;--b4:transparent;
+  --pearl:linear-gradient(120deg,rgba(166,124,20,.05),rgba(201,184,255,.08) 50%,transparent);
+  --font:"Urbanist",system-ui,-apple-system,"Segoe UI",sans-serif;--display:"Fraunces",Georgia,serif;--mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);--ease-enter:cubic-bezier(.22,1,.36,1);
-  --r:14px;--r-lg:22px;color-scheme:light}
-/* Nácar de noche: el interior oscuro de la concha; el tornasol pastel se queda igual en botones */
+  --r:4px;--r-lg:6px;color-scheme:light}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121019;--surface:#1b1824;--surface-2:#252131;--ink:#f1eef7;--ink-2:#d6d0e2;--mut:#a69fb6;--line:#2c2738;--line-2:#3f384f;
-  --acc:#b7a6ff;--gold:#9d86ff;--gold-ink:#120f1a;--soft:rgba(157,134,255,.14);
-  --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
+  --bg:#140a22;--surface:#1e1230;--surface-2:#28193d;--ink:#f3ecfb;--ink-2:#d8cce6;--mut:#b4a7c4;--line:#2f2142;--line-2:#433157;
+  --acc:#e3c77a;--gold:#d9b04e;--gold-ink:#1a1206;--soft:rgba(217,176,78,.12);--pur:#7c4ddb;--pur-ink:#ffffff;
+  --violet:#b79cf5;--violet-2:#b79cf5;--vsoft:rgba(183,156,245,.14);
   --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
-  --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
+  --shade:rgba(6,3,12,.72);--sh:0 24px 48px -28px rgba(0,0,0,.6);
   --on-up:#06170f;--on-dn:#1f070b;--buy:#34d07f;--on-buy:#05140c;
-  --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
-  --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
-  --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
+  --iris:linear-gradient(90deg,rgba(217,176,78,.8),rgba(201,184,255,.7),rgba(243,196,221,.55),rgba(217,176,78,.8));--iris-on:#f3ecfb;
+  --iris-ink:linear-gradient(110deg,#c9b8ff,#e3c77a 55%,#c9b8ff);
+  --b1:rgba(124,77,219,.14);--b2:rgba(217,176,78,.05);--b3:transparent;--b4:transparent;
+  --pearl:linear-gradient(120deg,rgba(217,176,78,.06),rgba(124,77,219,.10) 50%,transparent);
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#121019;--surface:#1b1824;--surface-2:#252131;--ink:#f1eef7;--ink-2:#d6d0e2;--mut:#a69fb6;--line:#2c2738;--line-2:#3f384f;
-  --acc:#b7a6ff;--gold:#9d86ff;--gold-ink:#120f1a;--soft:rgba(157,134,255,.14);
-  --violet:#f08ac6;--violet-2:#6cc6f2;--vsoft:rgba(240,138,198,.14);
+  --bg:#140a22;--surface:#1e1230;--surface-2:#28193d;--ink:#f3ecfb;--ink-2:#d8cce6;--mut:#b4a7c4;--line:#2f2142;--line-2:#433157;
+  --acc:#e3c77a;--gold:#d9b04e;--gold-ink:#1a1206;--soft:rgba(217,176,78,.12);--pur:#7c4ddb;--pur-ink:#ffffff;
+  --violet:#b79cf5;--violet-2:#b79cf5;--vsoft:rgba(183,156,245,.14);
   --up:#4fd39a;--dn:#ff7f93;--up-soft:rgba(79,211,154,.12);--dn-soft:rgba(255,127,147,.12);
-  --shade:rgba(6,5,10,.7);--sh:0 24px 48px -28px rgba(0,0,0,.6);
+  --shade:rgba(6,3,12,.72);--sh:0 24px 48px -28px rgba(0,0,0,.6);
   --on-up:#06170f;--on-dn:#1f070b;--buy:#34d07f;--on-buy:#05140c;
-  --iris-ink:linear-gradient(110deg,#c9b8ff,#ffb3d6,#8fd6ff,#9eeec4,#c9b8ff);
-  --b1:rgba(124,98,255,.22);--b2:rgba(212,90,166,.14);--b3:rgba(47,159,214,.14);--b4:rgba(47,174,122,.12);
-  --pearl:linear-gradient(120deg,rgba(255,179,214,.10),rgba(185,168,255,.10) 30%,rgba(143,214,255,.09) 60%,rgba(158,238,196,.09));
+  --iris:linear-gradient(90deg,rgba(217,176,78,.8),rgba(201,184,255,.7),rgba(243,196,221,.55),rgba(217,176,78,.8));--iris-on:#f3ecfb;
+  --iris-ink:linear-gradient(110deg,#c9b8ff,#e3c77a 55%,#c9b8ff);
+  --b1:rgba(124,77,219,.14);--b2:rgba(217,176,78,.05);--b3:transparent;--b4:transparent;
+  --pearl:linear-gradient(120deg,rgba(217,176,78,.06),rgba(124,77,219,.10) 50%,transparent);
   color-scheme:dark}
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
@@ -148,7 +150,7 @@ h1,h2,h3{font-weight:600;letter-spacing:-.01em;line-height:1.08}
 
 /* Pantalla de juego */
 .gtop{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.gtop .wrap{display:flex;align-items:center;gap:8px;min-height:60px;flex-wrap:nowrap;padding-block:8px}
+.gtop .wrap{display:flex;align-items:center;gap:8px;min-height:60px;flex-wrap:wrap;row-gap:6px;padding-block:8px}
 .gtop .xp{flex:none}
 .mstat{display:inline-flex;align-items:center;gap:8px;font:500 12.5px/1 var(--mono);color:var(--mut);white-space:nowrap}
 .mstat i{width:8px;height:8px;border-radius:50%;background:var(--mut)}
@@ -340,11 +342,12 @@ progress{accent-color:var(--gold);height:8px}
 .pr small{display:block;font-size:11.5px}
 /* Estilo Nácar: titulares en Fraunces itálica blanda, tornasol pastel en lo que se toca */
 @keyframes sheen{to{background-position:200% 50%}}
-h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display);font-style:italic;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:800;letter-spacing:-.025em}
+h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display);font-style:normal;font-weight:600;letter-spacing:-.025em}
 .logo{font-size:20px}
 .mis .big,.lcard .n{color:var(--ink)}
-.btn{border-radius:999px}.btn.s{border-radius:999px}
-.btn.pri,.logo i,.lvnum,.tabs .cnt,.chip.on,.modes button.on,.skip{background:var(--iris);background-size:200% 100%;animation:sheen 7s linear infinite;color:var(--iris-on);border-color:transparent}
+.btn,.btn.s{border-radius:var(--r)}
+.btn.pri,.logo i,.lvnum,.tabs .cnt,.chip.on,.modes button.on,.skip{background:var(--pur);color:var(--pur-ink);border-color:var(--pur);animation:none}
+.logo i{box-shadow:inset 0 0 0 1.5px var(--gold)}.btn.pri{box-shadow:0 0 0 1px var(--soft)}
 .thm{min-width:44px;min-height:44px;padding:8px;font-size:18px;line-height:1}
 .lgo.mono{color:var(--acc);background:var(--soft)}
 .lcard.fin{background:var(--pearl),var(--surface);color:var(--ink);border-color:var(--line-2)}.lcard.fin p,.lcard.fin .st{color:var(--mut)}.lcard.fin .n{color:var(--ink)}
@@ -370,7 +373,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 #intro.out{clip-path:inset(0 0 100% 0)}
 .no-intro #intro{display:none}
 .in-w{display:grid;justify-items:center;gap:6px;overflow:hidden}
-.in-logo{font:800 italic clamp(56px,13vw,180px)/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.04em;background:var(--iris-ink);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:inUp 900ms var(--ease-enter) both,sheen 3s linear infinite;padding:0 .08em}
+.in-logo{font:600 clamp(56px,13vw,180px)/1 var(--display);letter-spacing:-.04em;background:var(--iris-ink);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:inUp 900ms var(--ease-enter) both,sheen 3s linear infinite;padding:0 .08em}
 .in-n{font:500 14px/1 var(--mono);color:var(--mut);letter-spacing:.2em;animation:inUp 900ms 150ms var(--ease-enter) both}
 .in-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--iris-ink);transform-origin:0 50%;transform:scaleX(0)}
 @keyframes inUp{from{transform:translateY(110%);opacity:0}}
@@ -389,8 +392,8 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .lrow{display:grid;grid-template-columns:72px minmax(0,1fr) auto 40px;gap:20px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line-2);padding:26px 8px;cursor:pointer;color:var(--ink);position:relative;transition:padding 400ms var(--ease-enter),color 300ms}
 .lrow::before{content:"";position:absolute;inset:0;background:var(--pearl),var(--surface);transform:scaleY(0);transform-origin:50% 100%;transition:transform 450ms var(--ease-enter);z-index:-1}
 .lrow{isolation:isolate}
-.lrow .n{font:800 italic 30px/1 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;color:var(--mut);transition:color 300ms}
-.lrow .lt b{display:block;font:800 italic clamp(22px,3vw,38px)/1.05 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.025em}
+.lrow .n{font:600 30px/1 var(--display);color:var(--mut);transition:color 300ms}
+.lrow .lt b{display:block;font:600 clamp(22px,3vw,38px)/1.05 var(--display);letter-spacing:-.025em}
 .lrow .lt small{display:block;margin-top:6px;font-size:14px}
 .lrow .ls{display:flex;gap:10px;align-items:center;font-size:13px;color:var(--mut);white-space:nowrap}
 .lrow .la{font-size:22px;transition:transform 400ms var(--ease-enter);color:var(--mut)}
@@ -405,7 +408,7 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .lprev{position:fixed;left:0;top:0;z-index:30;width:260px;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);padding:14px;box-shadow:var(--sh);opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity 250ms,transform 400ms var(--ease-enter)}
 .lprev.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
 .lprev .lviz{width:100%;height:120px;display:block;background:var(--pearl),var(--bg);border-radius:var(--r);padding:8px;border:1px solid var(--line)}
-.lprev b{display:block;margin-top:10px;font:800 italic 18px/1.1 var(--display)}
+.lprev b{display:block;margin-top:10px;font:600 18px/1.1 var(--display)}
 @media (max-width:700px){.lrow{grid-template-columns:44px minmax(0,1fr) 24px;gap:8px 12px;padding:20px 4px}.lrow .n{grid-area:1/1;font-size:22px}.lrow .lt{grid-area:1/2}.lrow .la{grid-area:1/3}.lrow .ls{grid-area:2/2;white-space:normal;flex-wrap:wrap}}
 /* Preguntas frecuentes */
 .faq{padding-block:clamp(56px,10vh,110px);border-top:1px solid var(--line)}
@@ -415,14 +418,14 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 .qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center;padding:22px 0;font-size:18px;font-weight:600;min-height:44px}
 .qa summary::-webkit-details-marker{display:none}
 .qa summary::after{content:"+";flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:400 22px/1 var(--mono);background:var(--surface);border:1px solid var(--line-2);transition:transform 400ms var(--ease-enter),background-color 300ms}
-.qa details[open] summary::after{transform:rotate(135deg);background:var(--iris);background-size:200% 100%;color:var(--iris-on);border-color:transparent}
+.qa details[open] summary::after{transform:rotate(135deg);background:var(--pur);color:var(--pur-ink);border-color:var(--pur)}
 .qa details p{padding:0 0 22px;color:var(--ink-2);max-width:56ch;font-size:16px}
 .qa details[open] p{animation:qaIn 450ms var(--ease-enter)}
 @keyframes qaIn{from{opacity:0;transform:translateY(-8px)}}
 @media (max-width:800px){.faq-g{grid-template-columns:1fr}}
 /* Pie: nombre gigante en tornasol, letra por letra */
 .foot{padding-top:0}
-.mega{font:800 italic clamp(64px,19vw,300px)/.9 var(--display);font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.05em;text-align:center;padding:clamp(24px,5vw,56px) 0 12px;overflow:hidden;white-space:nowrap;user-select:none}
+.mega{font:600 clamp(64px,19vw,300px)/.9 var(--display);letter-spacing:-.05em;text-align:center;padding:clamp(24px,5vw,56px) 0 12px;overflow:hidden;white-space:nowrap;user-select:none}
 /* cada letra toma su tramo del mismo degradado, así el tornasol recorre la palabra entera */
 .mega span{display:inline-block;background:var(--iris-ink);background-size:900% 100%;background-position:calc(var(--i)*12.5%) 50%;-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.04em;transition:transform 1000ms var(--ease-enter);transition-delay:calc(var(--i)*55ms)}.rv .mega:not(.in) span{transform:translateY(105%)}
 @media (prefers-reduced-motion:reduce){.tape-t{animation:none}#intro{display:none}}
@@ -489,19 +492,19 @@ h1,h2,h3,.logo,.mis .big,.lcard .n,.slide .kv,.win .kv{font-family:var(--display
 @media (max-width:360px){.bb.lu-bb,.bb.lu-bb .lu-head{width:56px;height:52px}}
 .gwrap{padding-bottom:96px}
 #toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
-@media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:var(--iris);background-size:200% 100%;filter:saturate(1.25) brightness(.97);border-color:transparent}}
-.logo i,.lvnum,.tabs .cnt{border-radius:10px}
+@media (hover:hover) and (pointer:fine){.btn.pri:not(:disabled):hover{background:color-mix(in srgb,var(--pur) 86%,var(--ink));border-color:var(--gold)}}
+.logo i,.lvnum,.tabs .cnt{border-radius:var(--r)}
 .hero h1 em{background:var(--iris-ink);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite;padding-right:.08em}
-.mis::after,.xp .bar i,.tabs button::after,.mis .prog i{background:linear-gradient(90deg,#8a6cff,#d45aa6,#2f9fd6,#2fae7a)}
+.mis::after,.xp .bar i,.tabs button::after,.mis .prog i{background:linear-gradient(90deg,var(--gold),var(--violet-2))}
 .mis::after{width:4px}
 .frame{border-color:var(--line-2);box-shadow:var(--sh);background:var(--pearl),var(--surface)}
 .mis{background:var(--pearl),var(--surface)}
 .card,.lcard,.mc,.tkb{box-shadow:0 1px 0 rgba(60,40,90,.04)}
 .lgo{border:1px solid var(--line)}
-.chip{clip-path:none;border-radius:999px}
+.chip{clip-path:none;border-radius:var(--r)}
 .home::before{opacity:.35}
-.modes{flex:none}.modes button{min-height:34px;font-weight:600;border-radius:999px}.modes button.on{box-shadow:none}
-.seg{border-radius:999px}.seg button{border-radius:999px}
+.modes{flex:none}.modes button{min-height:34px;font-weight:600;border-radius:calc(var(--r) - 1px)}.modes button.on{box-shadow:none}
+.seg{border-radius:var(--r)}.seg button{border-radius:calc(var(--r) - 1px)}
 .live{white-space:nowrap;flex:none;font:600 10.5px/1 var(--mono);letter-spacing:.08em;color:#fff;background:var(--dn);padding:4px 6px}
 .nw h4 a{color:var(--ink);text-decoration:none;background:linear-gradient(var(--violet-2),var(--violet-2)) 0 100%/0 1px no-repeat;transition:background-size 150ms var(--ease)}.nw h4 a:hover{background-size:100% 1px}
 .clock{font:500 clamp(28px,4vw,40px)/1 var(--mono);letter-spacing:-.03em}
@@ -754,7 +757,7 @@ function load(r){try{const o=JSON.parse(localStorage.getItem(r?KR:K));if(o&&o.h&
   M.forEach(x=>{if(o.h[x.s])return;if(r){o.h[x.s]=[];return}let p=x.p;const a=[p];for(let i=1;i<L;i++){p*=Math.exp(-(x.m/252)+x.v/Math.sqrt(252)*g());a.unshift(p)}const k=x.p/a[a.length-1];o.h[x.s]=a.map(v=>v*k)});return o}}catch(e){}return null}
 
 function dk(){const r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches}
-function thmUI(){const d=dk();document.querySelectorAll('.thm').forEach(b=>{b.textContent=d?'☀':'☾';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro')});const m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#121019':'#f6f4f8'}
+function thmUI(){const d=dk();document.querySelectorAll('.thm').forEach(b=>{b.textContent=d?'☀':'☾';b.setAttribute('aria-label',d?'Cambiar a modo claro':'Cambiar a modo oscuro')});const m=document.querySelector('meta[name=theme-color]');if(m)m.content=d?'#140a22':'#fbf9f3'}
 function theme(){const r=document.documentElement;r.dataset.theme=dk()?'light':'dark';try{localStorage.setItem('pf-theme',r.dataset.theme)}catch(e){}thmUI();tvKey='';document.querySelectorAll('.ch').forEach(x=>delete x.dataset.r);if(!$('sim').hidden)render()}
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),3800)}
 
@@ -1265,7 +1268,7 @@ function openBadges(){
 const bdgHTML=()=>BD.map(b=>{const on=S.g.bd.includes(b.id);return`<div class="bdg ${on?'':'off'}"><span class="ic">${b.i}</span><div><b>${b.t}</b><small>${b.d}</small></div></div>`}).join('');
 function confetti(){
   if(RM)return;const c=$('fx'),x=c.getContext('2d'),W=c.width=innerWidth,H=c.height=innerHeight;c.hidden=false;
-  const cols=['#ffb3d6','#b9a8ff','#8fd6ff','#9eeec4'],P=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*120,y:H*.38,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
+  const cols=['#3b0764','#a67c14','#c9b8ff','#e3c77a'],P=Array.from({length:90},()=>({x:W/2+(Math.random()-.5)*120,y:H*.38,vx:(Math.random()-.5)*12,vy:-Math.random()*11-4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*4)]}));
   const t0=performance.now();(function f(t){const k=(t-t0)/1400;x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.r+=.1;x.save();x.globalAlpha=Math.max(0,1-k);x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});if(k<1)requestAnimationFrame(f);else c.hidden=true})(t0);
 }
 function unlockPro(){S.g.pro=true;save();rAP();toast('Herramientas profesionales desbloqueadas.')}
@@ -1338,7 +1341,7 @@ function homeFx(){
   if(matchMedia('(hover:hover) and (pointer:fine)').matches&&!RM){const pv=$('lprev'),L=$('lmap');let x=0,y=0,tx=0,ty=0,raf=0,cur='';
     const loop=()=>{x+=(tx-x)*.16;y+=(ty-y)*.16;pv.style.left=x+'px';pv.style.top=y+'px';raf=pv.classList.contains('on')||Math.abs(tx-x)>.5?requestAnimationFrame(loop):0};
     L.addEventListener('mousemove',e=>{const r=e.target.closest('.lrow');tx=e.clientX+200;ty=e.clientY-20;if(!r||r.classList.contains('lock')){pv.classList.remove('on');return}
-      const i=r.dataset.i;if(i!==cur){cur=i;pv.innerHTML=i==='ny'?`<div class="lviz" style="display:grid;place-items:center;font:800 italic 56px/1 var(--display)"><span style="background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em">NY</span></div><b>Bolsa real</b>`:`${lviz(+i)}<b>${LV[i].t}</b><span class="stars">${starStr(S.g.stars[i]||0)}</span>`}
+      const i=r.dataset.i;if(i!==cur){cur=i;pv.innerHTML=i==='ny'?`<div class="lviz" style="display:grid;place-items:center;font:600 56px/1 var(--display)"><span style="background:var(--iris-ink);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.08em">NY</span></div><b>Bolsa real</b>`:`${lviz(+i)}<b>${LV[i].t}</b><span class="stars">${starStr(S.g.stars[i]||0)}</span>`}
       if(!pv.classList.contains('on')){x=tx;y=ty;pv.classList.add('on')}if(!raf)raf=requestAnimationFrame(loop)});
     L.addEventListener('mouseleave',()=>{pv.classList.remove('on');cur=''})}
 }
